@@ -1,6 +1,7 @@
 #include <substrate/substrate.h>
 
 #include <iostream>
+#include <thread>
 
 int main(int argc, char** argv)
 {
@@ -16,7 +17,11 @@ int main(int argc, char** argv)
 
    client->send("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"chain_getBlockHash\",\"params\":[0]}");
 
-   client->receive();
+   std::cout << "Client is connected, waiting until exit!" << std::endl;
+   client->wait();
+
+   std::cout << "Stopping" << std::endl;
+   client = nullptr;
 
    substrate::library_cleanup();
    return 0;

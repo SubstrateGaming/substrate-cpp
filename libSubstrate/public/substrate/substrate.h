@@ -31,9 +31,9 @@ namespace substrate
    public:
       virtual ~IClient() = default;
 
-      virtual void connect() = 0;
+      virtual bool connect() = 0;
       virtual bool connected() = 0;
+      virtual void wait() = 0;
       virtual void send(const std::string& message) = 0;
-      virtual void receive() = 0;
    };
 }
