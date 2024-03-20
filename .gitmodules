@@ -1,3 +1,6 @@
 [submodule "deps/curl"]
 	path = deps/curl
 	url = https://github.com/curl/curl.git
+[submodule "deps/scale-codec-cpp"]
+	path = deps/scale-codec-cpp
+	url = https://github.com/qdrvm/scale-codec-cpp.git
