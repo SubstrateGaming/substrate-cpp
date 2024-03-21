@@ -4,16 +4,6 @@
 
 #include <curl/curl.h>
 
-void substrate::library_init()
-{
-   curl_global_init(CURL_GLOBAL_ALL);
-}
-
-void substrate::library_cleanup()
-{
-   curl_global_cleanup();
-}
-
 std::string substrate::deps::get_curl_version_info()
 {
    curl_version_info_data *version_info = curl_version_info(CURLVERSION_NOW);

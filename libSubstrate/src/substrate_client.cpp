@@ -63,17 +63,34 @@ public:
       }
    }
 
-   void chain_getBlockHash()
+   substrate::modules::Author getAuthorModule() const override final
    {
-      assert(_socket);
+      return nullptr;
+   }
 
-      auto optResponse = _socket->send("chain_getBlockHash", std::vector<uint32_t>({0}));
-      if (!optResponse.has_value())
-      {
-         _socket = nullptr;
-      }
+   substrate::modules::Chain getChainModule() const override final
+   {
+      return nullptr;
+   }
 
-      auto value = optResponse.value();
+   substrate::modules::Payment getPaymentModule() const override final
+   {
+      return nullptr;
+   }
+
+   substrate::modules::State getStateModule() const override final
+   {
+      return nullptr;
+   }
+
+   substrate::modules::System getSystemModule() const override final
+   {
+      return nullptr;
+   }
+
+   substrate::modules::UnstableCalls getUnstableCallsModule() const
+   {
+      return nullptr;
    }
 };
 
