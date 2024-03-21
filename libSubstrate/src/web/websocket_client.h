@@ -29,10 +29,12 @@ namespace substrate::detail::web
       virtual ~websocket_client();
 
       bool connected() const;
-      bool send(const std::string &message);
       void start();
       void stop();
       void wait();
+
+   protected:
+      bool send_message(const std::string &message);
 
    private:
       void on_receive();

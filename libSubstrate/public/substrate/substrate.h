@@ -10,6 +10,7 @@
 
 #include "logger.h"
 #include "client.h"
+#include "hex.h"
 
 namespace substrate
 {

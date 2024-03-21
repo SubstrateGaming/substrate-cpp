@@ -50,19 +50,6 @@ bool websocket_client::connected() const
    return _curl != nullptr && !_shouldStop.load();
 }
 
-bool websocket_client::send(const std::string &message)
-{
-   size_t sent = 0;
-   CURLcode res = curl_ws_send(_curl, message.data(), message.size(), &sent, 0, CURLWS_TEXT);
-   if (res != CURLE_OK)
-   {
-      SLOG_ERROR(kCategory, std::format("curl_easy_perform failed: {}", curl_easy_strerror(res)));
-      return false;
-   }
-   assert(sent == message.size());
-   return res == CURLE_OK && sent == message.size();
-}
-
 void websocket_client::start()
 {
    _workerThread = std::thread(&websocket_client::on_receive, this);
@@ -80,6 +67,19 @@ void websocket_client::wait()
 {
    std::unique_lock<std::mutex> lock(_mtx);
    _cv.wait(lock);
+}
+
+bool websocket_client::send_message(const std::string &message)
+{
+   size_t sent = 0;
+   CURLcode res = curl_ws_send(_curl, message.data(), message.size(), &sent, 0, CURLWS_TEXT);
+   if (res != CURLE_OK)
+   {
+      SLOG_ERROR(kCategory, std::format("curl_easy_perform failed: {}", curl_easy_strerror(res)));
+      return false;
+   }
+   assert(sent == message.size());
+   return res == CURLE_OK && sent == message.size();
 }
 
 void websocket_client::on_receive()

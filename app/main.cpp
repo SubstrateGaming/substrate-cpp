@@ -49,7 +49,8 @@ int main(int argc, char **argv)
    std::cout << "Client is connected, waiting until exit!" << std::endl;
 
    // Debug
-   client->getChainModule()->getBlockHash(1);
+   // client->getChainModule()->getBlockHash(1);
+   client->getChainModule()->getFinalizedHead();
 
    client->wait();
 

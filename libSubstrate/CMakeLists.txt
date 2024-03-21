@@ -2,8 +2,15 @@ project(libSubstrate)
 
 include(GenerateExportHeader)
 
-file (GLOB_RECURSE libSubstrate_headers ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
-file (GLOB_RECURSE libSubstrate_src ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+file (GLOB_RECURSE libSubstrate_headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${LIB_SUBSTRATE_LIBSCALE}/include/*.h
+)
+
+file (GLOB_RECURSE libSubstrate_src
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${LIB_SUBSTRATE_LIBSCALE}/src/*.cpp
+)
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
@@ -18,5 +25,10 @@ generate_export_header(${PROJECT_NAME}
 
 target_include_directories (${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/public)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CURL_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${LIB_SUBSTRATE_LIBSCALE}/include
+    ${BOOST_INCLUDE_DIR}
+)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES} nlohmann_json)

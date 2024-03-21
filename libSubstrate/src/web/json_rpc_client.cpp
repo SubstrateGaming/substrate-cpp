@@ -9,7 +9,23 @@ json_rpc_client::json_rpc_client(substrate::Logger logger, const std::string &ur
 {
 }
 
-std::optional<nlohmann::json> json_rpc_client::send(const std::string &method, const nlohmann::json &params)
+std::optional<std::string> json_rpc_client::send(const std::string &method, const nlohmann::json &params)
+{
+   constexpr auto kResult = "result";
+
+   auto response = send_rpc(method, params);
+   if (response.has_value())
+   {
+      const auto& json = response.value();
+      assert(json.is_object());
+      assert(json.contains(kResult));
+      if (json.is_object() && json.contains(kResult))
+         return json[kResult];
+   }
+   return std::nullopt;
+}
+
+std::optional<nlohmann::json> json_rpc_client::send_rpc(const std::string &method, const nlohmann::json &params)
 {
    const auto request_id = _counter.fetch_add(1u);
    nlohmann::json request = {
@@ -21,7 +37,7 @@ std::optional<nlohmann::json> json_rpc_client::send(const std::string &method, c
    const std::string message = request.dump();
    SLOG_DEBUG(kCategory, std::format("send rpc {} as json {}", method, message));
 
-   if (!websocket_client::send(message))
+   if (!websocket_client::send_message(message))
       return std::nullopt;
 
    // Wait for the response
