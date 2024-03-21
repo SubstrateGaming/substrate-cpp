@@ -26,4 +26,6 @@ namespace substrate::detail::web
    protected:
       virtual void on_message(const std::string& message) override final;
    };
+
+   using json_rpc_client_ptr = std::shared_ptr<json_rpc_client>;
 }
