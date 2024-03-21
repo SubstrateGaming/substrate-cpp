@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <optional>
 
 namespace substrate
 {
@@ -11,4 +12,24 @@ namespace substrate
 
    class LIB_SUBSTRATE_EXPORT IClient;
    using Client = std::shared_ptr<IClient>;
+
+   // BasePrim<string>
+   struct Hash
+   {
+   };
+
+   struct Block
+   {
+   };
+
+   struct BlockData
+   {
+   };
+
+   // BasePrim<uint>
+   using BlockNumber = uint32_t;
+
+   struct Header
+   {
+   };
 }
