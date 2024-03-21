@@ -4,7 +4,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace substrate::detail
+namespace substrate::detail::web
 {
    class json_rpc_client : public websocket_client
    {

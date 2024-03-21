@@ -10,7 +10,7 @@ namespace substrate
       virtual ~IClient() = default;
 
       [[nodiscard]] virtual bool connect() = 0;
-      [[nodiscard]] virtual bool connected() = 0;
+      [[nodiscard]] virtual bool connected() const = 0;
 
       virtual void wait() = 0;
 

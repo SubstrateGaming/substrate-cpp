@@ -1,13 +1,12 @@
 #include "websocket_client.h"
 
-using namespace substrate::detail;
-
-#include <assert.h>
+#include "logger.h"
 
 #include <format>
 #include <sstream>
+#include <assert.h>
 
-#include "logger.h"
+using namespace substrate::detail::web;
 
 websocket_client::websocket_client(substrate::Logger logger, const std::string &url)
     : _logger(logger), _curl(curl_easy_init())

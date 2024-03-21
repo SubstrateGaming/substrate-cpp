@@ -2,7 +2,7 @@
 
 #include "logger.h"
 
-using namespace substrate::detail;
+using namespace substrate::detail::web;
 
 json_rpc_client::json_rpc_client(substrate::Logger logger, const std::string &url)
     : websocket_client(logger, url)

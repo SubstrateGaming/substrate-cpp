@@ -1,98 +1,90 @@
-#include <curl/curl.h>
+#include "substrate_client.h"
 
+#include "logger.h"
+#include "web/json_rpc_client.h"
+
+#include <curl/curl.h>
 #include <assert.h>
 
-#include "detail/logger.h"
-#include "detail/json_rpc_client.h"
+using namespace substrate::detail;
 
-namespace detail = substrate::detail;
-
-//
-// client implementation
-class client : public substrate::IClient
+client::client(substrate::Logger logger, const std::string &url)
+    : _logger(logger), _url(url)
 {
-   substrate::Logger _logger;
-   std::string _url;
-   std::unique_ptr<detail::json_rpc_client> _socket;
+}
 
-   constexpr static auto kCategory = "client";
+client::~client()
+{
+   _socket = nullptr;
+}
 
-public:
-   client(substrate::Logger logger, const std::string &url)
-       : _logger(logger), _url(url)
+bool client::connect()
+{
+   assert(_socket == nullptr);
+
+   SLOG_DEBUG(kCategory, std::format("connecting to endpoint {}", _url));
+
+   // build the rpc client and connect right away
+   _socket = std::make_unique<detail::web::json_rpc_client>(_logger, _url);
+   if (!_socket->connected())
    {
-   }
+      // most likely a user error
+      SLOG_DEBUG(kCategory, std::format("could not connect to endpoint {}", _url));
 
-   virtual ~client() override
-   {
       _socket = nullptr;
+      return false;
    }
 
-   bool connect() override
+   // start receiving messages
+   SLOG_DEBUG(kCategory, std::format("connected to endpoint {}, start receiving messages", _url));
+   _socket->start();
+   return true;
+}
+
+bool client::connected() const
+{
+   return _socket && _socket->connected();
+}
+
+void client::wait()
+{
+   assert(_socket != nullptr);
+   if (_socket)
    {
-      assert(_socket == nullptr);
-
-      SLOG_DEBUG(kCategory, std::format("connecting to endpoint {}", _url));
-
-      // build the rpc client and connect right away
-      _socket = std::make_unique<detail::json_rpc_client>(_logger, _url);
-      if (!_socket->connected())
-      {
-         // most likely a user error
-         SLOG_DEBUG(kCategory, std::format("could not connect to endpoint {}", _url));
-
-         _socket = nullptr;
-         return false;
-      }
-
-      // start receiving messages
-      SLOG_DEBUG(kCategory, std::format("connected to endpoint {}, start receiving messages", _url));
-      _socket->start();
-      return true;
+      SLOG_DEBUG(kCategory, "wait until connection is closed");
+      _socket->wait();
    }
+}
 
-   bool connected() override { return _socket && _socket->connected(); }
+substrate::modules::Author client::getAuthorModule() const
+{
+   return nullptr;
+}
 
-   void wait() override
-   {
-      assert(_socket != nullptr);
-      if (_socket)
-      {
-         SLOG_DEBUG(kCategory, "wait until connection is closed");
-         _socket->wait();
-      }
-   }
+substrate::modules::Chain client::getChainModule() const
+{
+   return nullptr;
+}
 
-   substrate::modules::Author getAuthorModule() const override final
-   {
-      return nullptr;
-   }
+substrate::modules::Payment client::getPaymentModule() const
+{
+   return nullptr;
+}
 
-   substrate::modules::Chain getChainModule() const override final
-   {
-      return nullptr;
-   }
+substrate::modules::State client::getStateModule() const
+{
+   return nullptr;
+}
 
-   substrate::modules::Payment getPaymentModule() const override final
-   {
-      return nullptr;
-   }
+substrate::modules::System client::getSystemModule() const
+{
+   return nullptr;
+}
 
-   substrate::modules::State getStateModule() const override final
-   {
-      return nullptr;
-   }
-
-   substrate::modules::System getSystemModule() const override final
-   {
-      return nullptr;
-   }
-
-   substrate::modules::UnstableCalls getUnstableCallsModule() const
-   {
-      return nullptr;
-   }
-};
+substrate::modules::UnstableCalls client::getUnstableCallsModule() const
+{
+   return nullptr;
+}
 
 substrate::Client substrate::make_client(substrate::Logger logger, const std::string &url)
 {

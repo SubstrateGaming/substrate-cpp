@@ -9,7 +9,7 @@
 #include <curl/curl.h>
 #include <substrate/substrate.h>
 
-namespace substrate::detail
+namespace substrate::detail::web
 {
    class websocket_client
    {
