@@ -34,6 +34,6 @@ namespace substrate
       virtual bool connect() = 0;
       virtual bool connected() = 0;
       virtual void wait() = 0;
-      virtual void send(const std::string& message) = 0;
+      virtual void chain_getBlockHash() = 0;
    };
 }

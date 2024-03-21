@@ -55,5 +55,7 @@ if (NOT CURL_FOUND)
     endif ()
 endif ()
 
+add_subdirectory(deps/json)
+
 add_subdirectory(libSubstrate)
 add_subdirectory(app)

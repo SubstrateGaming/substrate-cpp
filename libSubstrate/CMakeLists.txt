@@ -19,4 +19,4 @@ generate_export_header(${PROJECT_NAME}
 target_include_directories (${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/public)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES} nlohmann_json)

@@ -15,7 +15,7 @@ int main(int argc, char** argv)
    if (!client->connected())
       return -1;
 
-   client->send("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"chain_getBlockHash\",\"params\":[0]}");
+   client->chain_getBlockHash();
 
    std::cout << "Client is connected, waiting until exit!" << std::endl;
    client->wait();

@@ -8,7 +8,10 @@
 #include <chrono>
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
 #include <condition_variable>
+
+#include <nlohmann/json.hpp>
 
 class websocket_client
 {
@@ -47,7 +50,7 @@ public:
 
    bool connected() const { return _curl != nullptr && !_shouldStop.load(); }
 
-   ~websocket_client()
+   virtual ~websocket_client()
    {
       stop();
 
@@ -139,16 +142,85 @@ public:
 
          if (meta->bytesleft == 0)
          {
-            std::cout << "curl_ws_recv() completed message " << std::endl
-                      << stream.str()
-                      << std::endl;
-
+            on_message(stream.str());
             stream = std::stringstream();
          }
       }
 
       // Rather unexpected. Escalate.
       _shouldStop.store(true);
+      _cv.notify_all();
+   }
+
+protected:
+   virtual void on_message(std::string message)
+   {
+      (void)message;
+   }
+};
+
+class json_rpc_client : public websocket_client
+{
+   using counter_t = uint32_t;
+
+   std::atomic<counter_t> _counter{1};
+   std::mutex _mutex;
+   std::condition_variable _cv;
+   std::unordered_map<counter_t, nlohmann::json> _pending_messages;
+
+public:
+   json_rpc_client(const std::string &url)
+       : websocket_client(url)
+   {
+   }
+
+   virtual ~json_rpc_client() override = default;
+
+   std::optional<nlohmann::json> send(const std::string &method, const nlohmann::json &params)
+   {
+      const auto request_id = _counter.fetch_add(1u);
+      nlohmann::json request = {
+          {"jsonrpc", "2.0"},
+          {"id", request_id},
+          {"method", method},
+          {"params", params}};
+
+      if (!websocket_client::send(request.dump()))
+         return std::nullopt;
+
+      // Wait for the response
+      std::unique_lock<std::mutex> lock(_mutex);
+      _cv.wait(lock, [&]
+               { return _pending_messages.find(request_id) != _pending_messages.end(); });
+
+      // Retrieve the response
+      nlohmann::json response = _pending_messages[request_id];
+      _pending_messages.erase(request_id);
+      return response;
+   }
+
+private:
+   using websocket_client::send;
+
+protected:
+   virtual void on_message(std::string message) override final
+   {
+      constexpr const char *kId = "id";
+      constexpr bool allow_exceptions = false;
+      auto response = nlohmann::json::parse(std::move(message), nullptr, allow_exceptions);
+      if (!response.is_object())
+         return;
+
+      if (!response.contains(kId))
+         return; // subscription?
+
+      if (!response[kId].is_number())
+         return;
+
+      counter_t id = response[kId];
+
+      std::lock_guard<std::mutex> lock(_mutex);
+      _pending_messages[id] = response;
       _cv.notify_all();
    }
 };
@@ -158,7 +230,7 @@ public:
 class client : public substrate::IClient
 {
    std::string _url;
-   std::unique_ptr<websocket_client> _socket;
+   std::unique_ptr<json_rpc_client> _socket;
 
 public:
    client(const std::string &url)
@@ -174,7 +246,7 @@ public:
    bool connect() override
    {
       assert(_socket == nullptr);
-      _socket = std::make_unique<websocket_client>(_url);
+      _socket = std::make_unique<json_rpc_client>(_url);
       if (!_socket->connected())
       {
          _socket = nullptr;
@@ -197,90 +269,19 @@ public:
       }
    }
 
-   void send(const std::string &message)
+   void chain_getBlockHash()
    {
       assert(_socket);
 
-      if (!_socket->send(message))
+      auto optResponse = _socket->send("chain_getBlockHash", std::vector<uint32_t>({0}));
+      if (!optResponse.has_value())
       {
          _socket = nullptr;
       }
+
+      auto value = optResponse.value();
+      std::cout << value << std::endl;
    }
-
-   // void receive()
-   // {
-   //    std::stringstream stream;
-   //    char buffer[256] = {0};
-   //    CURLcode res = CURLE_OK;
-   //    size_t rlen = 0;
-   //    while (1)
-   //    {
-   //       const struct curl_ws_frame *meta;
-   //       res = curl_ws_recv(_curl, buffer, sizeof(buffer), &rlen, &meta);
-
-   //       if (res == CURLE_AGAIN)
-   //       {
-   //          // There is no curl_ws_poll API (yet).
-   //          // We (could) extract the socket and select() on that but for now we simply wait a short time.
-   //          std::this_thread::sleep_for(std::chrono::milliseconds(100));
-   //          continue;
-   //       }
-
-   //       if (res != CURLE_OK)
-   //       {
-   //          std::cerr << "curl_ws_recv() failed: " << curl_easy_strerror(res) << std::endl;
-   //          curl_easy_cleanup(_curl);
-   //          _curl = nullptr;
-   //          break;
-   //       }
-
-   //       if ((meta->flags & CURLWS_TEXT))
-   //       {
-   //          std::cout << "curl_ws_recv() received CURLWS_TEXT" << std::endl;
-   //          assert(rlen > 0);
-   //          if (rlen == 0)
-   //          {
-   //             curl_easy_cleanup(_curl);
-   //             _curl = nullptr;
-   //             break;
-   //          }
-
-   //          stream << std::string(&buffer[0], rlen);
-   //       }
-   //       else if ((meta->flags & CURLWS_BINARY))
-   //       {
-   //          // We do not yet expect that.
-   //          assert(false);
-   //       }
-
-   //       if ((meta->flags & CURLWS_CONT))
-   //       {
-   //          std::cout << "curl_ws_recv() received CURLWS_CONT" << std::endl;
-   //       }
-
-   //       if ((meta->flags & CURLWS_PING))
-   //       {
-   //          std::cout << "curl_ws_recv() received CURLWS_PING" << std::endl;
-   //       }
-
-   //       if ((meta->flags & CURLWS_CLOSE))
-   //       {
-   //          std::cout << "curl_ws_recv() received CURLWS_CLOSE" << std::endl;
-   //          curl_easy_cleanup(_curl);
-   //          _curl = nullptr;
-   //          break;
-   //       }
-
-   //       if (meta->bytesleft == 0)
-   //       {
-   //          std::cout << "curl_ws_recv() completed message " << std::endl
-   //                    << stream.str()
-   //                    << std::endl;
-
-   //          stream = std::stringstream();
-   //       }
-   //    }
-   // }
 };
 
 substrate::Client substrate::make_client(const std::string &url)
