@@ -1,9 +1,11 @@
 #include "json_rpc_client.h"
 
+#include "logger.h"
+
 using namespace substrate::detail;
 
-json_rpc_client::json_rpc_client(const std::string &url)
-    : websocket_client(url)
+json_rpc_client::json_rpc_client(substrate::Logger logger, const std::string &url)
+    : websocket_client(logger, url)
 {
 }
 
@@ -16,7 +18,10 @@ std::optional<nlohmann::json> json_rpc_client::send(const std::string &method, c
        {"method", method},
        {"params", params}};
 
-   if (!websocket_client::send(request.dump()))
+   const std::string message = request.dump();
+   SLOG_DEBUG(kCategory, std::format("send rpc {} as json {}", method, message));
+
+   if (!websocket_client::send(message))
       return std::nullopt;
 
    // Wait for the response
@@ -30,22 +35,29 @@ std::optional<nlohmann::json> json_rpc_client::send(const std::string &method, c
    return response;
 }
 
-void json_rpc_client::on_message(std::string message)
+void json_rpc_client::on_message(const std::string& message)
 {
+   SLOG_DEBUG(kCategory, std::format("recv message as json {}", message));
+
    constexpr const char *kId = "id";
    constexpr bool allow_exceptions = false;
-   auto response = nlohmann::json::parse(std::move(message), nullptr, allow_exceptions);
+   auto response = nlohmann::json::parse(message, nullptr, allow_exceptions);
    if (!response.is_object())
       return;
 
    if (!response.contains(kId))
-      return; // subscription?
+   {
+      SLOG_WARN(kCategory, std::format("message <{}> missing id, a subscription?", message));
+      return;
+   }
 
    if (!response[kId].is_number())
+   {
+      SLOG_ERROR(kCategory, std::format("message <{}> missing number based id, got id={}", message, response[kId].dump()));
       return;
+   }
 
    counter_t id = response[kId];
-
    std::lock_guard<std::mutex> lock(_mutex);
    _pending_messages[id] = response;
    _cv.notify_all();

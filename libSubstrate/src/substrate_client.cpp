@@ -1,8 +1,8 @@
-#include <substrate/substrate.h>
 #include <curl/curl.h>
 
 #include <assert.h>
 
+#include "detail/logger.h"
 #include "detail/json_rpc_client.h"
 
 namespace detail = substrate::detail;
@@ -11,12 +11,15 @@ namespace detail = substrate::detail;
 // client implementation
 class client : public substrate::IClient
 {
+   substrate::Logger _logger;
    std::string _url;
    std::unique_ptr<detail::json_rpc_client> _socket;
 
+   constexpr static auto kCategory = "client";
+
 public:
-   client(const std::string &url)
-       : _url(url)
+   client(substrate::Logger logger, const std::string &url)
+       : _logger(logger), _url(url)
    {
    }
 
@@ -28,14 +31,22 @@ public:
    bool connect() override
    {
       assert(_socket == nullptr);
-      _socket = std::make_unique<detail::json_rpc_client>(_url);
+
+      SLOG_DEBUG(kCategory, std::format("connecting to endpoint {}", _url));
+
+      // build the rpc client and connect right away
+      _socket = std::make_unique<detail::json_rpc_client>(_logger, _url);
       if (!_socket->connected())
       {
+         // most likely a user error
+         SLOG_DEBUG(kCategory, std::format("could not connect to endpoint {}", _url));
+
          _socket = nullptr;
          return false;
       }
 
-      // Start listening
+      // start receiving messages
+      SLOG_DEBUG(kCategory, std::format("connected to endpoint {}, start receiving messages", _url));
       _socket->start();
       return true;
    }
@@ -47,6 +58,7 @@ public:
       assert(_socket != nullptr);
       if (_socket)
       {
+         SLOG_DEBUG(kCategory, "wait until connection is closed");
          _socket->wait();
       }
    }
@@ -65,7 +77,7 @@ public:
    }
 };
 
-substrate::Client substrate::make_client(const std::string &url)
+substrate::Client substrate::make_client(substrate::Logger logger, const std::string &url)
 {
-   return std::make_shared<client>(url);
+   return std::make_shared<client>(logger, url);
 }

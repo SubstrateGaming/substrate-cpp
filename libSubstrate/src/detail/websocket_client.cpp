@@ -4,12 +4,13 @@ using namespace substrate::detail;
 
 #include <assert.h>
 
-#include <iostream> // std::cout
-
+#include <format>
 #include <sstream>
 
-websocket_client::websocket_client(const std::string &url)
-    : _curl(curl_easy_init())
+#include "logger.h"
+
+websocket_client::websocket_client(substrate::Logger logger, const std::string &url)
+    : _logger(logger), _curl(curl_easy_init())
 {
    assert(_curl);
    assert(!url.empty());
@@ -26,7 +27,7 @@ websocket_client::websocket_client(const std::string &url)
       CURLcode res = curl_easy_perform(_curl);
       if (res != CURLE_OK)
       {
-         std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+         SLOG_ERROR(kCategory, std::format("curl_easy_perform failed: {}", curl_easy_strerror(res)));
 
          curl_easy_cleanup(_curl);
          _curl = nullptr;
@@ -56,7 +57,7 @@ bool websocket_client::send(const std::string &message)
    CURLcode res = curl_ws_send(_curl, message.data(), message.size(), &sent, 0, CURLWS_TEXT);
    if (res != CURLE_OK)
    {
-      std::cerr << "curl_ws_send() failed: " << curl_easy_strerror(res) << std::endl;
+      SLOG_ERROR(kCategory, std::format("curl_easy_perform failed: {}", curl_easy_strerror(res)));
       return false;
    }
    assert(sent == message.size());
@@ -112,7 +113,7 @@ void websocket_client::on_receive()
       if (res != CURLE_OK)
       {
          // Rather unexpected. Escalate.
-         std::cerr << "curl_ws_recv() failed: " << curl_easy_strerror(res) << std::endl;
+         SLOG_ERROR(kCategory, std::format("curl_ws_recv failed: {}", curl_easy_strerror(res)));
          break;
       }
 
@@ -122,13 +123,13 @@ void websocket_client::on_receive()
 
       if ((meta->flags & CURLWS_CONT))
       {
-         std::cout << "curl_ws_recv() received CURLWS_CONT" << std::endl;
+         SLOG_DEBUG(kCategory, "curl_ws_recv received CURWS_CONT");
       }
 
       if ((meta->flags & CURLWS_CLOSE))
       {
          // Rather unexpected. Escalate.
-         std::cout << "curl_ws_recv() received CURLWS_CLOSE" << std::endl;
+         SLOG_DEBUG(kCategory, "curl_ws_recv received CURLWS_CLOSE");
          break;
       }
 
@@ -144,7 +145,7 @@ void websocket_client::on_receive()
    _cv.notify_all();
 }
 
-void websocket_client::on_message(std::string message)
+void websocket_client::on_message(const std::string& message)
 {
    (void)message;
 }
