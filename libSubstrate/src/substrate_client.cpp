@@ -8,6 +8,18 @@
 
 using namespace substrate::detail;
 
+// Forward private implementation
+namespace substrate::detail::modules
+{
+   substrate::modules::Author make_module_author();
+   substrate::modules::Chain make_module_chain();
+   substrate::modules::Payment make_module_payment();
+   substrate::modules::State make_module_state();
+   substrate::modules::System make_module_system();
+   substrate::modules::UnstableCalls make_module_unstable_calls();
+}
+
+// Client implementation
 client::client(substrate::Logger logger, const std::string &url)
     : _logger(logger), _url(url)
 {
@@ -35,6 +47,14 @@ bool client::connect()
       return false;
    }
 
+   // initialize module interfaces
+   _module_author = modules::make_module_author();
+   _module_chain = modules::make_module_chain();
+   _module_payment = modules::make_module_payment();
+   _module_state = modules::make_module_state();
+   _module_system = modules::make_module_system();
+   _module_unstable_calls = modules::make_module_unstable_calls();
+
    // start receiving messages
    SLOG_DEBUG(kCategory, std::format("connected to endpoint {}, start receiving messages", _url));
    _socket->start();
@@ -54,36 +74,6 @@ void client::wait()
       SLOG_DEBUG(kCategory, "wait until connection is closed");
       _socket->wait();
    }
-}
-
-substrate::modules::Author client::getAuthorModule() const
-{
-   return nullptr;
-}
-
-substrate::modules::Chain client::getChainModule() const
-{
-   return nullptr;
-}
-
-substrate::modules::Payment client::getPaymentModule() const
-{
-   return nullptr;
-}
-
-substrate::modules::State client::getStateModule() const
-{
-   return nullptr;
-}
-
-substrate::modules::System client::getSystemModule() const
-{
-   return nullptr;
-}
-
-substrate::modules::UnstableCalls client::getUnstableCallsModule() const
-{
-   return nullptr;
 }
 
 substrate::Client substrate::make_client(substrate::Logger logger, const std::string &url)

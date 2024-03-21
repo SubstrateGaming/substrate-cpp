@@ -22,6 +22,5 @@ namespace substrate
       [[nodiscard]] virtual modules::UnstableCalls getUnstableCallsModule() const = 0;
    };
 
-
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Client make_client(Logger logger, const std::string &url);
 }
