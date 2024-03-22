@@ -3,8 +3,11 @@
 
 namespace substrate::modules
 {
+   using namespace substrate::models;
+
    class LIB_SUBSTRATE_EXPORT IChain
    {
+
    public:
       virtual ~IChain() = default;
 

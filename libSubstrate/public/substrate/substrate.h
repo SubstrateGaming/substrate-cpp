@@ -6,6 +6,17 @@
 #include "decoder.h"
 #include "encoder.h"
 
+#include "models/account.h"
+#include "models/block.h"
+#include "models/charge_type.h"
+#include "models/digest.h"
+#include "models/era.h"
+#include "models/extrinsic.h"
+#include "models/hash.h"
+#include "models/header.h"
+#include "models/keytype.h"
+#include "models/method.h"
+
 #include "modules/author.h"
 #include "modules/chain.h"
 #include "modules/payment.h"

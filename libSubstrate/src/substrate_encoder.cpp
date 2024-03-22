@@ -89,6 +89,12 @@ encoder &encoder::operator<<(bool v)
    return *this;
 }
 
+encoder& encoder::operator<<(const std::span<const uint8_t>& v)
+{
+   _detail->_stream << v;
+   return *this;
+}
+
 std::vector<uint8_t> encoder::assemble() const
 {
    return _detail->_stream.to_vector();

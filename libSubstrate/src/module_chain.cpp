@@ -1,6 +1,6 @@
 #include "module.h"
 
-using namespace substrate;
+using namespace substrate::models;
 using namespace substrate::detail;
 using namespace substrate::detail::web;
 
@@ -86,7 +86,7 @@ public:
       auto params = json::array();
       if (blockNumber.has_value())
       {
-         encoder encoder;
+         substrate::encoder encoder;
          encoder << blockNumber.value().value();
          params.push_back(encoder.assemble_hex());
       }

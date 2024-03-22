@@ -28,6 +28,8 @@ namespace substrate
       encoder& operator<<(CompactInteger v);
       encoder& operator<<(bool v);
 
+      encoder& operator<<(const std::span<const uint8_t>& v);
+
       std::vector<uint8_t> assemble() const;
       std::string assemble_hex() const;
    };
