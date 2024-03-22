@@ -1,6 +1,11 @@
 #pragma once
 #include "types.h"
 
+#include "logger.h"
+#include "hex.h"
+#include "decoder.h"
+#include "encoder.h"
+
 #include "modules/author.h"
 #include "modules/chain.h"
 #include "modules/payment.h"
@@ -8,9 +13,7 @@
 #include "modules/system.h"
 #include "modules/unstable_calls.h"
 
-#include "logger.h"
 #include "client.h"
-#include "hex.h"
 
 namespace substrate
 {

@@ -1,18 +1,10 @@
 #include "module.h"
 
-#include <scale/scale.hpp>
-
 using namespace substrate;
 using namespace substrate::detail;
 using namespace substrate::detail::web;
 
 using json = nlohmann::json;
-
-// TODO: Refactor
-scale::ScaleEncoderStream &operator<<(scale::ScaleEncoderStream &s, const BlockNumber &v)
-{
-   return s << v.value();
-}
 
 Header parse_header(const json& json)
 {
@@ -94,10 +86,9 @@ public:
       auto params = json::array();
       if (blockNumber.has_value())
       {
-         // TODO: Refactor
-         scale::ScaleEncoderStream s;
-         s << blockNumber.value();
-         params.push_back(substrate::hex_encode(s.to_vector()));
+         encoder encoder;
+         encoder << blockNumber.value().value();
+         params.push_back(encoder.assemble_hex());
       }
 
       auto response = _socket->send("chain_getBlockHash", params);
