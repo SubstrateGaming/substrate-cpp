@@ -4,6 +4,3 @@
 [submodule "deps/scale-codec-cpp"]
 	path = deps/scale-codec-cpp
 	url = https://github.com/qdrvm/scale-codec-cpp.git
-[submodule "deps/json"]
-	path = deps/json
-	url = https://github.com/nlohmann/json.git

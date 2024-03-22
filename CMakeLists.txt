@@ -6,6 +6,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(Boost)
+find_package(nlohmann_json)
+
+# TODO: Use this as soon as conan exposes ENABLE_WEBSOCKET define.
+# find_package(CURL)
+
 set (LIB_SUBSTRATE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set (LIB_SUBSTRATE_DEPS ${LIB_SUBSTRATE_ROOT}/deps)
 set (LIB_SUBSTRATE_LIBSCALE ${LIB_SUBSTRATE_DEPS}/scale-codec-cpp)

@@ -25,7 +25,6 @@ generate_export_header(${PROJECT_NAME}
 
 target_include_directories (${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/public
-    ${BOOST_INCLUDE_DIR}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -34,4 +33,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${LIB_SUBSTRATE_LIBSCALE}/include
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES} nlohmann_json)
+# Right now boost is the only library we expose to public.
+target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    nlohmann_json::nlohmann_json
+    ${CURL_LIBRARIES})

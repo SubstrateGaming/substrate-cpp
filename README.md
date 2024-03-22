@@ -42,6 +42,21 @@ services:
       - 80:80
 ```
 
+## Building
+
+```sh
+# Initialize the project (for development)
+conan install .\conanfile.py -s build_type=Debug --output-folder build --build=missing
+
+# Initialize the project
+conan install .\conanfile.py -s build_type=Release --output-folder build --build=missing
+
+# Build (assuming Windows and MSVC)
+cd build
+cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+cmake --build . --config Release
+```
+
 ## References
 
 - Substrate.NET.API
