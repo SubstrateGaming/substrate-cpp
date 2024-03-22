@@ -51,6 +51,17 @@ std::optional<nlohmann::json> json_rpc_client::send_rpc(const std::string &metho
    return response;
 }
 
+std::optional<nlohmann::json> json_rpc_client::send_rpc_result(const std::string &method, const nlohmann::json &params)
+{
+   auto response = send_rpc(method, params);
+   if (response.has_value() && response->contains("result"))
+   {
+      auto result = response.value()["result"];
+      return result;
+   }
+   return std::nullopt;
+}
+
 void json_rpc_client::on_message(const std::string& message)
 {
    SLOG_DEBUG(kCategory, std::format("recv message as json {}", message));

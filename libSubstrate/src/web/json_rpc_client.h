@@ -22,6 +22,7 @@ namespace substrate::detail::web
 
       std::optional<std::string> send(const std::string &method, const nlohmann::json &params = nullptr);
       std::optional<nlohmann::json> send_rpc(const std::string &method, const nlohmann::json &params = nullptr);
+      std::optional<nlohmann::json> send_rpc_result(const std::string &method, const nlohmann::json &params = nullptr);
 
    protected:
       virtual void on_message(const std::string& message) override final;

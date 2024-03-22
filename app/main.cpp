@@ -50,7 +50,9 @@ int main(int argc, char **argv)
 
    // Debug
    // client->getChainModule()->getBlockHash(1);
-   client->getChainModule()->getFinalizedHead();
+   // client->getChainModule()->getFinalizedHead();
+   // auto header = client->getChainModule()->getHeader();
+   auto block = client->getChainModule()->getBlock();
 
    client->wait();
 
