@@ -16,3 +16,5 @@ namespace substrate::models
       std::vector<uint8_t> PrivateKey;
    };
 }
+
+LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::AccountId& v);

@@ -6,3 +6,5 @@ namespace substrate::models
    {
    };
 }
+
+LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::ChargeType& v);

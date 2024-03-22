@@ -10,3 +10,5 @@ namespace substrate::models
       uint64_t Phase{0};
    };
 }
+
+LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Era& v);

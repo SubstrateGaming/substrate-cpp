@@ -18,11 +18,6 @@ set (LIB_SUBSTRATE_LIBSCALE ${LIB_SUBSTRATE_DEPS}/scale-codec-cpp)
 
 option(LSUB_WITH_TESTS "Build with tests. Default is ON." ON)
 
-if (LSUB_WITH_TESTS)
-    enable_testing()
-    # add_subdirectory(test ${CMAKE_BINARY_DIR}/tests)
-endif ()
-
 # Dependencies
 find_package(CURL)
 
@@ -65,7 +60,19 @@ if (NOT CURL_FOUND)
     endif ()
 endif ()
 
-add_subdirectory(deps/json)
-
 add_subdirectory(libSubstrate)
 add_subdirectory(app)
+
+if (LSUB_WITH_TESTS)
+    find_package(GTest)
+
+    enable_testing()
+    file (GLOB_RECURSE libSubstrate_tests_sources ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp)
+
+    add_executable(libSubstrate_tests ${libSubstrate_tests_sources})
+    target_link_libraries(libSubstrate_tests PRIVATE GTest::gtest_main libSubstrate)
+    add_test(NAME libSubstrate_tests COMMAND $<TARGET_FILE:libSubstrate_tests>)
+
+    # include(GoogleTest)
+    # gtest_discover_tests(libSubstrate_tests)
+endif ()
