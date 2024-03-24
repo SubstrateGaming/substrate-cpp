@@ -4,6 +4,7 @@
 #include "logger.h"
 #include "hex.h"
 #include "base58.h"
+#include "blake2.h"
 #include "decoder.h"
 #include "encoder.h"
 

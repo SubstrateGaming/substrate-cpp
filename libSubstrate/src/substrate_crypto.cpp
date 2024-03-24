@@ -133,3 +133,57 @@ substrate::Crypto substrate::make_crypto_secp256k1()
    // Not yet implemented.
    return nullptr;
 }
+
+std::vector<uint8_t> substrate::get_public_key(const std::string &address)
+{
+   uint16_t network{0};
+   return substrate::get_public_key_with_network(address, network);
+}
+
+std::vector<uint8_t> substrate::get_public_key_with_network(const std::string &address, uint16_t &network)
+{
+   network = 42;
+   const size_t publicKeyLength = 32;
+   std::vector<uint8_t> pubkByteList;
+
+   auto bs58decoded = substrate::base58_decode(address);
+   auto len = bs58decoded.size();
+
+   std::vector<uint8_t> ssPrefixed = {0x53, 0x53, 0x35, 0x38, 0x50, 0x52, 0x45};
+
+   size_t prefixSize;
+   // 00000000b..=00111111b (0..=63 inclusive): Simple account/address/network identifier.
+   if (len == 35)
+   {
+      prefixSize = 1;
+      // set network
+      network = bs58decoded[0];
+   }
+   // 01000000b..=01111111b (64..=127 inclusive)
+   else if (len == 36)
+   {
+      prefixSize = 2;
+      // set network
+      uint8_t b2up = static_cast<uint8_t>((bs58decoded[0] << 2) & 0b11111100);
+      uint8_t b2lo = static_cast<uint8_t>((bs58decoded[1] >> 6) & 0b00000011);
+      uint8_t b2 = b2up | b2lo;
+      uint8_t b1 = bs58decoded[1] & 0b00111111;
+      network = static_cast<int16_t>((b1 << 8) | b2);
+   }
+   else
+   {
+      throw std::runtime_error("unsupported address size");
+   }
+
+   pubkByteList.insert(pubkByteList.end(), ssPrefixed.begin(), ssPrefixed.end());
+   pubkByteList.insert(pubkByteList.end(), bs58decoded.begin(), bs58decoded.begin() + publicKeyLength + prefixSize);
+
+   auto blake2bHashed = substrate::blake2(pubkByteList, 512);
+   if (bs58decoded[publicKeyLength + prefixSize] != blake2bHashed[0] ||
+       bs58decoded[publicKeyLength + prefixSize + 1] != blake2bHashed[1])
+   {
+      throw std::runtime_error("address checksum is wrong");
+   }
+
+   return std::vector<uint8_t>(bs58decoded.begin() + prefixSize, bs58decoded.begin() + prefixSize + publicKeyLength);
+}

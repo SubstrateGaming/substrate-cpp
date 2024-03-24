@@ -21,4 +21,7 @@ namespace substrate
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_ed25519();
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_sr25519();
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_secp256k1();
+
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<uint8_t> get_public_key(const std::string& address);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<uint8_t> get_public_key_with_network(const std::string& address, uint16_t& network);
 }

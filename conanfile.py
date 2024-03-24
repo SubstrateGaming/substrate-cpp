@@ -16,8 +16,8 @@ class Pkg(ConanFile):
     def requirements(self):
         self.requires("boost/1.84.0")
         self.requires("nlohmann_json/3.11.3")
-        self.requires("gtest/1.14.0")
         self.requires("libsodium/1.0.19")
+        self.requires("gtest/1.14.0")
         # Lacks ENABLE_WEBSOCKETS options.
         # self.requires("libcurl/8.6.0")
 
