@@ -5,6 +5,26 @@
 #include <algorithm>
 
 //
+// BlockNumber
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::BlockNumber& v)
+{
+   encoder << v.value();
+   return encoder;
+}
+
+substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::BlockNumber& v)
+{
+   static_assert(sizeof(substrate::models::BlockNumber) == sizeof(uint32_t), "BlockNumber must be the same size as uint32_t");
+
+   uint32_t value{0ull};
+   decoder >> value;
+   v = substrate::models::BlockNumber{value};
+
+   return decoder;
+}
+
+//
 // Method
 //
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Method& v)
@@ -23,9 +43,36 @@ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::M
    return decoder;
 }
 
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::ChargeType& v)
+//
+// ChargeAssetTxPayment
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::ChargeAssetTxPayment& v)
 {
+   encoder << v.AssetId;
+   encoder << v.Tip;
    return encoder;
+}
+
+substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::ChargeAssetTxPayment& v)
+{
+   decoder >> v.AssetId;
+   decoder >> v.Tip;
+   return decoder;
+}
+
+//
+// ChargeTransactionPayment
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::ChargeTransactionPayment& v)
+{
+   encoder << v.Tip;
+   return encoder;
+}
+
+substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::ChargeTransactionPayment& v)
+{
+   decoder >> v.Tip;
+   return decoder;
 }
 
 //
@@ -74,16 +121,20 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
 
 substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::Era& v)
 {
-   const auto bytes = decoder.bytes();
-   if (decoder.size() == 1 && bytes[0] == 0x00)
+   uint8_t first{0};
+   decoder >> first;
+
+   if (first == 0x00)
    {
       v = substrate::models::Era{true, 0ull, 0ull};
-      decoder.seek(1);
    }
-   else if (decoder.size() == 2)
+   else
    {
-      const uint64_t ul0 = static_cast<uint64_t>(bytes[0]);
-      const uint64_t ul1 = static_cast<uint64_t>(bytes[1]);
+      uint8_t second{0};
+      decoder >> second;
+
+      const uint64_t ul0 = static_cast<uint64_t>(first);
+      const uint64_t ul1 = static_cast<uint64_t>(second);
       const uint64_t encoded = ul0 + (ul1 << 8);
       const uint64_t period = 2ULL << (encoded % (1 << 4));
       const uint64_t quantizeFactor = std::max(static_cast<uint64_t>(1), period >> 12);
@@ -92,21 +143,16 @@ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::E
       if (period < 4 || phase >= period) {
          throw std::invalid_argument("invalid byte stream to represente Era");
       }
-      decoder.seek(2);
       v = substrate::models::Era{false, period, phase};
-   }
-   else
-   {
-      throw std::runtime_error("invalid byte stream to decode Era");
    }
 
    return decoder;
 }
 
 //
-// AccountId
+// AccountId32
 //
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::AccountId& v)
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::AccountId32& v)
 {
    switch (substrate::constants::AddressVersion)
    {
@@ -126,6 +172,53 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
    return encoder;
 }
 
+substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::AccountId32& v)
+{
+   uint8_t tmp{0};
+   std::vector<uint8_t> account_id32(32);
+
+   switch (substrate::constants::AddressVersion)
+   {
+   case 0:
+      break;
+   case 1:
+      decoder >> tmp;
+      decoder >> account_id32;
+      v = substrate::models::AccountId32(substrate::hex_encode(account_id32));
+      break;
+   case 2:
+      decoder >> tmp;
+      decoder >> account_id32;
+      v = substrate::models::AccountId32(substrate::hex_encode(account_id32));
+      break;
+   default:
+      throw std::runtime_error("invalid account version");
+   }
+   return decoder;
+}
+
+//
+// Signature
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Signature& v)
+{
+   encoder << v.Type;
+   encoder << v.Bytes;
+   return encoder;
+}
+
+substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::Signature& v)
+{
+   decoder >> v.Type;
+
+   v.Bytes.resize(64);
+   decoder >> v.Bytes;
+   return decoder;
+}
+
+//
+// Extrinsic
+//
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Extrinsic& v)
 {
    encoder << v.Signed;
@@ -138,3 +231,38 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
    encoder << v.Signature;
    return encoder;
 }
+
+ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::Extrinsic& v)
+ {
+   v = substrate::models::Extrinsic{};
+
+   // Decode length
+   substrate::CompactInteger length{0};
+   decoder >> length;
+
+   // Decode signed_flag
+   uint8_t signed_flag{0};
+   decoder >> signed_flag;
+
+   v.Signed = signed_flag >= 0x80;
+   v.TransactionVersion = (uint8_t)(signed_flag - (v.Signed ? 0x80 : 0x00));
+
+   if (v.Signed)
+   {
+      decoder >> v.Account;
+      decoder >> v.Signature;
+      decoder >> v.Era;
+      decoder >> v.Nonce;
+
+      // TODO: Fixup
+      decoder >> v.Charge;
+   }
+
+   // decoder >> v.Signed;
+   // decoder >> v.TransactionVersion;
+
+   decoder >> v.Method;
+
+   assert(decoder.remaining_bytes() == 0);
+   return decoder;
+ }

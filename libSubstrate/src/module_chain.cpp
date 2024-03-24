@@ -34,7 +34,11 @@ std::vector<Extrinsic> parse_extrinsics(const json& json)
    std::vector<Extrinsic> result;
    for (const auto& jsonExtrinsic : json)
    {
+      substrate::decoder decoder(substrate::hex_decode(jsonExtrinsic));
+
       Extrinsic extrinsic;
+      decoder >> extrinsic;
+
       // TODO: Decode
       result.emplace_back(extrinsic);
    }
@@ -87,7 +91,7 @@ public:
       if (blockNumber.has_value())
       {
          substrate::encoder encoder;
-         encoder << blockNumber.value().value();
+         encoder << blockNumber.value();
          params.push_back(encoder.assemble_hex());
       }
 

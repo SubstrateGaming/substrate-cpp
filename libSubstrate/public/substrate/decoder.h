@@ -16,6 +16,7 @@ namespace substrate
       virtual ~decoder();
 
       size_t size() const;
+      size_t remaining_bytes() const;
       std::span<const uint8_t> bytes() const;
       void seek(size_t offset);
 

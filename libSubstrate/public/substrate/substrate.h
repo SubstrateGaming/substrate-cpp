@@ -16,6 +16,7 @@
 #include "models/header.h"
 #include "models/keytype.h"
 #include "models/method.h"
+#include "models/signature.h"
 
 #include "modules/author.h"
 #include "modules/chain.h"

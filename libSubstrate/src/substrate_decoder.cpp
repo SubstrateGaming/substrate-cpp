@@ -37,6 +37,11 @@ size_t decoder::size() const
    return _detail->_size;
 }
 
+size_t decoder::remaining_bytes() const
+{
+   return size() - _detail->_stream.currentIndex();
+}
+
 std::span<const uint8_t> decoder::bytes() const
 {
    return _detail->_stream.span();
@@ -111,8 +116,17 @@ decoder &decoder::operator>>(bool &v)
 decoder &decoder::operator>>(std::vector<uint8_t>& v)
 {
    // Decode as static collection, not as dynamic.
-   // This means we take the remaining bytes.
-   while (_detail->_stream.hasMore(1))
-      v.emplace_back(_detail->_stream.nextByte());
+   if (v.empty())
+   {
+      // This means we take the remaining bytes.
+      while (_detail->_stream.hasMore(1))
+         v.emplace_back(_detail->_stream.nextByte());
+   }
+   else
+   {
+      assert(_detail->_stream.hasMore(v.size()));
+      for (size_t i = 0; i < v.size(); ++i)
+         v[i] = _detail->_stream.nextByte();
+   }
    return *this;
 }

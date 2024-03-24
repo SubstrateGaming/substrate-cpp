@@ -3,6 +3,7 @@
 #include "era.h"
 #include "charge_type.h"
 #include "method.h"
+#include "signature.h"
 
 namespace substrate::models
 {
@@ -15,8 +16,9 @@ namespace substrate::models
       CompactInteger Nonce;
       ChargeType Charge;
       Method Method;
-      std::vector<uint8_t> Signature;
+      Signature Signature;
    };
 }
 
 LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Extrinsic& v);
+LIB_SUBSTRATE_EXPORT substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::Extrinsic& v);
