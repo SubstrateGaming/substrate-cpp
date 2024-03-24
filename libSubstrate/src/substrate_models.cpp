@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <algorithm>
 
+//
+// Method
+//
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Method& v)
 {
    encoder << v.ModuleIndex;
@@ -12,9 +15,42 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
    return encoder;
 }
 
+substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::Method& v)
+{
+   decoder >> v.ModuleIndex;
+   decoder >> v.CallIndex;
+   decoder >> v.Parameters;
+   return decoder;
+}
+
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::ChargeType& v)
 {
    return encoder;
+}
+
+//
+// Era
+//
+uint64_t substrate::models::Era::get_start(uint64_t blockNumber) const
+{
+   if (IsImmortal)
+      return 0ull;
+
+   return ((std::max<uint64_t>(blockNumber, Phase) - Phase) / Period * Period) + Phase;
+}
+
+substrate::models::Era substrate::models::Era::make(uint32_t lifeTime, uint64_t finalizedHeaderBlockNumber)
+{
+   if (lifeTime == static_cast<uint32_t>(0))
+      return substrate::models::Era{true, 0ull, 0ull};
+
+    uint64_t period = static_cast<uint64_t>(std::pow(2, std::round(std::log2(static_cast<double>(lifeTime)))));
+    period = std::max(period, static_cast<uint64_t>(4));
+    period = std::min(period, static_cast<uint64_t>(65536));
+    const uint64_t phase = finalizedHeaderBlockNumber % period;
+    const uint64_t quantize_factor = std::max(period >> 12, static_cast<uint64_t>(1));
+    const uint64_t quantized_phase = (phase / quantize_factor) * quantize_factor;
+    return substrate::models::Era{false, period, quantized_phase};
 }
 
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Era& v)
@@ -36,6 +72,40 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
    return encoder;
 }
 
+substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::Era& v)
+{
+   const auto bytes = decoder.bytes();
+   if (decoder.size() == 1 && bytes[0] == 0x00)
+   {
+      v = substrate::models::Era{true, 0ull, 0ull};
+      decoder.seek(1);
+   }
+   else if (decoder.size() == 2)
+   {
+      const uint64_t ul0 = static_cast<uint64_t>(bytes[0]);
+      const uint64_t ul1 = static_cast<uint64_t>(bytes[1]);
+      const uint64_t encoded = ul0 + (ul1 << 8);
+      const uint64_t period = 2ULL << (encoded % (1 << 4));
+      const uint64_t quantizeFactor = std::max(static_cast<uint64_t>(1), period >> 12);
+      const uint64_t phase = (encoded >> 4) * quantizeFactor;
+
+      if (period < 4 || phase >= period) {
+         throw std::invalid_argument("invalid byte stream to represente Era");
+      }
+      decoder.seek(2);
+      v = substrate::models::Era{false, period, phase};
+   }
+   else
+   {
+      throw std::runtime_error("invalid byte stream to decode Era");
+   }
+
+   return decoder;
+}
+
+//
+// AccountId
+//
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::AccountId& v)
 {
    switch (substrate::constants::AddressVersion)

@@ -12,8 +12,12 @@ namespace substrate
       std::unique_ptr<details::decoder> _detail;
 
    public:
-      decoder(std::span<const uint8_t> bytes);
+      decoder(std::vector<uint8_t> bytes);
       virtual ~decoder();
+
+      size_t size() const;
+      std::span<const uint8_t> bytes() const;
+      void seek(size_t offset);
 
       decoder& operator>>(uint8_t& v);
       decoder& operator>>(uint16_t& v);
@@ -27,5 +31,8 @@ namespace substrate
 
       decoder& operator>>(CompactInteger& v);
       decoder& operator>>(bool& v);
+
+      // Handled as static collection, not dynamic.
+      decoder& operator>>(std::vector<uint8_t>& v);
    };
 }

@@ -91,7 +91,10 @@ encoder &encoder::operator<<(bool v)
 
 encoder& encoder::operator<<(const std::span<const uint8_t>& v)
 {
-   _detail->_stream << v;
+   // Encode as static collection, not as dynamic.
+   for (const auto item : v) {
+      _detail->_stream << item;
+   }
    return *this;
 }
 

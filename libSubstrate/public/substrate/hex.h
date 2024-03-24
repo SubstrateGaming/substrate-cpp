@@ -19,7 +19,7 @@ namespace substrate
 
       std::ostringstream ss;
       ss << "0x";
-      std::for_each(std::rbegin(data), std::rend(data), [&](const uint8_t &byte)
+      std::for_each(std::begin(data), std::end(data), [&](const uint8_t &byte)
                     { ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte); });
       return ss.str();
    }

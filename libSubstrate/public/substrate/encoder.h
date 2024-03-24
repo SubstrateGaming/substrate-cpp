@@ -28,6 +28,7 @@ namespace substrate
       encoder& operator<<(CompactInteger v);
       encoder& operator<<(bool v);
 
+      // Handled as static collection, not dynamic.
       encoder& operator<<(const std::span<const uint8_t>& v);
 
       std::vector<uint8_t> assemble() const;
