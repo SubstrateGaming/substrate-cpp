@@ -27,6 +27,7 @@
 #include "modules/system.h"
 #include "modules/unstable_calls.h"
 
+#include "wrap_message.h"
 #include "crypto.h"
 #include "client.h"
 
