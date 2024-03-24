@@ -38,4 +38,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     nlohmann_json::nlohmann_json
+    libsodium::libsodium
     ${CURL_LIBRARIES})

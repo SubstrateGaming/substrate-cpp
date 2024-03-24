@@ -25,6 +25,7 @@
 #include "modules/system.h"
 #include "modules/unstable_calls.h"
 
+#include "crypto.h"
 #include "client.h"
 
 namespace substrate

@@ -8,6 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(Boost)
 find_package(nlohmann_json)
+find_package(libsodium)
 
 # TODO: Use this as soon as conan exposes ENABLE_WEBSOCKET define.
 # find_package(CURL)

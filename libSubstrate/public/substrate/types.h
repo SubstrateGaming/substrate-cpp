@@ -15,6 +15,9 @@ namespace substrate
    class LIB_SUBSTRATE_EXPORT IClient;
    using Client = std::shared_ptr<IClient>;
 
+   class LIB_SUBSTRATE_EXPORT ICrypto;
+   using Crypto = std::shared_ptr<ICrypto>;
+
    using CompactInteger = boost::multiprecision::cpp_int;
 
    template <typename T, typename Tag, size_t TypeSize = sizeof(T)>
