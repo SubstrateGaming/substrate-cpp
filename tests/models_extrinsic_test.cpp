@@ -4,9 +4,8 @@
 
 // #/extrinsics/decode/0x03000b88daca6f8e01
 // timestamp::set()
-TEST(ExtrinsicTest, ExtrinsicDecodeTest1)
+TEST(ExtrinsicTest, ExtrinsicDecodeEncodeTest1)
 {
-   // timestamp::set()
    const std::string hex = "0x280403000b88daca6f8e01";
 
    substrate::decoder decoder(substrate::hex_decode(hex));
@@ -27,6 +26,10 @@ TEST(ExtrinsicTest, ExtrinsicDecodeTest1)
    decoder2 >> timestamp;
    EXPECT_EQ(timestamp, 1'711'272'549'000);
 
+   // Encode
+   substrate::encoder encoder;
+   encoder << extrinsic;
+   EXPECT_EQ(encoder.assemble_hex(), hex);
 }
 
 // balances::transferKeepAlive
@@ -60,4 +63,8 @@ TEST(ExtrinsicTest, ExtrinsicDecodeTest2)
    EXPECT_EQ(dest.value(), "0xbe5ddb1579b72e84524fc29e78609e3caf42e85aa118ebfe0b0ad404b5bdd25f");
    EXPECT_EQ(value, 232'000'000'000'000);
 
+   // Encode
+   substrate::encoder encoder;
+   encoder << extrinsic;
+   EXPECT_EQ(encoder.assemble_hex(), hex);
 }

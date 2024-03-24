@@ -89,10 +89,21 @@ encoder &encoder::operator<<(bool v)
    return *this;
 }
 
+// Encode as static collection, not as dynamic.
 encoder& encoder::operator<<(const std::span<const uint8_t>& v)
 {
-   // Encode as static collection, not as dynamic.
    for (const auto item : v) {
+      _detail->_stream << item;
+   }
+   return *this;
+}
+
+// Encodes as dynamic collection (pre-fixed with size)
+encoder& encoder::operator<<(const encoder& v)
+{
+   const auto data = v.assemble();
+   _detail->_stream << substrate::CompactInteger(data.size());
+   for (const auto item : data) {
       _detail->_stream << item;
    }
    return *this;

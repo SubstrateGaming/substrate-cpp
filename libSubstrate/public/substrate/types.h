@@ -38,5 +38,9 @@ namespace substrate
       ///  0 = AccountId (no prefix), 1 = IndicesLookup (0xFF), 2 = MutiAddress (https://github.com/paritytech/substrate/pull/7380)
       /// </summary>
       constexpr const uint32_t AddressVersion = 2;
+
+      // https://github.com/paritytech/substrate/blob/c0cb70419798eb7fd38806da668bec05f8cfd7f1/primitives/runtime/src/generic/unchecked_extrinsic.rs#L33
+      // aka TRANSACTION_VERSION
+      constexpr const uint8_t ExtrinsicVersion = 4;
    }
 }

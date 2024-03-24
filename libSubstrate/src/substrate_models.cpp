@@ -180,6 +180,8 @@ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::A
    switch (substrate::constants::AddressVersion)
    {
    case 0:
+      decoder >> account_id32;
+      v = substrate::models::AccountId32(substrate::hex_encode(account_id32));
       break;
    case 1:
       decoder >> tmp;
@@ -221,14 +223,23 @@ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::S
 //
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Extrinsic& v)
 {
-   encoder << v.Signed;
-   encoder << v.TransactionVersion;
-   encoder << v.Account;
-   encoder << v.Era;
-   encoder << v.Nonce;
-   encoder << v.Charge;
-   encoder << v.Method;
-   encoder << v.Signature;
+   substrate::encoder sub;
+
+   const uint8_t signed_flag{ static_cast<uint8_t>((v.Signed ? static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)) + substrate::constants::ExtrinsicVersion) };
+   sub << signed_flag;
+
+   if (v.Signed)
+   {
+      sub << v.Account;
+      sub << v.Signature;
+      sub << v.Era;
+      sub << v.Nonce;
+      sub << v.Charge;
+   }
+
+   sub << v.Method;
+   encoder << sub;
+
    return encoder;
 }
 
@@ -245,7 +256,7 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
    decoder >> signed_flag;
 
    v.Signed = signed_flag >= 0x80;
-   v.TransactionVersion = (uint8_t)(signed_flag - (v.Signed ? 0x80 : 0x00));
+   v.TransactionVersion = static_cast<uint8_t>(signed_flag - (v.Signed ?  static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)));
 
    if (v.Signed)
    {
@@ -253,13 +264,8 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
       decoder >> v.Signature;
       decoder >> v.Era;
       decoder >> v.Nonce;
-
-      // TODO: Fixup
       decoder >> v.Charge;
    }
-
-   // decoder >> v.Signed;
-   // decoder >> v.TransactionVersion;
 
    decoder >> v.Method;
 

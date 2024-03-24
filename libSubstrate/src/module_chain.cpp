@@ -38,8 +38,6 @@ std::vector<Extrinsic> parse_extrinsics(const json& json)
 
       Extrinsic extrinsic;
       decoder >> extrinsic;
-
-      // TODO: Decode
       result.emplace_back(extrinsic);
    }
    return result;
