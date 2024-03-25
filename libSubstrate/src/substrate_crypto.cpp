@@ -1,102 +1,5 @@
 #include <substrate/substrate.h>
 
-#include <sodium.h>
-
-class crypto_ed25519 final : public substrate::ICrypto
-{
-public:
-   crypto_ed25519()
-   {
-   }
-
-   virtual ~crypto_ed25519() override = default;
-
-   virtual std::pair<bytes, bytes> make_keypair(const bytes &seed) const override
-   {
-      if (seed.size() != crypto_sign_SEEDBYTES)
-      {
-         throw std::invalid_argument("invalid seed size");
-      }
-
-      bytes public_key(crypto_sign_PUBLICKEYBYTES);
-      bytes private_key(crypto_sign_SECRETKEYBYTES);
-
-      // Generate the key pair from the seed
-      if (crypto_sign_seed_keypair(public_key.data(), private_key.data(), seed.data()) != 0)
-      {
-         throw std::runtime_error("Failed to generate key pair from seed.");
-      }
-
-      return {public_key, private_key};
-   }
-
-   virtual bytes sign(const bytes &message, const bytes &private_key) const override
-   {
-      if (private_key.size() != crypto_sign_SECRETKEYBYTES)
-      {
-         throw std::invalid_argument("invalid private key size");
-      }
-
-      bytes signature(crypto_sign_BYTES);
-      unsigned long long signature_len{0ull};
-
-      // use crypto_sign_detached to generate the signature
-      if (crypto_sign_detached(signature.data(), &signature_len, message.data(), message.size(), private_key.data()) != 0)
-      {
-         throw std::runtime_error("failed to sign the message");
-      }
-
-      signature.resize(signature_len);
-      return signature;
-   }
-
-   virtual bool verify(const bytes &message, const bytes &signature, const bytes &public_key) const override
-   {
-      // ensure that the provided public key is the correct size
-      if (public_key.size() != crypto_sign_PUBLICKEYBYTES)
-      {
-         throw std::invalid_argument("invalid public key size");
-      }
-
-      // ensure that the provided signature is the correct size
-      if (signature.size() != crypto_sign_BYTES)
-      {
-         throw std::invalid_argument("invalid signature size");
-      }
-
-      // perform the signature verification
-      int result = crypto_sign_verify_detached(signature.data(), message.data(), message.size(), public_key.data());
-
-      // crypto_sign_verify_detached returns 0 on success
-      return result == 0;
-   }
-};
-
-class crypto_sr25519 final : public substrate::ICrypto
-{
-public:
-   crypto_sr25519()
-   {
-   }
-
-   virtual ~crypto_sr25519() override = default;
-
-   virtual std::pair<bytes, bytes> make_keypair(const bytes &seed) const override
-   {
-      return {};
-   }
-
-   virtual bytes sign(const bytes &message, const bytes &private_key) const override
-   {
-      return bytes{};
-   }
-
-   virtual bool verify(const bytes &message, const bytes &signature, const bytes &public_key) const override
-   {
-      return false;
-   }
-};
-
 substrate::Crypto substrate::make_crypto(substrate::models::KeyType provider)
 {
    switch (provider)
@@ -111,21 +14,6 @@ substrate::Crypto substrate::make_crypto(substrate::models::KeyType provider)
       break;
    }
    return nullptr;
-}
-
-substrate::Crypto substrate::make_crypto_ed25519()
-{
-   // https://doc.libsodium.org/usage
-   // sodium_init() returns 0 on success, -1 on failure, and 1 if the library had already been initialized.
-   if (sodium_init() == -1)
-      return nullptr;
-
-   return std::make_shared<crypto_ed25519>();
-}
-
-substrate::Crypto substrate::make_crypto_sr25519()
-{
-   return std::make_shared<crypto_sr25519>();
 }
 
 substrate::Crypto substrate::make_crypto_secp256k1()
@@ -186,4 +74,49 @@ std::vector<uint8_t> substrate::get_public_key_with_network(const std::string &a
    }
 
    return std::vector<uint8_t>(bs58decoded.begin() + prefixSize, bs58decoded.begin() + prefixSize + publicKeyLength);
+}
+
+std::string substrate::get_address(const std::vector<uint8_t> &bytes, uint16_t ss58_prefix)
+{
+   const size_t sr25519_public_size = 32;
+   const size_t public_key_length = 32;
+   size_t key_size = 0;
+
+   std::vector<uint8_t> plain_addr;
+   if (ss58_prefix < 64)
+   {
+      key_size = 1;
+      plain_addr.resize(35);
+      plain_addr[0] = static_cast<uint8_t>(ss58_prefix);
+      std::copy(bytes.begin(), bytes.end(), plain_addr.begin() + 1);
+   }
+   else if (ss58_prefix < 16384)
+   {
+      key_size = 2;
+      plain_addr.resize(36);
+
+      auto ident = ss58_prefix & 0b0011111111111111; // clear first two bits
+      auto first = static_cast<uint8_t>(((ident & 0b0000000011111100) >> 2) | 0b01000000);
+      auto second = static_cast<uint8_t>((ident >> 8) | (ident & 0b0000000000000011) << 6);
+
+      plain_addr[0] = first;
+      plain_addr[1] = second;
+
+      std::copy(bytes.begin(), bytes.end(), plain_addr.begin() + 2);
+   }
+   else
+   {
+      throw std::runtime_error("unsupported prefix used, support only up to 16383!");
+   }
+
+   std::vector<uint8_t> ss_prefixed(sr25519_public_size + 7 + key_size);
+   std::vector<uint8_t> ss_prefixed1 = {0x53, 0x53, 0x35, 0x38, 0x50, 0x52, 0x45};
+   std::copy(ss_prefixed1.begin(), ss_prefixed1.end(), ss_prefixed.begin());
+   std::copy(plain_addr.begin(), plain_addr.begin() + sr25519_public_size + key_size, ss_prefixed.begin() + 7);
+
+   auto blake2b_hashed = blake2(ss_prefixed, 512); // Assuming Blake2 hashing function similar to the C# version
+   plain_addr[key_size + public_key_length] = blake2b_hashed[0];
+   plain_addr[key_size + public_key_length + 1] = blake2b_hashed[1];
+
+   return base58_encode(plain_addr);
 }

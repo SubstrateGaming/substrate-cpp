@@ -7,7 +7,8 @@ class Pkg(ConanFile):
 
     default_options = {
         "boost*:header_only": True,
-        "libsodium*:shared": False
+        "libsodium*:shared": False,
+        "sr25519*:shared": False,
 
         # Lacks ENABLE_WEBSOCKETS options.
         # "libcurl*:shared": False
@@ -18,6 +19,7 @@ class Pkg(ConanFile):
         self.requires("nlohmann_json/3.11.3")
         self.requires("libsodium/1.0.19")
         self.requires("gtest/1.14.0")
+        self.requires("sr25519/1.0.0")
         # Lacks ENABLE_WEBSOCKETS options.
         # self.requires("libcurl/8.6.0")
 

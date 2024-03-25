@@ -60,9 +60,9 @@ TEST(CryptoTest, crypto_ed25519_keypair_test1)
 
    EXPECT_EQ(substrate::hex_encode(seed), "0xf5e5767cf153319517630f226876b86c8160cc583bc013744c6bf255f5cc0ee5");
 
-   auto pair = crypto->make_keypair(seed);
-   EXPECT_EQ(pair.first, public_key);
-   EXPECT_EQ(pair.second, private_key);
+   auto key_pair = crypto->make_keypair(seed);
+   EXPECT_EQ(key_pair.public_key, public_key);
+   EXPECT_EQ(key_pair.secret_key, private_key);
 }
 
 TEST(CryptoTest, SignatureVerifySignedOnNodeByAccount1)
@@ -99,13 +99,11 @@ TEST(CryptoTest, Ed25519SignatureTestComparePolkadotJs)
    const std::string rawSeed = "0x70f93a75dbc6ad5b0c051210704a00a9937732d0c360792b0fea24efb8ea8465";
 
    auto crypto = substrate::make_crypto_ed25519();
-   const auto pair = crypto->make_keypair(substrate::hex_decode(rawSeed));
-   const auto& public_key = pair.first;
-   const auto& private_key = pair.second;
+   const auto key_pair = crypto->make_keypair(substrate::hex_decode(rawSeed));
 
    const std::string message = "I test this signature!";
    const auto message_wrapped = substrate::wrap_message::wrap(message);
 
-   auto signature = crypto->sign(message_wrapped, private_key);
+   auto signature = crypto->sign(message_wrapped, key_pair.secret_key);
    EXPECT_EQ(signature, substrate::hex_decode(polkadotJsSignature));
 }
