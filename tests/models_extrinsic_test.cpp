@@ -68,3 +68,33 @@ TEST(ExtrinsicTest, ExtrinsicDecodeTest2)
    encoder << extrinsic;
    EXPECT_EQ(encoder.assemble_hex(), hex);
 }
+
+TEST(ExtrinsicTest, ExtrinsicDecodeSignedTransaction)
+{
+   const std::string signed_extrinsic = "0x45028400d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d015ee8a223bd50126312c7dd4e052cbd596c362e18b576caebf88a46f37f0ae645f8d83b6841c2bcbe7e875de25ab90ffc69cb719ba9f98eb5c66718a47683db8a000800000607008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480b00a014e33226";
+
+   substrate::decoder decoder(substrate::hex_decode(signed_extrinsic));
+   substrate::models::Extrinsic extrinsic;
+   decoder >> extrinsic;
+
+   substrate::encoder encoder;
+   encoder << extrinsic;
+
+   EXPECT_EQ(encoder.assemble(), substrate::hex_decode(signed_extrinsic));
+
+
+   // // Secret Key URI Alice account:
+   // // Secret seed:      0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a
+   // // Public key(hex):  0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d
+   // // Account ID:       0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d
+   // // SS58 Address:     5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
+   // const std::string key = "0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a";
+   // auto crypto = substrate::make_crypto_sr25519();
+   // const auto key_pair = crypto->make_keypair(substrate::hex_decode(key));
+
+   // EXPECT_EQ(crypto->verify(encoder.assemble(), extrinsic.Signature.Bytes, key_pair.public_key), true);
+
+
+
+
+}

@@ -11,6 +11,19 @@ public:
    {
    }
 
+   std::optional<uint32_t> getAccountNextIndex(const std::string& ss58_address) const override
+   {
+      const auto params = json::array({ ss58_address });
+      const auto response = _socket->send_rpc_result("system_accountNextIndex", params);
+      if (response.has_value())
+      {
+         const uint32_t result = response.value();
+         return result;
+      }
+
+      return std::nullopt;
+   }
+
    virtual ~module_system() override = default;
 };
 

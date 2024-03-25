@@ -14,6 +14,12 @@ namespace substrate
 
       virtual void wait() = 0;
 
+      [[nodiscard]] virtual std::optional<modules::RuntimeVersion> getRuntimeVersion() const = 0;
+      virtual void setRuntimeVersion(modules::RuntimeVersion version) = 0;
+
+      [[nodiscard]] virtual std::optional<models::Hash> getGenesisHash() const = 0;
+      virtual void setGenesisHash(models::Hash hash) = 0;
+
       [[nodiscard]] virtual modules::Author getAuthorModule() const = 0;
       [[nodiscard]] virtual modules::Chain getChainModule() const = 0;
       [[nodiscard]] virtual modules::Payment getPaymentModule() const = 0;

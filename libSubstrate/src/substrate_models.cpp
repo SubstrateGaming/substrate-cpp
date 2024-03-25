@@ -255,9 +255,17 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
 //
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload& v)
 {
-   encoder << v.Call;
-   encoder << v.Extra;
-   encoder << v.Additional;
+   substrate::encoder sub;
+   sub << v.Call;
+   sub << v.Extra;
+   sub << v.Additional;
+
+   const auto encoded = sub.assemble();
+   if (encoded.size() > 256)
+      encoder << substrate::blake2(encoded, 256);
+   else
+      encoder << encoded;
+
    return encoder;
 }
 

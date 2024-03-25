@@ -24,6 +24,12 @@ public:
 
       return std::vector<Extrinsic>{};
    }
+
+   virtual void submitExtrinsic(const std::string& extrinsic_encoded) const
+   {
+      const auto params = json::array({ extrinsic_encoded });
+      _socket->send_rpc_result("author_submitExtrinsic", params);
+   }
 };
 
 namespace substrate::detail::modules

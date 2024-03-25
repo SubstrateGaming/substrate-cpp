@@ -7,6 +7,8 @@ namespace substrate::modules
    {
    public:
       virtual ~ISystem() = default;
+
+      [[nodiscard]] virtual std::optional<uint32_t> getAccountNextIndex(const std::string& ss58_address) const = 0;
    };
    using System = std::shared_ptr<ISystem>;
 }

@@ -25,6 +25,8 @@ class substrate_client final : public substrate::IClient
    std::string _url;
    json_rpc_client_ptr _socket;
 
+   std::optional<substrate::modules::RuntimeVersion> _runtimeVersion;
+   std::optional<substrate::models::Hash> _genesisHash;
    substrate::modules::Author _module_author;
    substrate::modules::Chain _module_chain;
    substrate::modules::Payment _module_payment;
@@ -85,6 +87,12 @@ public:
          _socket->wait();
       }
    }
+
+   std::optional<substrate::modules::RuntimeVersion> getRuntimeVersion() const override { return _runtimeVersion; }
+   void setRuntimeVersion(substrate::modules::RuntimeVersion version) override { _runtimeVersion = version; }
+
+   std::optional<substrate::models::Hash> getGenesisHash() const override { return _genesisHash; }
+   void setGenesisHash(substrate::models::Hash hash) override { _genesisHash = hash; }
 
    substrate::modules::Author getAuthorModule() const override { return _module_author; }
    substrate::modules::Chain getChainModule() const override { return _module_chain; }
