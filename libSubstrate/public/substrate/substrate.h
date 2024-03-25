@@ -29,6 +29,7 @@
 
 #include "wrap_message.h"
 #include "crypto.h"
+#include "account.h"
 #include "client.h"
 
 namespace substrate

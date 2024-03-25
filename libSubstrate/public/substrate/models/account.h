@@ -9,12 +9,6 @@ namespace substrate::models
    {
       using strong_type::strong_type;
    };
-
-   struct Account : AccountId32
-   {
-      KeyType KeyType{KeyType::Unknown};
-      std::vector<uint8_t> PrivateKey;
-   };
 }
 
 LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::AccountId32& v);
