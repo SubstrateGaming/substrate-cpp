@@ -5,6 +5,15 @@
 #include <algorithm>
 
 //
+// Hash
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Hash& v)
+{
+   encoder << substrate::hex_decode(v.value());
+   return encoder;
+}
+
+//
 // BlockNumber
 //
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::BlockNumber& v)
@@ -216,6 +225,40 @@ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::S
    v.Bytes.resize(64);
    decoder >> v.Bytes;
    return decoder;
+}
+
+//
+// Payload::extra_t
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload::extra_t& v)
+{
+   encoder << v.Mortality;
+   encoder << v.Nonce;
+   encoder << v.Charge;
+   return encoder;
+}
+
+//
+// Payload::additional_t
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload::additional_t& v)
+{
+   encoder << v.SpecVersion;
+   encoder << v.TransactionVersion;
+   encoder << v.GenesisHash;
+   encoder << v.CheckpointHash;
+   return encoder;
+}
+
+//
+// Payload
+//
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload& v)
+{
+   encoder << v.Call;
+   encoder << v.Extra;
+   encoder << v.Additional;
+   return encoder;
 }
 
 //

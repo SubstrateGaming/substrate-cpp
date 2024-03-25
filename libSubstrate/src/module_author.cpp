@@ -1,5 +1,6 @@
 #include "module.h"
 
+using namespace substrate::models;
 using namespace substrate::detail;
 using namespace substrate::detail::web;
 
@@ -12,6 +13,17 @@ public:
    }
 
    virtual ~module_author() override = default;
+
+   virtual std::vector<Extrinsic> getPendingExtrinsic() const
+   {
+      auto response = _socket->send_rpc_result("author_pendingExtrinsics");
+      if (response.has_value())
+      {
+         return parse_extrinsics(response.value());
+      }
+
+      return std::vector<Extrinsic>{};
+   }
 };
 
 namespace substrate::detail::modules

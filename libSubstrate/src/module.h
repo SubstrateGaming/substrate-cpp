@@ -5,6 +5,9 @@
 
 namespace substrate::detail
 {
+   using namespace substrate::models;
+   using json = nlohmann::json;
+
    class module
    {
    protected:
@@ -15,4 +18,8 @@ namespace substrate::detail
       module(substrate::Logger logger, web::json_rpc_client_ptr socket);
       virtual ~module() = default;
    };
+
+   Header parse_header(const json& json);
+   BlockData parse_block_data(const json& json);
+   std::vector<Extrinsic> parse_extrinsics(const json& json);
 }

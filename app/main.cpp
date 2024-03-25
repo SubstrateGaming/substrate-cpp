@@ -52,7 +52,8 @@ int main(int argc, char **argv)
    // client->getChainModule()->getBlockHash(1);
    // client->getChainModule()->getFinalizedHead();
    // auto header = client->getChainModule()->getHeader();
-   auto block = client->getChainModule()->getBlock();
+   // auto block = client->getChainModule()->getBlock();
+   auto pending = client->getAuthorModule()->getPendingExtrinsic();
 
    client->wait();
 

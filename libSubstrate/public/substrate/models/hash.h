@@ -9,3 +9,5 @@ namespace substrate::models
       using strong_type::strong_type;
    };
 }
+
+LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Hash& v);
