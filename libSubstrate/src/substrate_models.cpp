@@ -303,7 +303,7 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
 {
    substrate::encoder sub;
 
-   const uint8_t signed_flag{ static_cast<uint8_t>((v.Signed ? static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)) + substrate::constants::ExtrinsicVersion) };
+   const uint8_t signed_flag{ static_cast<uint8_t>((v.Signed ? static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)) + substrate::constants::TransactionVersion) };
    sub << signed_flag;
 
    if (v.Signed)

@@ -45,6 +45,6 @@ namespace substrate
 
       // https://github.com/paritytech/substrate/blob/c0cb70419798eb7fd38806da668bec05f8cfd7f1/primitives/runtime/src/generic/unchecked_extrinsic.rs#L33
       // aka TRANSACTION_VERSION
-      constexpr const uint8_t ExtrinsicVersion = 4;
+      constexpr const uint8_t TransactionVersion = 4;
    }
 }

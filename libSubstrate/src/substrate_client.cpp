@@ -89,27 +89,49 @@ public:
       }
    }
 
-   std::optional<substrate::modules::RuntimeVersion> getRuntimeVersion() const override { return _runtimeVersion; }
+   substrate::modules::RuntimeVersion getRuntimeVersion() const override
+   {
+      if (!_runtimeVersion.has_value())
+      {
+         throw std::runtime_error("Called client::getRuntimeVersion() without having the runtime version set.");
+      }
+      return _runtimeVersion.value();
+   }
+
    void setRuntimeVersion(substrate::modules::RuntimeVersion version) override { _runtimeVersion = version; }
 
-   std::optional<substrate::models::Hash> getGenesisHash() const override { return _genesisHash; }
+   substrate::models::Hash getGenesisHash() const override
+   {
+      if (!_genesisHash.has_value())
+      {
+         throw std::runtime_error("Called client::getGenesisHash() without having the hash set.");
+      }
+      return _genesisHash.value();
+   }
    void setGenesisHash(substrate::models::Hash hash) override { _genesisHash = hash; }
 
-   substrate::models::Extrinsic make_extrinsic(substrate::Account account, substrate::models::Method call, substrate::models::ChargeType charge = substrate::models::ChargeType(), uint32_t lifeTime = 0) const override
+   substrate::models::Extrinsic make_extrinsic(
+      substrate::Account account,
+      substrate::models::Method call,
+      substrate::models::ChargeType charge = substrate::models::ChargeType(),
+      uint32_t lifeTime = 0) const override
    {
       using namespace substrate::models;
 
-      Hash checkpoint;
+      const auto genesisHash = getGenesisHash();
+      const auto runtimeVersion = getRuntimeVersion();
 
+      Hash checkpoint;
       substrate::models::Extrinsic extrinsic;
+
       extrinsic.Signed = true;
-      extrinsic.TransactionVersion = 4;
+      extrinsic.TransactionVersion = substrate::constants::TransactionVersion;
       extrinsic.Account = account->get_account_id();
 
       if (lifeTime == 0)
       {
          extrinsic.Era = Era::make(0, 0);
-         checkpoint = getGenesisHash().value();
+         checkpoint = genesisHash;
       }
       else
       {
@@ -124,11 +146,10 @@ public:
       extrinsic.Method = call;
 
       substrate::encoder encoder;
-      encoder << substrate::models::detail::make_payload(extrinsic, getGenesisHash().value(), checkpoint, getRuntimeVersion().value());
+      encoder << substrate::models::detail::make_payload(extrinsic, genesisHash, checkpoint, runtimeVersion);
 
       extrinsic.Signature.Bytes = account->sign(encoder.assemble());
       extrinsic.Signature.Type = account->get_type();
-
       return extrinsic;
    }
 

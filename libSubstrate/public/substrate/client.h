@@ -14,10 +14,10 @@ namespace substrate
 
       virtual void wait() = 0;
 
-      [[nodiscard]] virtual std::optional<modules::RuntimeVersion> getRuntimeVersion() const = 0;
+      [[nodiscard]] virtual modules::RuntimeVersion getRuntimeVersion() const = 0;
       virtual void setRuntimeVersion(modules::RuntimeVersion version) = 0;
 
-      [[nodiscard]] virtual std::optional<models::Hash> getGenesisHash() const = 0;
+      [[nodiscard]] virtual models::Hash getGenesisHash() const = 0;
       virtual void setGenesisHash(models::Hash hash) = 0;
 
       [[nodiscard]] virtual substrate::models::Extrinsic make_extrinsic(substrate::Account account, substrate::models::Method call, substrate::models::ChargeType charge = substrate::models::ChargeType(), uint32_t lifeTime = 0) const = 0;
