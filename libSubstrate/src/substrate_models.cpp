@@ -59,7 +59,7 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
 
    const auto encoded = sub.assemble();
    if (encoded.size() > 256)
-      encoder << substrate::blake2(encoded, 256);
+      encoder << substrate::hash::blake2(encoded, 256);
    else
       encoder << encoded;
 

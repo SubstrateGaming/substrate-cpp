@@ -66,7 +66,7 @@ substrate::bytes substrate::get_public_key_with_network(const std::string &addre
    pubkByteList.insert(pubkByteList.end(), ssPrefixed.begin(), ssPrefixed.end());
    pubkByteList.insert(pubkByteList.end(), bs58decoded.begin(), bs58decoded.begin() + publicKeyLength + prefixSize);
 
-   auto blake2bHashed = substrate::blake2(pubkByteList, 512);
+   auto blake2bHashed = substrate::hash::blake2(pubkByteList, 512);
    if (bs58decoded[publicKeyLength + prefixSize] != blake2bHashed[0] ||
        bs58decoded[publicKeyLength + prefixSize + 1] != blake2bHashed[1])
    {
@@ -114,7 +114,7 @@ std::string substrate::get_address(const substrate::bytes &bytes, uint16_t ss58_
    std::copy(ss_prefixed1.begin(), ss_prefixed1.end(), ss_prefixed.begin());
    std::copy(plain_addr.begin(), plain_addr.begin() + sr25519_public_size + key_size, ss_prefixed.begin() + 7);
 
-   auto blake2b_hashed = blake2(ss_prefixed, 512); // Assuming Blake2 hashing function similar to the C# version
+   auto blake2b_hashed = substrate::hash::blake2(ss_prefixed, 512); // Assuming Blake2 hashing function similar to the C# version
    plain_addr[key_size + public_key_length] = blake2b_hashed[0];
    plain_addr[key_size + public_key_length + 1] = blake2b_hashed[1];
 
