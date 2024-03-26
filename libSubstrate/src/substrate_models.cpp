@@ -250,7 +250,7 @@ substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::mod
 substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::AccountId32& v)
 {
    uint8_t tmp{0};
-   std::vector<uint8_t> account_id32(32);
+   substrate::bytes account_id32(32);
 
    switch (substrate::constants::AddressVersion)
    {

@@ -11,6 +11,6 @@
 
 namespace substrate
 {
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::string hex_encode(const std::vector<uint8_t>& input);
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<uint8_t> hex_decode(std::string input);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::string hex_encode(const substrate::bytes& input);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes hex_decode(std::string input);
 }

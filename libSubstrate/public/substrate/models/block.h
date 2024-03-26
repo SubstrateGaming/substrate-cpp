@@ -13,7 +13,7 @@ namespace substrate::models
    struct BlockData
    {
       Block Block;
-      std::vector<uint8_t> Justification;
+      substrate::bytes Justification;
    };
 
    struct BlockNumberTag { };

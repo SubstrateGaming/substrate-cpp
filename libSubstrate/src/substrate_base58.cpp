@@ -27,7 +27,7 @@ static const int8_t mapBase58[256] = {
 };
 
 // Modified from Bitcoin implementation.
-std::string substrate::base58_encode(std::vector<uint8_t> input)
+std::string substrate::base58_encode(substrate::bytes input)
 {
    // Skip & count leading zeroes.
    int zeroes = 0;
@@ -69,7 +69,7 @@ std::string substrate::base58_encode(std::vector<uint8_t> input)
 }
 
 // Modified from Bitcoin implementation.
-std::vector<uint8_t> substrate::base58_decode(const std::string &input)
+substrate::bytes substrate::base58_decode(const std::string &input)
 {
    const char *psz = input.c_str();
 
@@ -83,7 +83,7 @@ std::vector<uint8_t> substrate::base58_decode(const std::string &input)
 
    // Allocate enough space in big-endian base256 representation
    int size = strlen(psz) * 733 / 1000 + 1; // log(58) / log(256), rounded up
-   std::vector<uint8_t> b256(size);
+   substrate::bytes b256(size);
 
    // guarantee not out of range
    static_assert(std::size(mapBase58) == 256, "mapBase58.size() should be 256");
@@ -124,7 +124,7 @@ std::vector<uint8_t> substrate::base58_decode(const std::string &input)
    auto it = std::find_if(b256.begin(), b256.end(), [](uint8_t byte)
                           { return byte != 0; });
 
-   std::vector<uint8_t> result;
+   substrate::bytes result;
    result.reserve(zeroes + (b256.end() - it));
    result.assign(zeroes, 0x00); // Add zeroes represented by leading '1's
    result.insert(result.end(), it, b256.end());

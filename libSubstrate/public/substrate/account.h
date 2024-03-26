@@ -9,18 +9,18 @@ namespace substrate
    public:
       virtual ~IAccount() = default;
 
-      [[nodiscard]] virtual std::vector<uint8_t> sign(const std::vector<uint8_t> &message) const = 0;
-      [[nodiscard]] virtual bool verify(const std::vector<uint8_t> &message, const std::vector<uint8_t> &signature) const = 0;
+      [[nodiscard]] virtual substrate::bytes sign(const substrate::bytes &message) const = 0;
+      [[nodiscard]] virtual bool verify(const substrate::bytes &message, const substrate::bytes &signature) const = 0;
 
       [[nodiscard]] virtual substrate::models::KeyType get_type() const = 0;
-      [[nodiscard]] virtual const std::vector<uint8_t>& get_public_key() const = 0;
+      [[nodiscard]] virtual const substrate::bytes& get_public_key() const = 0;
       [[nodiscard]] virtual substrate::models::AccountId32 get_account_id() const = 0;
       [[nodiscard]] virtual std::string get_address() const = 0;
       [[nodiscard]] virtual uint16_t get_address_network() const = 0;
    };
    using Account = std::shared_ptr<IAccount>;
 
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account(substrate::models::KeyType type, const std::vector<uint8_t> &seed);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account(substrate::models::KeyType type, const substrate::bytes &seed);
 
    // Development
    namespace development

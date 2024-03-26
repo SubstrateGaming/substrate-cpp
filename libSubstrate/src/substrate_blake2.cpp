@@ -7,10 +7,10 @@ extern "C"
    int blake2b(uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen);
 }
 
-std::vector<uint8_t> substrate::blake2(const std::vector<uint8_t> &input, size_t size, const std::vector<uint8_t> &key)
+substrate::bytes substrate::blake2(const substrate::bytes &input, size_t size, const substrate::bytes &key)
 {
    size_t outlen = size / 8;
-   std::vector<uint8_t> output(outlen);
+   substrate::bytes output(outlen);
 
    // The key is optional.
    // If not provided, pass nullptr and 0 length to blake2b

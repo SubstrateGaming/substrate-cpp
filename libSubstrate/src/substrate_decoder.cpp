@@ -11,10 +11,10 @@ namespace substrate::details
    {
    public:
       size_t _size;
-      std::vector<uint8_t> _bytes;
+      substrate::bytes _bytes;
       scale::ScaleDecoderStream _stream;
 
-      decoder(std::vector<uint8_t> bytes)
+      decoder(substrate::bytes bytes)
          : _size(bytes.size())
          , _bytes(std::move(bytes))
          , _stream(_bytes)
@@ -23,7 +23,7 @@ namespace substrate::details
    };
 }
 
-decoder::decoder(std::vector<uint8_t> bytes)
+decoder::decoder(substrate::bytes bytes)
    : _detail(std::make_unique<details::decoder>(std::move(bytes)))
 {
 }
@@ -113,7 +113,7 @@ decoder &decoder::operator>>(bool &v)
    return *this;
 }
 
-decoder &decoder::operator>>(std::vector<uint8_t>& v)
+decoder &decoder::operator>>(substrate::bytes& v)
 {
    // Decode as static collection, not as dynamic.
    if (v.empty())

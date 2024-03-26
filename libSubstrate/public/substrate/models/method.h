@@ -7,7 +7,7 @@ namespace substrate::models
    {
       uint8_t ModuleIndex{0};
       uint8_t CallIndex{0};
-      std::vector<uint8_t> Parameters;
+      substrate::bytes Parameters;
    };
 }
 

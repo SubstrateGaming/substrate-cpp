@@ -34,7 +34,7 @@ namespace substrate
       // Encodes as dynamic collection (pre-fixed with size)
       encoder& operator<<(const encoder& v);
 
-      std::vector<uint8_t> assemble() const;
+      substrate::bytes assemble() const;
       std::string assemble_hex() const;
    };
 }

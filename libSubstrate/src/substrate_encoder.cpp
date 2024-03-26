@@ -109,7 +109,7 @@ encoder& encoder::operator<<(const encoder& v)
    return *this;
 }
 
-std::vector<uint8_t> encoder::assemble() const
+substrate::bytes encoder::assemble() const
 {
    return _detail->_stream.to_vector();
 }

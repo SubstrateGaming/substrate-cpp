@@ -14,7 +14,7 @@ namespace
    }
 }
 
-std::string substrate::hex_encode(const std::vector<uint8_t> &input)
+std::string substrate::hex_encode(const substrate::bytes &input)
 {
    if (input.empty())
       return std::string();
@@ -26,7 +26,7 @@ std::string substrate::hex_encode(const std::vector<uint8_t> &input)
    return ss.str();
 }
 
-std::vector<uint8_t> substrate::hex_decode(std::string input)
+substrate::bytes substrate::hex_decode(std::string input)
 {
    if (input == "0x0")
       return {0x00};
@@ -40,7 +40,7 @@ std::vector<uint8_t> substrate::hex_decode(std::string input)
    if (input.length() % 2 != 0)
       input = "0" + input;
 
-   std::vector<uint8_t> arr(input.length() / 2);
+   substrate::bytes arr(input.length() / 2);
    for (size_t i = 0; i < input.length(); i += 2)
       arr[i / 2] = (hex_value(input[i]) << 4) + hex_value(input[i + 1]);
 

@@ -18,6 +18,7 @@ namespace substrate
    class LIB_SUBSTRATE_EXPORT ICrypto;
    using Crypto = std::shared_ptr<ICrypto>;
 
+   using bytes = std::vector<uint8_t>;
    using CompactInteger = boost::multiprecision::cpp_int;
 
    template <typename T, typename Tag, size_t TypeSize = sizeof(T)>

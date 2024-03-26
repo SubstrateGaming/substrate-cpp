@@ -12,7 +12,7 @@ namespace substrate
       std::unique_ptr<details::decoder> _detail;
 
    public:
-      decoder(std::vector<uint8_t> bytes);
+      decoder(substrate::bytes bytes);
       virtual ~decoder();
 
       size_t size() const;
@@ -34,6 +34,6 @@ namespace substrate
       decoder& operator>>(bool& v);
 
       // Handled as static collection, not dynamic.
-      decoder& operator>>(std::vector<uint8_t>& v);
+      decoder& operator>>(substrate::bytes& v);
    };
 }

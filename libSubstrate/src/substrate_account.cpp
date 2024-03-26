@@ -9,7 +9,7 @@ class substrate_account final : public substrate::IAccount
    const substrate::ICrypto::key_pair _key_pair;
 
 public:
-   substrate_account(substrate::models::KeyType type, const std::vector<uint8_t> &seed)
+   substrate_account(substrate::models::KeyType type, const substrate::bytes &seed)
       : _type(type)
       , _crypto(substrate::make_crypto(_type))
       , _key_pair(_crypto->make_keypair(seed))
@@ -17,18 +17,18 @@ public:
    }
    virtual ~substrate_account() override = default;
 
-   std::vector<uint8_t> sign(const std::vector<uint8_t> &message) const override
+   substrate::bytes sign(const substrate::bytes &message) const override
    {
       return _crypto->sign(message, _key_pair);
    }
 
-   bool verify(const std::vector<uint8_t> &message, const std::vector<uint8_t> &signature) const override
+   bool verify(const substrate::bytes &message, const substrate::bytes &signature) const override
    {
       return _crypto->verify(message, signature, get_public_key());
    }
 
    substrate::models::KeyType get_type() const override { return _type; }
-   const std::vector<uint8_t>& get_public_key() const override { return _key_pair.public_key; }
+   const substrate::bytes& get_public_key() const override { return _key_pair.public_key; }
    substrate::models::AccountId32 get_account_id() const override { return substrate::models::AccountId32(substrate::hex_encode(get_public_key())); }
    std::string get_address() const override { return substrate::get_address(get_public_key()); }
 
@@ -41,7 +41,7 @@ public:
 
 };
 
-substrate::Account substrate::make_account(substrate::models::KeyType type, const std::vector<uint8_t> &seed)
+substrate::Account substrate::make_account(substrate::models::KeyType type, const substrate::bytes &seed)
 {
    return std::make_shared<substrate_account>(type, seed);
 }

@@ -10,7 +10,7 @@ namespace substrate
       virtual ~ICrypto() = default;
 
       // Syntactic sugar.
-      using bytes = std::vector<uint8_t>;
+      using bytes = substrate::bytes;
 
       struct secret_pair
       {
@@ -34,8 +34,8 @@ namespace substrate
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_sr25519();
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_secp256k1();
 
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<uint8_t> get_public_key(const std::string &address);
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<uint8_t> get_public_key_with_network(const std::string &address, uint16_t &network);
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::string get_address(const std::vector<uint8_t> &bytes, uint16_t ss58_prefix = 42);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes get_public_key(const std::string &address);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes get_public_key_with_network(const std::string &address, uint16_t &network);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::string get_address(const substrate::bytes &bytes, uint16_t ss58_prefix = 42);
 
 }

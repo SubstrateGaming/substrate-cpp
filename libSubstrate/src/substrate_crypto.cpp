@@ -22,22 +22,22 @@ substrate::Crypto substrate::make_crypto_secp256k1()
    return nullptr;
 }
 
-std::vector<uint8_t> substrate::get_public_key(const std::string &address)
+substrate::bytes substrate::get_public_key(const std::string &address)
 {
    uint16_t network{0};
    return substrate::get_public_key_with_network(address, network);
 }
 
-std::vector<uint8_t> substrate::get_public_key_with_network(const std::string &address, uint16_t &network)
+substrate::bytes substrate::get_public_key_with_network(const std::string &address, uint16_t &network)
 {
    network = 42;
    const size_t publicKeyLength = 32;
-   std::vector<uint8_t> pubkByteList;
+   substrate::bytes pubkByteList;
 
    auto bs58decoded = substrate::base58_decode(address);
    auto len = bs58decoded.size();
 
-   std::vector<uint8_t> ssPrefixed = {0x53, 0x53, 0x35, 0x38, 0x50, 0x52, 0x45};
+   substrate::bytes ssPrefixed = {0x53, 0x53, 0x35, 0x38, 0x50, 0x52, 0x45};
 
    size_t prefixSize;
    // 00000000b..=00111111b (0..=63 inclusive): Simple account/address/network identifier.
@@ -73,16 +73,16 @@ std::vector<uint8_t> substrate::get_public_key_with_network(const std::string &a
       throw std::runtime_error("address checksum is wrong");
    }
 
-   return std::vector<uint8_t>(bs58decoded.begin() + prefixSize, bs58decoded.begin() + prefixSize + publicKeyLength);
+   return substrate::bytes(bs58decoded.begin() + prefixSize, bs58decoded.begin() + prefixSize + publicKeyLength);
 }
 
-std::string substrate::get_address(const std::vector<uint8_t> &bytes, uint16_t ss58_prefix)
+std::string substrate::get_address(const substrate::bytes &bytes, uint16_t ss58_prefix)
 {
    const size_t sr25519_public_size = 32;
    const size_t public_key_length = 32;
    size_t key_size = 0;
 
-   std::vector<uint8_t> plain_addr;
+   substrate::bytes plain_addr;
    if (ss58_prefix < 64)
    {
       key_size = 1;
@@ -109,8 +109,8 @@ std::string substrate::get_address(const std::vector<uint8_t> &bytes, uint16_t s
       throw std::runtime_error("unsupported prefix used, support only up to 16383!");
    }
 
-   std::vector<uint8_t> ss_prefixed(sr25519_public_size + 7 + key_size);
-   std::vector<uint8_t> ss_prefixed1 = {0x53, 0x53, 0x35, 0x38, 0x50, 0x52, 0x45};
+   substrate::bytes ss_prefixed(sr25519_public_size + 7 + key_size);
+   substrate::bytes ss_prefixed1 = {0x53, 0x53, 0x35, 0x38, 0x50, 0x52, 0x45};
    std::copy(ss_prefixed1.begin(), ss_prefixed1.end(), ss_prefixed.begin());
    std::copy(plain_addr.begin(), plain_addr.begin() + sr25519_public_size + key_size, ss_prefixed.begin() + 7);
 
