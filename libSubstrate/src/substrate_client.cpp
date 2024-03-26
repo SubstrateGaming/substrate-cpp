@@ -135,12 +135,12 @@ public:
       }
       else
       {
-         checkpoint = getChainModule()->getFinalizedHead().value();
-         const auto finalizedHeader = getChainModule()->getHeader(checkpoint).value();
+         checkpoint = getChainModule()->getFinalizedHead();
+         const auto finalizedHeader = getChainModule()->getHeader(checkpoint);
          extrinsic.Era = Era::make(lifeTime, finalizedHeader.Number);
       }
 
-      extrinsic.Nonce = getSystemModule()->getAccountNextIndex(account->get_address()).value();
+      extrinsic.Nonce = getSystemModule()->getAccountNextIndex(account->get_address());
 
       extrinsic.Charge = charge;
       extrinsic.Method = call;

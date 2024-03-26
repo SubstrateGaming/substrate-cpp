@@ -1,6 +1,7 @@
 #include <substrate/substrate.h>
 
 #include <mutex>
+#include <format>
 #include <thread>
 #include <iostream>
 
@@ -46,7 +47,33 @@ int main(int argc, char **argv)
    if (!client->connect())
       return -1;
 
+   std::cout << "Get metadata...";
+   const auto runtimeVersion = client->getStateModule()->getRuntimeVersion();
+   client->setRuntimeVersion(runtimeVersion);
+
+   std::cout << std::format("Runtime version is: {}, spec version is {}, transaction version is {}, node is {}",
+      runtimeVersion.ImplVersion,
+      runtimeVersion.SpecVersion,
+      runtimeVersion.TransactionVersion,
+      runtimeVersion.ImplName) << std::endl;
+
+   const auto genesisHash = client->getChainModule()->getBlockHash(substrate::models::BlockNumber(0));
+   client->setGenesisHash(genesisHash);
+   std::cout << std::format("Genesis hash is {}", genesisHash.value()) << std::endl;
+
    std::cout << "Client is connected, waiting until exit!" << std::endl;
+
+   auto account = substrate::development::make_account_alice();
+   substrate::models::Method method;
+   method.ModuleIndex = 6;
+   method.CallIndex = 7;
+   method.Parameters = substrate::hex_decode("0x008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480b00a014e33226");
+
+   for (int i = 0; i < 3; ++i)
+   {
+      const auto extrinsic = client->make_extrinsic(account, method);
+      client->getAuthorModule()->submitExtrinsic(extrinsic);
+   }
 
    // Debug
    // client->getChainModule()->getBlockHash(1);

@@ -9,23 +9,20 @@ json_rpc_client::json_rpc_client(substrate::Logger logger, const std::string &ur
 {
 }
 
-std::optional<std::string> json_rpc_client::send(const std::string &method, const nlohmann::json &params)
+std::string json_rpc_client::send(const std::string &method, const nlohmann::json &params)
 {
    constexpr auto kResult = "result";
 
-   auto response = send_rpc(method, params);
-   if (response.has_value())
-   {
-      const auto& json = response.value();
-      assert(json.is_object());
-      assert(json.contains(kResult));
-      if (json.is_object() && json.contains(kResult))
-         return json[kResult];
-   }
-   return std::nullopt;
+   auto json = send_rpc(method, params);
+   assert(json.is_object());
+   assert(json.contains(kResult));
+   if (json.is_object() && json.contains(kResult))
+      return json[kResult];
+
+   throw std::runtime_error(method);
 }
 
-std::optional<nlohmann::json> json_rpc_client::send_rpc(const std::string &method, const nlohmann::json &params)
+nlohmann::json json_rpc_client::send_rpc(const std::string &method, const nlohmann::json &params)
 {
    const auto request_id = _counter.fetch_add(1u);
    nlohmann::json request = {
@@ -38,7 +35,7 @@ std::optional<nlohmann::json> json_rpc_client::send_rpc(const std::string &metho
    SLOG_DEBUG(kCategory, std::format("send rpc {} as json {}", method, message));
 
    if (!websocket_client::send_message(message))
-      return std::nullopt;
+      throw std::runtime_error(method);
 
    // Wait for the response
    std::unique_lock<std::mutex> lock(_mutex);
@@ -51,15 +48,13 @@ std::optional<nlohmann::json> json_rpc_client::send_rpc(const std::string &metho
    return response;
 }
 
-std::optional<nlohmann::json> json_rpc_client::send_rpc_result(const std::string &method, const nlohmann::json &params)
+nlohmann::json json_rpc_client::send_rpc_result(const std::string &method, const nlohmann::json &params)
 {
    auto response = send_rpc(method, params);
-   if (response.has_value() && response->contains("result"))
-   {
-      auto result = response.value()["result"];
-      return result;
-   }
-   return std::nullopt;
+   if (response.contains("result"))
+      return response["result"];
+
+   throw std::runtime_error(method);
 }
 
 void json_rpc_client::on_message(const std::string& message)

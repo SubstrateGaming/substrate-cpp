@@ -8,7 +8,7 @@ namespace substrate::modules
    public:
       virtual ~IState() = default;
 
-      virtual std::optional<substrate::models::RuntimeVersion> getRuntimeVersion() const = 0;
+      virtual substrate::models::RuntimeVersion getRuntimeVersion() const = 0;
 
    };
    using State = std::shared_ptr<IState>;

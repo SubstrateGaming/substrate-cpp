@@ -20,9 +20,9 @@ namespace substrate::detail::web
       json_rpc_client(substrate::Logger logger, const std::string &url);
       virtual ~json_rpc_client() override = default;
 
-      std::optional<std::string> send(const std::string &method, const nlohmann::json &params = nullptr);
-      std::optional<nlohmann::json> send_rpc(const std::string &method, const nlohmann::json &params = nullptr);
-      std::optional<nlohmann::json> send_rpc_result(const std::string &method, const nlohmann::json &params = nullptr);
+      std::string send(const std::string &method, const nlohmann::json &params = nullptr);
+      nlohmann::json send_rpc(const std::string &method, const nlohmann::json &params = nullptr);
+      nlohmann::json send_rpc_result(const std::string &method, const nlohmann::json &params = nullptr);
 
    protected:
       virtual void on_message(const std::string& message) override final;

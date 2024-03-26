@@ -16,13 +16,9 @@ public:
 
    virtual std::vector<Extrinsic> getPendingExtrinsic() const
    {
-      auto response = _socket->send_rpc_result("author_pendingExtrinsics");
-      if (response.has_value())
-      {
-         return parse_extrinsics(response.value());
-      }
-
-      return std::vector<Extrinsic>{};
+      const auto json = _socket->send_rpc_result("author_pendingExtrinsics");
+      const auto result = parse_extrinsics(json);
+      return result;
    }
 
    virtual void submitExtrinsic(const Extrinsic& extrinsic) const

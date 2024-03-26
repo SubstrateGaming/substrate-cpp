@@ -16,25 +16,18 @@ public:
 
    virtual ~module_chain() override = default;
 
-   std::optional<BlockData> getBlock(std::optional<Hash> hash = std::nullopt) const override
+   BlockData getBlock(std::optional<Hash> hash = std::nullopt) const override
    {
       auto params = json::array();
       if (hash.has_value())
-      {
          params.push_back(hash.value());
-      }
 
-      auto response = _socket->send_rpc_result("chain_getBlock", params);
-      if (response.has_value())
-      {
-         const auto& json = response.value();
-         return parse_block_data(json);
-      }
-
-      return std::nullopt;
+      const auto json = _socket->send_rpc_result("chain_getBlock", params);
+      const auto result = parse_block_data(json);
+      return result;
    }
 
-   std::optional<Hash> getBlockHash(std::optional<BlockNumber> blockNumber = std::nullopt) const override
+   Hash getBlockHash(std::optional<BlockNumber> blockNumber = std::nullopt) const override
    {
       auto params = json::array();
       if (blockNumber.has_value())
@@ -44,38 +37,25 @@ public:
          params.push_back(encoder.assemble_hex());
       }
 
-      auto response = _socket->send("chain_getBlockHash", params);
-      if (response.has_value())
-         return Hash{response.value()};
-
-      return std::nullopt;
+      const auto result = _socket->send("chain_getBlockHash", params);
+      return Hash{ result };
    }
 
-   std::optional<Hash> getFinalizedHead() const override
+   Hash getFinalizedHead() const override
    {
-      auto response = _socket->send("chain_getFinalizedHead");
-      if (response.has_value())
-         return Hash{response.value()};
-
-      return std::nullopt;
+      const auto result = _socket->send("chain_getFinalizedHead");
+      return Hash{ result };
    }
 
-   std::optional<Header> getHeader(std::optional<Hash> hash = std::nullopt) const override
+   Header getHeader(std::optional<Hash> hash = std::nullopt) const override
    {
       auto params = json::array();
       if (hash.has_value())
-      {
          params.push_back(hash.value());
-      }
 
-      auto response = _socket->send_rpc_result("chain_getHeader", params);
-      if (response.has_value())
-      {
-         const auto& json = response.value();
-         return parse_header(json);
-      }
-
-      return std::nullopt;
+      const auto json = _socket->send_rpc_result("chain_getHeader", params);
+      const auto result = parse_header(json);
+      return result;
    }
 };
 
