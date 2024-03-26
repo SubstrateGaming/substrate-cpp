@@ -4,12 +4,17 @@
 #include <cstdint>
 #include <algorithm>
 
+#include "substrate_models.h"
 
-namespace substrate::models
+
+//
+// Private API
+//
+namespace substrate::models::detail
 {
    Payload make_payload(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion)
    {
-      substrate::models::Payload payload;
+      Payload payload;
       payload.Call = extrinsic.Method;
       payload.Extra.Charge = extrinsic.Charge;
       payload.Extra.Mortality = extrinsic.Era;
@@ -24,6 +29,46 @@ namespace substrate::models
       return payload;
    }
 }
+
+// (private) Payload::extra_t
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::detail::Payload::extra_t& v)
+{
+   encoder << v.Mortality;
+   encoder << v.Nonce;
+   encoder << v.Charge;
+   return encoder;
+}
+
+// (private) Payload::additional_t
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::detail::Payload::additional_t& v)
+{
+   encoder << v.SpecVersion;
+   encoder << v.TransactionVersion;
+   encoder << v.GenesisHash;
+   encoder << v.CheckpointHash;
+   return encoder;
+}
+
+// (private) Payload
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::detail::Payload& v)
+{
+   substrate::encoder sub;
+   sub << v.Call;
+   sub << v.Extra;
+   sub << v.Additional;
+
+   const auto encoded = sub.assemble();
+   if (encoded.size() > 256)
+      encoder << substrate::blake2(encoded, 256);
+   else
+      encoder << encoded;
+
+   return encoder;
+}
+
+//
+// Public API
+//
 
 //
 // Hash
@@ -249,48 +294,6 @@ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::S
 
    decoder >> v.Bytes;
    return decoder;
-}
-
-//
-// Payload::extra_t
-//
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload::extra_t& v)
-{
-   encoder << v.Mortality;
-   encoder << v.Nonce;
-   encoder << v.Charge;
-   return encoder;
-}
-
-//
-// Payload::additional_t
-//
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload::additional_t& v)
-{
-   encoder << v.SpecVersion;
-   encoder << v.TransactionVersion;
-   encoder << v.GenesisHash;
-   encoder << v.CheckpointHash;
-   return encoder;
-}
-
-//
-// Payload
-//
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload& v)
-{
-   substrate::encoder sub;
-   sub << v.Call;
-   sub << v.Extra;
-   sub << v.Additional;
-
-   const auto encoded = sub.assemble();
-   if (encoded.size() > 256)
-      encoder << substrate::blake2(encoded, 256);
-   else
-      encoder << encoded;
-
-   return encoder;
 }
 
 //

@@ -1,5 +1,6 @@
 #include "logger.h"
 #include "web/json_rpc_client.h"
+#include "substrate_models.h"
 
 #include <assert.h>
 
@@ -123,7 +124,7 @@ public:
       extrinsic.Method = call;
 
       substrate::encoder encoder;
-      encoder << substrate::models::make_payload(extrinsic, getGenesisHash().value(), checkpoint, getRuntimeVersion().value());
+      encoder << substrate::models::detail::make_payload(extrinsic, getGenesisHash().value(), checkpoint, getRuntimeVersion().value());
 
       extrinsic.Signature.Bytes = account->sign(encoder.assemble());
       extrinsic.Signature.Type = account->get_type();
