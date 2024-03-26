@@ -1,5 +1,33 @@
 #include <substrate/hash.h>
 #include <sodium/crypto_generichash.h>
+#include <sodium/crypto_hash_sha256.h>
+#include <sodium/crypto_hash_sha512.h>
+
+substrate::bytes substrate::hash::sha256(const substrate::bytes& input)
+{
+   substrate::bytes output(32);
+
+   int result = crypto_hash_sha256(output.data(), input.data(), input.size());
+   if (result != 0)
+   {
+      throw std::runtime_error("sha256 failed");
+   }
+
+   return output;
+}
+
+substrate::bytes substrate::hash::sha512(const substrate::bytes& input)
+{
+   substrate::bytes output(64);
+
+   int result = crypto_hash_sha512(output.data(), input.data(), input.size());
+   if (result != 0)
+   {
+      throw std::runtime_error("sha512 failed");
+   }
+
+   return output;
+}
 
 substrate::bytes substrate::hash::blake2(const substrate::bytes &input, size_t size, const substrate::bytes &key)
 {
