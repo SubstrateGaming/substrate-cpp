@@ -4,6 +4,7 @@
 
 namespace substrate
 {
+   // TODO: Introduce crypto namespace?
    class LIB_SUBSTRATE_EXPORT ICrypto
    {
    public:
@@ -36,6 +37,7 @@ namespace substrate
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_ed25519();
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_sr25519();
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_secp256k1();
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes pbkdf2_hmac_sha512(uint32_t derived_key_length, const substrate::bytes& password, const substrate::bytes& salt, uint32_t iteration_count);
 
    [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes get_public_key(const std::string &address);
    [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes get_public_key_with_network(const std::string &address, uint16_t &network);

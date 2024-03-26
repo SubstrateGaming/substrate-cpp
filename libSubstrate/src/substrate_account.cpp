@@ -43,7 +43,20 @@ public:
 
 substrate::Account substrate::make_account(substrate::models::KeyType type, const substrate::bytes &seed)
 {
-   return std::make_shared<substrate_account>(type, seed);
+   switch (type)
+   {
+   case substrate::models::KeyType::Sr25519:
+   case substrate::models::KeyType::Ed25519:
+      return std::make_shared<substrate_account>(type, seed);
+   default:
+      break;
+   }
+   throw std::runtime_error("invalid key type");
+}
+
+substrate::Account substrate::make_account_with_mnemonic(substrate::models::KeyType type, const std::string& mnemonic, substrate::mnemonic::BIP39WordList list, const std::string& password)
+{
+   return substrate::make_account(type, substrate::mnemonic::make_secret_from_mnemonic(mnemonic, password, list));
 }
 
 substrate::Account substrate::development::make_account_alice()

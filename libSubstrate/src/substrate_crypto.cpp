@@ -1,4 +1,5 @@
 #include <substrate/substrate.h>
+#include <sodium.h>
 
 substrate::Crypto substrate::make_crypto(substrate::models::KeyType provider)
 {
@@ -20,6 +21,64 @@ substrate::Crypto substrate::make_crypto_secp256k1()
 {
    // Not yet implemented.
    return nullptr;
+}
+
+substrate::bytes substrate::pbkdf2_hmac_sha512(uint32_t derived_key_length, const substrate::bytes &password, const substrate::bytes &salt, uint32_t iteration_count)
+{
+   // https://doc.libsodium.org/usage
+   // sodium_init() returns 0 on success, -1 on failure, and 1 if the library had already been initialized.
+   if (sodium_init() == -1)
+      throw std::runtime_error("sodium not initialized");
+
+   uint32_t hashLength = crypto_auth_hmacsha512_BYTES;
+   uint32_t keyLength = derived_key_length / hashLength;
+   if (derived_key_length > (0xFFFFFFFFL * hashLength) || derived_key_length < 0)
+   {
+      throw std::out_of_range("derived_key_length");
+   }
+   if (derived_key_length % hashLength != 0)
+   {
+      keyLength++;
+   }
+
+   std::vector<uint8_t> extendedKey(salt.size() + 4);
+   std::memcpy(extendedKey.data(), salt.data(), salt.size());
+
+   std::vector<uint8_t> dk(derived_key_length);
+   std::vector<uint8_t> T(hashLength);
+
+   for (int i = 0; i < keyLength; ++i)
+   {
+      extendedKey[salt.size()] = (i + 1) >> 24;
+      extendedKey[salt.size() + 1] = (i + 1) >> 16;
+      extendedKey[salt.size() + 2] = (i + 1) >> 8;
+      extendedKey[salt.size() + 3] = (i + 1);
+
+      std::vector<uint8_t> U(hashLength);
+      crypto_auth_hmacsha512_state state;
+      crypto_auth_hmacsha512_init(&state, password.data(), password.size());
+      crypto_auth_hmacsha512_update(&state, extendedKey.data(), extendedKey.size());
+      crypto_auth_hmacsha512_final(&state, U.data());
+
+      std::memcpy(T.data(), U.data(), hashLength);
+
+      for (int j = 1; j < iteration_count; ++j)
+      {
+         crypto_auth_hmacsha512_init(&state, password.data(), password.size());
+         crypto_auth_hmacsha512_update(&state, U.data(), U.size());
+         crypto_auth_hmacsha512_final(&state, U.data());
+
+         for (int k = 0; k < hashLength; ++k)
+         {
+            T[k] ^= U[k];
+         }
+      }
+
+      const auto copyLen = std::min(hashLength, derived_key_length - i * hashLength);
+      std::memcpy(dk.data() + i * hashLength, T.data(), copyLen);
+   }
+
+   return dk;
 }
 
 substrate::bytes substrate::get_public_key(const std::string &address)

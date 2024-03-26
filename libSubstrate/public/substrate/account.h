@@ -1,6 +1,8 @@
 #pragma once
 #include "types.h"
 #include "models/keytype.h"
+#include "models/account.h"
+#include "mnemonic.h"
 
 namespace substrate
 {
@@ -21,6 +23,7 @@ namespace substrate
    using Account = std::shared_ptr<IAccount>;
 
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account(substrate::models::KeyType type, const substrate::bytes &seed);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account_with_mnemonic(substrate::models::KeyType type, const std::string& mnemonic, substrate::mnemonic::BIP39WordList list = substrate::mnemonic::BIP39WordList::English, const std::string& password = std::string());
 
    // Development
    namespace development

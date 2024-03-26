@@ -7,6 +7,7 @@
 #include "hash.h"
 #include "decoder.h"
 #include "encoder.h"
+#include "mnemonic.h"
 
 #include "models/account.h"
 #include "models/block.h"

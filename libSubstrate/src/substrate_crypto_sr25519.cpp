@@ -21,7 +21,7 @@ public:
 
       sr25519_keypair sr25519_key_pair{0};
       sr25519_mini_secret_key sr25519_key_seed;
-      memcpy(&sr25519_key_seed[0], seed.data(), seed.size());
+      std::memcpy(&sr25519_key_seed[0], seed.data(), seed.size());
       sr25519_keypair_from_seed(sr25519_key_pair, sr25519_key_seed);
 
       key_pair result;
@@ -29,9 +29,9 @@ public:
       result.secret.key.resize(sizeof(sr25519_secret_key_key));
       result.secret.nonce.resize(sizeof(sr25519_secret_key_nonce));
 
-      memcpy(&result.secret.key[0], &sr25519_key_pair[0], sizeof(sr25519_secret_key_key));
-      memcpy(&result.secret.nonce[0], &sr25519_key_pair[sizeof(sr25519_secret_key_key)], sizeof(sr25519_secret_key_nonce));
-      memcpy(&result.public_key[0], &sr25519_key_pair[sizeof(sr25519_secret_key_key) + sizeof(sr25519_secret_key_nonce)], sizeof(sr25519_public_key));
+      std::memcpy(&result.secret.key[0], &sr25519_key_pair[0], sizeof(sr25519_secret_key_key));
+      std::memcpy(&result.secret.nonce[0], &sr25519_key_pair[sizeof(sr25519_secret_key_key)], sizeof(sr25519_secret_key_nonce));
+      std::memcpy(&result.public_key[0], &sr25519_key_pair[sizeof(sr25519_secret_key_key) + sizeof(sr25519_secret_key_nonce)], sizeof(sr25519_public_key));
       return result;
    }
 
@@ -47,17 +47,17 @@ public:
          throw std::invalid_argument("invalid nonce size");
 
       sr25519_public_key public_key{0};
-      memcpy(&public_key[0], key_pair.public_key.data(), key_pair.public_key.size());
+      std::memcpy(&public_key[0], key_pair.public_key.data(), key_pair.public_key.size());
 
       sr25519_secret_key secret{0};
-      memcpy(&secret[0], key_pair.secret.key.data(), sizeof(sr25519_secret_key_key));
-      memcpy(&secret[sizeof(sr25519_secret_key_key)], key_pair.secret.nonce.data(), sizeof(sr25519_secret_key_nonce));
+      std::memcpy(&secret[0], key_pair.secret.key.data(), sizeof(sr25519_secret_key_key));
+      std::memcpy(&secret[sizeof(sr25519_secret_key_key)], key_pair.secret.nonce.data(), sizeof(sr25519_secret_key_nonce));
 
       sr25519_signature signature{0};
       sr25519_sign(signature, public_key, secret, message.data(), message.size());
 
       bytes result(sizeof(sr25519_signature));
-      memcpy(result.data(), &signature[0], sizeof(sr25519_signature));
+      std::memcpy(result.data(), &signature[0], sizeof(sr25519_signature));
       return result;
    }
 
@@ -70,10 +70,10 @@ public:
          throw std::invalid_argument("invalid public key size");
 
       sr25519_signature sr25519_signature{0};
-      memcpy(&sr25519_signature[0], signature.data(), sizeof(sr25519_signature));
+      std::memcpy(&sr25519_signature[0], signature.data(), sizeof(sr25519_signature));
 
       sr25519_public_key sr25519_public_key{0};
-      memcpy(&sr25519_public_key[0], public_key.data(), sizeof(sr25519_public_key));
+      std::memcpy(&sr25519_public_key[0], public_key.data(), sizeof(sr25519_public_key));
 
       return sr25519_verify(sr25519_signature, message.data(), message.size(), sr25519_public_key);
    }
