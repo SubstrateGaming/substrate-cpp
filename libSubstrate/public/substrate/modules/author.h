@@ -11,7 +11,7 @@ namespace substrate::modules
       virtual ~IAuthor() = default;
 
       [[nodiscard]] virtual std::vector<Extrinsic> getPendingExtrinsic() const = 0;
-      [[nodiscard]] virtual void submitExtrinsic(const std::string& extrinsic_encoded) const = 0;
+      [[nodiscard]] virtual void submitExtrinsic(const Extrinsic& extrinsic) const = 0;
    };
    using Author = std::shared_ptr<IAuthor>;
 }

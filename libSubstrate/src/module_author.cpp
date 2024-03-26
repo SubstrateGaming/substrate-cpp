@@ -25,9 +25,12 @@ public:
       return std::vector<Extrinsic>{};
    }
 
-   virtual void submitExtrinsic(const std::string& extrinsic_encoded) const
+   virtual void submitExtrinsic(const Extrinsic& extrinsic) const
    {
-      const auto params = json::array({ extrinsic_encoded });
+      substrate::encoder encoder;
+      encoder << extrinsic;
+
+      const auto params = json::array({ encoder.assemble_hex() });
       _socket->send_rpc_result("author_submitExtrinsic", params);
    }
 };

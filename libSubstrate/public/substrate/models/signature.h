@@ -5,7 +5,7 @@ namespace substrate::models
 {
    struct Signature
    {
-      uint8_t Type{0};
+      KeyType Type{0};
       std::vector<uint8_t> Bytes;
    };
 }

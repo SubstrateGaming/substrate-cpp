@@ -5,6 +5,7 @@
 #include "method.h"
 #include "signature.h"
 #include "hash.h"
+#include "rpc.h"
 
 namespace substrate::models
 {
@@ -20,6 +21,7 @@ namespace substrate::models
       Signature Signature;
    };
 
+   // TODO: Do we want to have this exposed?
    struct Payload
    {
       struct extra_t
@@ -43,7 +45,10 @@ namespace substrate::models
       extra_t Extra;
       additional_t Additional;
    };
+
+   LIB_SUBSTRATE_EXPORT Payload make_payload(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion);
 }
+
 
 LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload::extra_t& v);
 LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Payload::additional_t& v);

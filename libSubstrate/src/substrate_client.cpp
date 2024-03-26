@@ -94,6 +94,43 @@ public:
    std::optional<substrate::models::Hash> getGenesisHash() const override { return _genesisHash; }
    void setGenesisHash(substrate::models::Hash hash) override { _genesisHash = hash; }
 
+   substrate::models::Extrinsic make_extrinsic(substrate::Account account, substrate::models::Method call, substrate::models::ChargeType charge = substrate::models::ChargeType(), uint32_t lifeTime = 0) const override
+   {
+      using namespace substrate::models;
+
+      Hash checkpoint;
+
+      substrate::models::Extrinsic extrinsic;
+      extrinsic.Signed = true;
+      extrinsic.TransactionVersion = 4;
+      extrinsic.Account = account->get_account_id();
+
+      if (lifeTime == 0)
+      {
+         extrinsic.Era = Era::make(0, 0);
+         checkpoint = getGenesisHash().value();
+      }
+      else
+      {
+         checkpoint = getChainModule()->getFinalizedHead().value();
+         const auto finalizedHeader = getChainModule()->getHeader(checkpoint).value();
+         extrinsic.Era = Era::make(lifeTime, finalizedHeader.Number);
+      }
+
+      extrinsic.Nonce = getSystemModule()->getAccountNextIndex(account->get_address()).value();
+
+      extrinsic.Charge = charge;
+      extrinsic.Method = call;
+
+      substrate::encoder encoder;
+      encoder << substrate::models::make_payload(extrinsic, getGenesisHash().value(), checkpoint, getRuntimeVersion().value());
+
+      extrinsic.Signature.Bytes = account->sign(encoder.assemble());
+      extrinsic.Signature.Type = account->get_type();
+
+      return extrinsic;
+   }
+
    substrate::modules::Author getAuthorModule() const override { return _module_author; }
    substrate::modules::Chain getChainModule() const override { return _module_chain; }
    substrate::modules::Payment getPaymentModule() const override { return _module_payment; }

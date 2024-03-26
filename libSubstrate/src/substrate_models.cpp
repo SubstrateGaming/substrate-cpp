@@ -4,6 +4,27 @@
 #include <cstdint>
 #include <algorithm>
 
+
+namespace substrate::models
+{
+   Payload make_payload(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion)
+   {
+      substrate::models::Payload payload;
+      payload.Call = extrinsic.Method;
+      payload.Extra.Charge = extrinsic.Charge;
+      payload.Extra.Mortality = extrinsic.Era;
+      payload.Extra.Nonce = extrinsic.Nonce;
+
+      payload.Additional.GenesisHash = genesis;
+      payload.Additional.CheckpointHash = checkpoint;
+
+      payload.Additional.SpecVersion = runtimeVersion.SpecVersion;
+      payload.Additional.TransactionVersion = runtimeVersion.TransactionVersion;
+
+      return payload;
+   }
+}
+
 //
 // Hash
 //
@@ -213,16 +234,19 @@ substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::A
 //
 substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Signature& v)
 {
-   encoder << v.Type;
+   encoder << static_cast<uint8_t>(v.Type);
    encoder << v.Bytes;
    return encoder;
 }
 
 substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::Signature& v)
 {
-   decoder >> v.Type;
+   uint8_t tmp{0};
+   decoder >> tmp;
 
+   v.Type = static_cast<substrate::models::KeyType>(tmp);
    v.Bytes.resize(64);
+
    decoder >> v.Bytes;
    return decoder;
 }

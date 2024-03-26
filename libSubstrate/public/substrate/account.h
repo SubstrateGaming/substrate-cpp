@@ -12,6 +12,7 @@ namespace substrate
       [[nodiscard]] virtual std::vector<uint8_t> sign(const std::vector<uint8_t> &message) const = 0;
       [[nodiscard]] virtual bool verify(const std::vector<uint8_t> &message, const std::vector<uint8_t> &signature) const = 0;
 
+      [[nodiscard]] virtual substrate::models::KeyType get_type() const = 0;
       [[nodiscard]] virtual const std::vector<uint8_t>& get_public_key() const = 0;
       [[nodiscard]] virtual substrate::models::AccountId32 get_account_id() const = 0;
       [[nodiscard]] virtual std::string get_address() const = 0;

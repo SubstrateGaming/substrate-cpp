@@ -27,6 +27,7 @@ public:
       return _crypto->verify(message, signature, get_public_key());
    }
 
+   substrate::models::KeyType get_type() const override { return _type; }
    const std::vector<uint8_t>& get_public_key() const override { return _key_pair.public_key; }
    substrate::models::AccountId32 get_account_id() const override { return substrate::models::AccountId32(substrate::hex_encode(get_public_key())); }
    std::string get_address() const override { return substrate::get_address(get_public_key()); }
