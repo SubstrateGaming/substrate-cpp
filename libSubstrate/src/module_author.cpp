@@ -21,13 +21,14 @@ public:
       return result;
    }
 
-   virtual void submitExtrinsic(const Extrinsic& extrinsic) const
+   virtual Hash submitExtrinsic(const Extrinsic& extrinsic) const
    {
       substrate::encoder encoder;
       encoder << extrinsic;
 
       const auto params = json::array({ encoder.assemble_hex() });
-      _socket->send_rpc_result("author_submitExtrinsic", params);
+      const auto json = _socket->send_rpc_result("author_submitExtrinsic", params);
+      return Hash{json};
    }
 };
 

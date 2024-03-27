@@ -11,7 +11,7 @@ public:
 
    virtual ~crypto_ed25519() override = default;
 
-   virtual key_pair make_keypair(const bytes &seed) const override
+   virtual key_pair make_keypair(const substrate::bytes &seed) const override
    {
       if (seed.size() != crypto_sign_SEEDBYTES)
       {
@@ -31,14 +31,14 @@ public:
       return result;
    }
 
-   virtual bytes sign(const bytes &message, const key_pair &key_pair) const override
+   virtual substrate::bytes sign(const substrate::bytes &message, const key_pair &key_pair) const override
    {
       if (key_pair.secret.key.size() != crypto_sign_SECRETKEYBYTES)
       {
          throw std::invalid_argument("invalid private key size");
       }
 
-      bytes signature(crypto_sign_BYTES);
+      substrate::bytes signature(crypto_sign_BYTES);
       unsigned long long signature_len{0ull};
 
       // use crypto_sign_detached to generate the signature
@@ -51,7 +51,7 @@ public:
       return signature;
    }
 
-   virtual bool verify(const bytes &message, const bytes &signature, const bytes &public_key) const override
+   virtual bool verify(const substrate::bytes &message, const substrate::bytes &signature, const substrate::bytes &public_key) const override
    {
       // ensure that the provided public key is the correct size
       if (public_key.size() != crypto_sign_PUBLICKEYBYTES)

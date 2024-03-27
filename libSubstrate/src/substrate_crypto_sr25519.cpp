@@ -14,7 +14,7 @@ public:
 
    virtual ~crypto_sr25519() override = default;
 
-   virtual key_pair make_keypair(const bytes &seed) const override
+   virtual key_pair make_keypair(const substrate::bytes &seed) const override
    {
       if (seed.size() != sizeof(sr25519_mini_secret_key))
          throw std::invalid_argument("invalid seed size");
@@ -35,7 +35,7 @@ public:
       return result;
    }
 
-   virtual bytes sign(const bytes &message, const key_pair &key_pair) const override
+   virtual substrate::bytes sign(const substrate::bytes &message, const key_pair &key_pair) const override
    {
       if (key_pair.public_key.size() != sizeof(sr25519_public_key))
          throw std::invalid_argument("invalid public key size");
@@ -56,12 +56,12 @@ public:
       sr25519_signature signature{0};
       sr25519_sign(signature, public_key, secret, message.data(), message.size());
 
-      bytes result(sizeof(sr25519_signature));
+      substrate::bytes result(sizeof(sr25519_signature));
       std::memcpy(result.data(), &signature[0], sizeof(sr25519_signature));
       return result;
    }
 
-   virtual bool verify(const bytes &message, const bytes &signature, const bytes &public_key) const override
+   virtual bool verify(const substrate::bytes &message, const substrate::bytes &signature, const substrate::bytes &public_key) const override
    {
       if (signature.size() != sizeof(sr25519_signature))
          throw std::invalid_argument("invalid signature size");

@@ -10,10 +10,6 @@ namespace substrate
    public:
       virtual ~ICrypto() = default;
 
-      // Syntactic sugar.
-      // TODO: Remove
-      using bytes = substrate::bytes;
-
       // TODO: Move
       struct secret_pair
       {

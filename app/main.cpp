@@ -68,11 +68,9 @@ int main(int argc, char **argv)
    method.CallIndex = 7;
    method.Parameters = substrate::hex_decode("0x008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480b00a014e33226");
 
-   for (int i = 0; i < 3; ++i)
-   {
-      const auto extrinsic = client->make_extrinsic(account, method);
-      client->getAuthorModule()->submitExtrinsic(extrinsic);
-   }
+   const auto extrinsic = client->make_extrinsic(account, method);
+   auto hash = client->getAuthorModule()->submitExtrinsic(extrinsic);
+   std::cout << "Extrinsic result is " << hash.value() << std::endl;
 
    // Debug
    // client->getChainModule()->getBlockHash(1);
