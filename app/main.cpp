@@ -15,26 +15,26 @@ public:
    virtual void debug(const std::string &category, const std::string &message) override
    {
       std::lock_guard<std::mutex> lock(_mutex);
-      std::cout << "DBG "
-                << ":" << category << ":" << message << std::endl;
+      std::cout << "DBG"
+                << ": [" << category << "]:" << message << std::endl;
    }
    virtual void info(const std::string &category, const std::string &message) override
    {
       std::lock_guard<std::mutex> lock(_mutex);
-      std::cout << "INFO "
-                << ":" << category << ":" << message << std::endl;
+      std::cout << "INFO"
+                << ": [" << category << "]:" << message << std::endl;
    }
    virtual void warn(const std::string &category, const std::string &message) override
    {
       std::lock_guard<std::mutex> lock(_mutex);
-      std::cout << "WARN "
-                << ":" << category << ":" << message << std::endl;
+      std::cout << "WARN"
+                << ": [" << category << "]:" << message << std::endl;
    }
    virtual void error(const std::string &category, const std::string &message) override
    {
       std::lock_guard<std::mutex> lock(_mutex);
-      std::cout << "ERR "
-                << ":" << category << ":" << message << std::endl;
+      std::cout << "ERR"
+                << ": [" << category << "]:" << message << std::endl;
    }
 };
 
@@ -69,15 +69,15 @@ int main(int argc, char **argv)
    method.Parameters = substrate::hex_decode("0x008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480b00a014e33226");
 
    const auto extrinsic = client->make_extrinsic(account, method);
-   auto hash = client->getAuthorModule()->submitExtrinsic(extrinsic);
-   std::cout << "Extrinsic result is " << hash.value() << std::endl;
+   auto id = client->getAuthorModule()->submitExtrinsicSubscribe(extrinsic);
+   std::cout << "Extrinsic subscription id is " << id << std::endl;
 
    // Debug
    // client->getChainModule()->getBlockHash(1);
    // client->getChainModule()->getFinalizedHead();
    // auto header = client->getChainModule()->getHeader();
    // auto block = client->getChainModule()->getBlock();
-   auto pending = client->getAuthorModule()->getPendingExtrinsic();
+   // auto pending = client->getAuthorModule()->getPendingExtrinsic();
 
    client->wait();
 

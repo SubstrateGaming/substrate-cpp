@@ -12,6 +12,7 @@ namespace substrate::modules
 
       [[nodiscard]] virtual std::vector<Extrinsic> getPendingExtrinsic() const = 0;
       [[nodiscard]] virtual Hash submitExtrinsic(const Extrinsic& extrinsic) const = 0;
+      [[nodiscard]] virtual std::string submitExtrinsicSubscribe(const Extrinsic& extrinsic) = 0;
    };
    using Author = std::shared_ptr<IAuthor>;
 }

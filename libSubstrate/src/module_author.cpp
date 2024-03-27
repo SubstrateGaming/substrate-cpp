@@ -30,6 +30,19 @@ public:
       const auto json = _socket->send_rpc_result("author_submitExtrinsic", params);
       return Hash{json};
    }
+
+   virtual std::string submitExtrinsicSubscribe(const Extrinsic& extrinsic)
+   {
+      substrate::encoder encoder;
+      encoder << extrinsic;
+
+      // TEST
+      const auto params = json::array({ encoder.assemble_hex() });
+      const auto json = _socket->send_rpc_result("author_submitAndWatchExtrinsic", params, [this](nlohmann::json result) {
+         SLOG_INFO("callback", std::format("received response: {}", result.dump()));
+      });
+      return std::string{json};
+   }
 };
 
 namespace substrate::detail::modules
