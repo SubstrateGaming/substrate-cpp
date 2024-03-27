@@ -1,23 +1,15 @@
 #include <substrate/substrate.h>
 
-#include <sstream>
+#include <sodium.h>
 
-#include <curl/curl.h>
-
-std::string substrate::deps::get_curl_version_info()
+std::vector<uint8_t> substrate::utils::make_random_bytes(size_t size)
 {
-   curl_version_info_data *version_info = curl_version_info(CURLVERSION_NOW);
-   std::stringstream version_details;
+   // https://doc.libsodium.org/usage
+   // sodium_init() returns 0 on success, -1 on failure, and 1 if the library had already been initialized.
+   if (sodium_init() == -1)
+      throw std::runtime_error("sodium not initialized");
 
-   version_details << "cURL Version: " << version_info->version << "\n";
-   version_details << "SSL Version: " << (version_info->ssl_version ? version_info->ssl_version : "Not Available") << "\n";
-   version_details << "Libz Version: " << (version_info->libz_version ? version_info->libz_version : "Not Available") << "\n";
-   version_details << "Protocols: ";
-
-   for (const char *const *protocol = version_info->protocols; *protocol; ++protocol)
-   {
-      version_details << *protocol << " ";
-   }
-
-   return version_details.str();
+   std::vector<uint8_t> result(size);
+   randombytes_buf(result.data(), size);
+   return result;
 }

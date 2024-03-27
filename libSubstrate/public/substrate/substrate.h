@@ -36,8 +36,8 @@
 
 namespace substrate
 {
-   namespace deps
+   namespace utils
    {
-      [[nodiscard]] LIB_SUBSTRATE_EXPORT std::string get_curl_version_info();
+      [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<uint8_t> make_random_bytes(size_t size);
    }
 }

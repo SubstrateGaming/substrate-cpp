@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include <substrate/substrate.h>
 
-#include "test_utils.h"
-
 TEST(CryptoTest, crypto_sr25519_key_pair_test1)
 {
    // Secret Key URI Alice account:
@@ -43,7 +41,7 @@ TEST(CryptoTest, crypto_sr25519_signature_test)
 
    auto crypto = substrate::make_crypto_sr25519();
    const auto key_pair = crypto->make_keypair(substrate::hex_decode(key));
-   const auto message = utils::generate_random_bytes(10, 200);
+   const auto message = substrate::utils::make_random_bytes(200);
 
    // sign the message
    const auto signature = crypto->sign(message, key_pair);

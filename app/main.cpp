@@ -41,7 +41,6 @@ public:
 int main(int argc, char **argv)
 {
    std::cout << "Hello, Substrate Client!" << std::endl;
-   std::cout << substrate::deps::get_curl_version_info() << std::endl;
 
    auto client = substrate::make_client(std::make_shared<logger>(), "ws://192.168.88.147:9944");
    if (!client->connect())

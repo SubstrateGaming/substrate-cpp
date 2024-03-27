@@ -1,15 +1,13 @@
 #include <gtest/gtest.h>
 #include <substrate/substrate.h>
 
-#include "test_utils.h"
-
 TEST(CryptoTest, crypto_ed25519_signature_test)
 {
    const std::string private_key_hex = "0xf5e5767cf153319517630f226876b86c8160cc583bc013744c6bf255f5cc0ee5278117fc144c72340f67d0f2316e8386ceffbf2b2428c9c51fef7c597f1d426e";
    const std::string public_key_hex = "0x278117fc144c72340f67d0f2316e8386ceffbf2b2428c9c51fef7c597f1d426e";
    const auto private_key = substrate::hex_decode(private_key_hex);
    const auto public_key = substrate::hex_decode(public_key_hex);
-   const auto message = utils::generate_random_bytes(10, 200);
+   const auto message = substrate::utils::make_random_bytes(200);
    auto crypto = substrate::make_crypto_ed25519();
 
    // sign the message

@@ -1,5 +1,4 @@
-#include <substrate/mnemonic.h>
-#include <substrate/hash.h>
+#include <substrate/substrate.h>
 
 #include <sodium/crypto_auth_hmacsha512.h>
 
@@ -11,27 +10,6 @@
 #include <algorithm>
 
 using namespace substrate::mnemonic;
-
-namespace refactor
-{
-   // TODO: Move this to public and make this customizable.
-   std::vector<uint8_t> make_random_bytes(size_t size)
-   {
-      static std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr)));
-
-      std::uniform_int_distribution<size_t> distLength(size, size);
-      std::uniform_int_distribution<int> distBytes(0, 255);
-
-      size_t messageLength = distLength(rng);
-
-      std::vector<uint8_t> message(messageLength);
-
-      for (auto &byte : message)
-         byte = static_cast<uint8_t>(distBytes(rng));
-
-      return message;
-   }
-}
 
 namespace substrate::mnemonic::detail
 {
@@ -137,7 +115,7 @@ namespace substrate::mnemonic::detail
 
    std::vector<std::string> make_mnemonic_from_entropy(size_t entropy_size, BIP39WordList list)
    {
-      const auto entropy = refactor::make_random_bytes(entropy_size);
+      const auto entropy = substrate::utils::make_random_bytes(entropy_size);
       return substrate::mnemonic::make_mnemonic_with_entropy(entropy, list);
    }
 
