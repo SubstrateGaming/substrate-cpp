@@ -20,9 +20,12 @@ namespace substrate::models
       Method Method;
       Signature Signature;
    };
+}
 
-
-
+namespace substrate::rpc
+{
+   // TODO: Refactor
+   using Extrinsic = substrate::models::Extrinsic;
 }
 
 

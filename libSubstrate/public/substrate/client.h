@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include "logger.h"
+#include "rpc_client.h"
 
 namespace substrate
 {

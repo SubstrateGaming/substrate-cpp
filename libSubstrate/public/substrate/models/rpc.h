@@ -13,3 +13,8 @@ namespace substrate::models
       std::string SpecName;
    };
 }
+
+namespace substrate::rpc
+{
+   using RuntimeVersion = substrate::models::RuntimeVersion;
+}

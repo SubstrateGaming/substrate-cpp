@@ -10,4 +10,11 @@ namespace substrate::models
    };
 }
 
+namespace substrate::rpc
+{
+   // TODO: Refactor
+   using Hash = substrate::models::Hash;
+   using BlockHash = Hash;
+}
+
 LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::Hash& v);

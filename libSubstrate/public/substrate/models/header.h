@@ -13,3 +13,9 @@ namespace substrate::models
       Hash StateRoot;
    };
 }
+
+namespace substrate::rpc
+{
+   // TODO: Refactor
+   using Header = substrate::models::Header;
+}

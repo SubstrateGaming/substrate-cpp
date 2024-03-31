@@ -1,0 +1,2122 @@
+{
+    "author": [
+        {
+            "name": "author_hasKey",
+            "summary": "Returns true if the keystore has private keys for the given public key and key type.",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "publicKey",
+                        "type": "Bytes",
+                        "optional": false
+                    },
+                    {
+                        "name": "keyType",
+                        "type": "Text",
+                        "optional": false
+                    }
+                ],
+                "returnType": "bool"
+            }
+        },
+        {
+            "name": "author_hasSessionKeys",
+            "summary": "Returns true if the keystore has private keys for the given session public keys.",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "sessionKeys",
+                        "type": "Bytes",
+                        "optional": false
+                    }
+                ],
+                "returnType": "bool"
+            }
+        },
+        {
+            "name": "author_insertKey",
+            "summary": "Insert a key into the keystore.",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "keyType",
+                        "type": "Text",
+                        "optional": false
+                    },
+                    {
+                        "name": "suri",
+                        "type": "Text",
+                        "optional": false
+                    },
+                    {
+                        "name": "publicKey",
+                        "type": "Bytes",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Bytes"
+            }
+        },
+        {
+            "name": "author_pendingExtrinsics",
+            "summary": "Returns all pending extrinsics, potentially grouped by sender",
+            "method": {
+                "parameters": [],
+                "returnType": "Vec<Extrinsic>"
+            }
+        },
+        {
+            "name": "author_removeExtrinsic",
+            "summary": "Remove given extrinsic from the pool and temporarily ban it to prevent reimporting",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "bytesOrHash",
+                        "type": "Vec<ExtrinsicOrHash>",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Vec<Hash>"
+            }
+        },
+        {
+            "name": "author_rotateKeys",
+            "summary": "Generate new session keys and returns the corresponding public keys",
+            "unsafe": true,
+            "method": {
+                "parameters": [],
+                "returnType": "Bytes"
+            }
+        },
+        {
+            "name": "author_submitAndWatchExtrinsic",
+            "summary": "Submit and subscribe to watch an extrinsic until unsubscribed",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "extrinsic",
+                        "type": "Extrinsic",
+                        "optional": false
+                    }
+                ],
+                "returnType": "ExtrinsicStatus"
+            }
+        },
+        {
+            "name": "author_submitExtrinsic",
+            "summary": "Submit a fully formatted extrinsic for block inclusion",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "extrinsic",
+                        "type": "Extrinsic",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Hash"
+            }
+        }
+    ],
+    "babe": [
+        {
+            "name": "babe_epochAuthorship",
+            "summary": "Returns data about which slots (primary or secondary) can be claimed in the current epoch with the keys in the keystore",
+            "unsafe": true,
+            "method": {
+                "parameters": [],
+                "returnType": "HashMap<AuthorityId, EpochAuthorship>"
+            }
+        }
+    ],
+    "beefy": [
+        {
+            "name": "beefy_getFinalizedHead",
+            "summary": "Returns hash of the latest BEEFY finalized block as seen by this client.",
+            "method": {
+                "parameters": [],
+                "returnType": "H256"
+            }
+        },
+        {
+            "name": "beefy_subscribeJustifications",
+            "summary": "Returns the block most recently finalized by BEEFY, alongside its justification.",
+            "method": {
+                "parameters": [],
+                "returnType": "BeefyVersionedFinalityProof"
+            }
+        }
+    ],
+    "chain": [
+        {
+            "name": "chain_getBlock",
+            "summary": "Get header and body of a relay chain block",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "SignedBlock"
+            }
+        },
+        {
+            "name": "chain_getBlockHash",
+            "summary": "Get the block hash for a specific block",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "blockNumber",
+                        "type": "BlockNumber",
+                        "optional": true
+                    }
+                ],
+                "returnType": "BlockHash"
+            }
+        },
+        {
+            "name": "chain_getFinalizedHead",
+            "summary": "Get hash of the last finalized block in the canon chain",
+            "method": {
+                "parameters": [],
+                "returnType": "BlockHash"
+            }
+        },
+        {
+            "name": "chain_getHeader",
+            "summary": "Retrieves the header for a specific block",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Header"
+            }
+        },
+        {
+            "name": "chain_subscribeAllHeads",
+            "summary": "Retrieves the newest header via subscription",
+            "method": {
+                "parameters": [],
+                "returnType": "Header"
+            }
+        },
+        {
+            "name": "chain_subscribeFinalizedHeads",
+            "summary": "Retrieves the best finalized header via subscription",
+            "method": {
+                "parameters": [],
+                "returnType": "Header"
+            }
+        },
+        {
+            "name": "chain_subscribeNewHeads",
+            "summary": "Retrieves the best header via subscription",
+            "method": {
+                "parameters": [],
+                "returnType": "Header"
+            }
+        }
+    ],
+    "childstate": [
+        {
+            "name": "childstate_getKeys",
+            "summary": "Returns the keys with prefix from a child storage, leave empty to get all the keys",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childKey",
+                        "type": "PrefixedStorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "prefix",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "Hash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<StorageKey>"
+            }
+        },
+        {
+            "name": "childstate_getKeysPaged",
+            "summary": "Returns the keys with prefix from a child storage with pagination support",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childKey",
+                        "type": "PrefixedStorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "prefix",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "count",
+                        "type": "u32",
+                        "optional": false
+                    },
+                    {
+                        "name": "startKey",
+                        "type": "StorageKey",
+                        "optional": true
+                    },
+                    {
+                        "name": "at",
+                        "type": "Hash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<StorageKey>"
+            }
+        },
+        {
+            "name": "childstate_getStorage",
+            "summary": "Returns a child storage entry at a specific block state",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childKey",
+                        "type": "PrefixedStorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "Hash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Option<StorageData>"
+            }
+        },
+        {
+            "name": "childstate_getStorageEntries",
+            "summary": "Returns child storage entries for multiple keys at a specific block state",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childKey",
+                        "type": "PrefixedStorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "keys",
+                        "type": "Vec<StorageKey>",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "Hash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<Option<StorageData>>"
+            }
+        },
+        {
+            "name": "childstate_getStorageHash",
+            "summary": "Returns the hash of a child storage entry at a block state",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childKey",
+                        "type": "PrefixedStorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "Hash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Option<Hash>"
+            }
+        },
+        {
+            "name": "childstate_getStorageSize",
+            "summary": "Returns the size of a child storage entry at a block state",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childKey",
+                        "type": "PrefixedStorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "Hash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Option<u64>"
+            }
+        }
+    ],
+    "contracts": [
+        {
+            "name": "contracts_call",
+            "summary": "Executes a call to a contract",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "callRequest",
+                        "type": "ContractCallRequest",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "ContractExecResult"
+            }
+        },
+        {
+            "name": "contracts_getStorage",
+            "summary": "Returns the value under a specified storage key in a contract",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "AccountId",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "H256",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Option<Bytes>"
+            }
+        },
+        {
+            "name": "contracts_instantiate",
+            "summary": "Instantiate a new contract",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "request",
+                        "type": "InstantiateRequestV1",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "ContractInstantiateResult"
+            }
+        },
+        {
+            "name": "contracts_rentProjection",
+            "summary": "Returns the projected time a given contract will be able to sustain paying its rent",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "AccountId",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Option<BlockNumber>"
+            }
+        },
+        {
+            "name": "contracts_upload_code",
+            "summary": "Upload new code without instantiating a contract from it",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "uploadRequest",
+                        "type": "CodeUploadRequest",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "CodeUploadResult"
+            }
+        }
+    ],
+    "dev": [
+        {
+            "name": "dev_getBlockStats",
+            "summary": "Reexecute the specified block_hash and gather statistics while doing so",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "at",
+                        "type": "Hash",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Option<BlockStats>"
+            }
+        }
+    ],
+    "engine": [
+        {
+            "name": "engine_createBlock",
+            "summary": "Instructs the manual-seal authorship task to create a new block",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "createEmpty",
+                        "type": "bool",
+                        "optional": false
+                    },
+                    {
+                        "name": "finalize",
+                        "type": "bool",
+                        "optional": false
+                    },
+                    {
+                        "name": "parentHash",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "CreatedBlock"
+            }
+        },
+        {
+            "name": "engine_finalizeBlock",
+            "summary": "Instructs the manual-seal authorship task to finalize a block",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "BlockHash",
+                        "optional": false
+                    },
+                    {
+                        "name": "justification",
+                        "type": "Justification",
+                        "optional": true
+                    }
+                ],
+                "returnType": "bool"
+            }
+        }
+    ],
+    "eth": [
+        {
+            "name": "eth_accounts",
+            "summary": "Returns accounts list.",
+            "method": {
+                "parameters": [],
+                "returnType": "Vec<H160>"
+            }
+        },
+        {
+            "name": "eth_blockNumber",
+            "summary": "Returns the blockNumber",
+            "method": {
+                "parameters": [],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_call",
+            "summary": "Call contract, returning the output data.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "request",
+                        "type": "EthCallRequest",
+                        "optional": false
+                    },
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Bytes"
+            }
+        },
+        {
+            "name": "eth_chainId",
+            "summary": "Returns the chain ID used for transaction signing at the current best block. None is returned if not available.",
+            "method": {
+                "parameters": [],
+                "returnType": "U64"
+            }
+        },
+        {
+            "name": "eth_coinbase",
+            "summary": "Returns block author.",
+            "method": {
+                "parameters": [],
+                "returnType": "H160"
+            }
+        },
+        {
+            "name": "eth_estimateGas",
+            "summary": "Estimate gas needed for execution of given contract.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "request",
+                        "type": "EthCallRequest",
+                        "optional": false
+                    },
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": true
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_feeHistory",
+            "summary": "Returns fee history for given block count & reward percentiles",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "blockCount",
+                        "type": "U256",
+                        "optional": false
+                    },
+                    {
+                        "name": "newestBlock",
+                        "type": "BlockNumber",
+                        "optional": false
+                    },
+                    {
+                        "name": "rewardPercentiles",
+                        "type": "Option<Vec<f64>>",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthFeeHistory"
+            }
+        },
+        {
+            "name": "eth_gasPrice",
+            "summary": "Returns current gas price.",
+            "method": {
+                "parameters": [],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_getBalance",
+            "summary": "Returns balance of the given account.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "H160",
+                        "optional": false
+                    },
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": true
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_getBlockByHash",
+            "summary": "Returns block with given hash.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    },
+                    {
+                        "name": "full",
+                        "type": "bool",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Option<EthRichBlock>"
+            }
+        },
+        {
+            "name": "eth_getBlockByNumber",
+            "summary": "Returns block with given number.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "block",
+                        "type": "BlockNumber",
+                        "optional": false
+                    },
+                    {
+                        "name": "full",
+                        "type": "bool",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Option<EthRichBlock>"
+            }
+        },
+        {
+            "name": "eth_getBlockTransactionCountByHash",
+            "summary": "Returns the number of transactions in a block with given hash.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_getBlockTransactionCountByNumber",
+            "summary": "Returns the number of transactions in a block with given block number.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "block",
+                        "type": "BlockNumber",
+                        "optional": false
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_getCode",
+            "summary": "Returns the code at given address at given time (block number).",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "H160",
+                        "optional": false
+                    },
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Bytes"
+            }
+        },
+        {
+            "name": "eth_getFilterChanges",
+            "summary": "Returns filter changes since last poll.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthFilterChanges"
+            }
+        },
+        {
+            "name": "eth_getFilterLogs",
+            "summary": "Returns all logs matching given filter (in a range 'from' - 'to').",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Vec<EthLog>"
+            }
+        },
+        {
+            "name": "eth_getLogs",
+            "summary": "Returns logs matching given filter object.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "type": "EthFilter",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Vec<EthLog>"
+            }
+        },
+        {
+            "name": "eth_getProof",
+            "summary": "Returns proof for account and storage.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "H160",
+                        "optional": false
+                    },
+                    {
+                        "name": "storageKeys",
+                        "type": "Vec<H256>",
+                        "optional": false
+                    },
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthAccount"
+            }
+        },
+        {
+            "name": "eth_getStorageAt",
+            "summary": "Returns content of the storage at given address.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "H160",
+                        "optional": false
+                    },
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    },
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": true
+                    }
+                ],
+                "returnType": "H256"
+            }
+        },
+        {
+            "name": "eth_getTransactionByBlockHashAndIndex",
+            "summary": "Returns transaction at given block hash and index.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    },
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthTransaction"
+            }
+        },
+        {
+            "name": "eth_getTransactionByBlockNumberAndIndex",
+            "summary": "Returns transaction by given block number and index.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": false
+                    },
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthTransaction"
+            }
+        },
+        {
+            "name": "eth_getTransactionByHash",
+            "summary": "Get transaction by its hash.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthTransaction"
+            }
+        },
+        {
+            "name": "eth_getTransactionCount",
+            "summary": "Returns the number of transactions sent from given address at given time (block number).",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "H160",
+                        "optional": false
+                    },
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": true
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_getTransactionReceipt",
+            "summary": "Returns transaction receipt by transaction hash.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthReceipt"
+            }
+        },
+        {
+            "name": "eth_getUncleByBlockHashAndIndex",
+            "summary": "Returns an uncles at given block and index.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    },
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthRichBlock"
+            }
+        },
+        {
+            "name": "eth_getUncleByBlockNumberAndIndex",
+            "summary": "Returns an uncles at given block and index.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": false
+                    },
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "EthRichBlock"
+            }
+        },
+        {
+            "name": "eth_getUncleCountByBlockHash",
+            "summary": "Returns the number of uncles in a block with given hash.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_getUncleCountByBlockNumber",
+            "summary": "Returns the number of uncles in a block with given block number.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "number",
+                        "type": "BlockNumber",
+                        "optional": false
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_getWork",
+            "summary": "Returns the hash of the current block, the seedHash, and the boundary condition to be met.",
+            "method": {
+                "parameters": [],
+                "returnType": "EthWork"
+            }
+        },
+        {
+            "name": "eth_hashrate",
+            "summary": "Returns the number of hashes per second that the node is mining with.",
+            "method": {
+                "parameters": [],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_maxPriorityFeePerGas",
+            "summary": "Returns max priority fee per gas",
+            "method": {
+                "parameters": [],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_mining",
+            "summary": "Returns true if client is actively mining new blocks.",
+            "method": {
+                "parameters": [],
+                "returnType": "bool"
+            }
+        },
+        {
+            "name": "eth_newBlockFilter",
+            "summary": "Returns id of new block filter.",
+            "method": {
+                "parameters": [],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_newFilter",
+            "summary": "Returns id of new filter.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "type": "EthFilter",
+                        "optional": false
+                    }
+                ],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_newPendingTransactionFilter",
+            "summary": "Returns id of new block filter.",
+            "method": {
+                "parameters": [],
+                "returnType": "U256"
+            }
+        },
+        {
+            "name": "eth_protocolVersion",
+            "summary": "Returns protocol version encoded as a string (quotes are necessary).",
+            "method": {
+                "parameters": [],
+                "returnType": "u64"
+            }
+        },
+        {
+            "name": "eth_sendRawTransaction",
+            "summary": "Sends signed transaction, returning its hash.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "bytes",
+                        "type": "Bytes",
+                        "optional": false
+                    }
+                ],
+                "returnType": "H256"
+            }
+        },
+        {
+            "name": "eth_sendTransaction",
+            "summary": "Sends transaction; will block waiting for signer to return the transaction hash",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "tx",
+                        "type": "EthTransactionRequest",
+                        "optional": false
+                    }
+                ],
+                "returnType": "H256"
+            }
+        },
+        {
+            "name": "eth_submitHashrate",
+            "summary": "Used for submitting mining hashrate.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    },
+                    {
+                        "name": "hash",
+                        "type": "H256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "bool"
+            }
+        },
+        {
+            "name": "eth_submitWork",
+            "summary": "Used for submitting a proof-of-work solution.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "nonce",
+                        "type": "H64",
+                        "optional": false
+                    },
+                    {
+                        "name": "headerHash",
+                        "type": "H256",
+                        "optional": false
+                    },
+                    {
+                        "name": "mixDigest",
+                        "type": "H256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "bool"
+            }
+        },
+        {
+            "name": "eth_subscribe",
+            "summary": "Subscribe to Eth subscription.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "kind",
+                        "type": "EthSubKind",
+                        "optional": false
+                    },
+                    {
+                        "name": "params",
+                        "type": "EthSubParams",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Null"
+            }
+        },
+        {
+            "name": "eth_syncing",
+            "summary": "Returns an object with data about the sync status or false.",
+            "method": {
+                "parameters": [],
+                "returnType": "EthSyncStatus"
+            }
+        },
+        {
+            "name": "eth_uninstallFilter",
+            "summary": "Uninstalls filter.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "index",
+                        "type": "U256",
+                        "optional": false
+                    }
+                ],
+                "returnType": "bool"
+            }
+        }
+    ],
+    "eth/net": [
+        {
+            "name": "net_listening",
+            "summary": "Returns true if client is actively listening for network connections. Otherwise false.",
+            "method": {
+                "parameters": [],
+                "returnType": "bool"
+            }
+        },
+        {
+            "name": "net_peerCount",
+            "summary": "Returns number of peers connected to node.",
+            "method": {
+                "parameters": [],
+                "returnType": "Text"
+            }
+        },
+        {
+            "name": "net_version",
+            "summary": "Returns protocol version.",
+            "method": {
+                "parameters": [],
+                "returnType": "Text"
+            }
+        }
+    ],
+    "eth/web3": [
+        {
+            "name": "web3_clientVersion",
+            "summary": "Returns current client version.",
+            "method": {
+                "parameters": [],
+                "returnType": "Text"
+            }
+        },
+        {
+            "name": "web3_sha3",
+            "summary": "Returns sha3 of the given data",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "data",
+                        "type": "Bytes",
+                        "optional": false
+                    }
+                ],
+                "returnType": "H256"
+            }
+        }
+    ],
+    "grandpa": [
+        {
+            "name": "grandpa_proveFinality",
+            "summary": "Prove finality for the given block number, returning the Justification for the last block in the set.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "blockNumber",
+                        "type": "BlockNumber",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Option<EncodedFinalityProofs>"
+            }
+        },
+        {
+            "name": "grandpa_roundState",
+            "summary": "Returns the state of the current best round state as well as the ongoing background rounds",
+            "method": {
+                "parameters": [],
+                "returnType": "ReportedRoundStates"
+            }
+        },
+        {
+            "name": "grandpa_subscribeJustifications",
+            "summary": "Subscribes to grandpa justifications",
+            "method": {
+                "parameters": [],
+                "returnType": "JustificationNotification"
+            }
+        }
+    ],
+    "mmr": [
+        {
+            "name": "mmr_generateProof",
+            "summary": "Generate MMR proof for the given block numbers.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "blockNumbers",
+                        "type": "Vec<u64>",
+                        "optional": false
+                    },
+                    {
+                        "name": "bestKnownBlockNumber",
+                        "type": "u64",
+                        "optional": true
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "MmrLeafBatchProof"
+            }
+        },
+        {
+            "name": "mmr_root",
+            "summary": "Get the MMR root hash for the current best block.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "MmrHash"
+            }
+        },
+        {
+            "name": "mmr_verifyProof",
+            "summary": "Verify an MMR proof",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "proof",
+                        "type": "MmrLeafBatchProof",
+                        "optional": false
+                    }
+                ],
+                "returnType": "bool"
+            }
+        },
+        {
+            "name": "mmr_verifyProofStateless",
+            "summary": "Verify an MMR proof statelessly given an mmr_root",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "root",
+                        "type": "MmrHash",
+                        "optional": false
+                    },
+                    {
+                        "name": "proof",
+                        "type": "MmrLeafBatchProof",
+                        "optional": false
+                    }
+                ],
+                "returnType": "bool"
+            }
+        }
+    ],
+    "offchain": [
+        {
+            "name": "offchain_localStorageGet",
+            "summary": "Get offchain local storage under given key and prefix",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "kind",
+                        "type": "StorageKind",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "Bytes",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Option<Bytes>"
+            }
+        },
+        {
+            "name": "offchain_localStorageSet",
+            "summary": "Set offchain local storage under given key and prefix",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "kind",
+                        "type": "StorageKind",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "Bytes",
+                        "optional": false
+                    },
+                    {
+                        "name": "value",
+                        "type": "Bytes",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Null"
+            }
+        }
+    ],
+    "payment": [
+        {
+            "name": "payment_queryFeeDetails",
+            "summary": "Query the detailed fee of a given encoded extrinsic",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "extrinsic",
+                        "type": "Bytes",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "FeeDetails"
+            }
+        },
+        {
+            "name": "payment_queryInfo",
+            "summary": "Retrieves the fee information for an encoded extrinsic",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "extrinsic",
+                        "type": "Bytes",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "RuntimeDispatchInfoV1"
+            }
+        }
+    ],
+    "rpc": [
+        {
+            "name": "rpc_methods",
+            "summary": "Retrieves the list of RPC methods that are exposed by the node",
+            "method": {
+                "parameters": [],
+                "returnType": "RpcMethods"
+            }
+        }
+    ],
+    "state": [
+        {
+            "name": "state_call",
+            "summary": "Perform a call to a builtin on the chain",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "method",
+                        "type": "Text",
+                        "optional": false
+                    },
+                    {
+                        "name": "data",
+                        "type": "Bytes",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Bytes"
+            }
+        },
+        {
+            "name": "state_getChildKeys",
+            "summary": "Retrieves the keys with prefix of a specific child storage",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childStorageKey",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childDefinition",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childType",
+                        "type": "u32",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<StorageKey>"
+            }
+        },
+        {
+            "name": "state_getChildReadProof",
+            "summary": "Returns proof of storage for child key entries at a specific block state.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childStorageKey",
+                        "type": "PrefixedStorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "keys",
+                        "type": "Vec<StorageKey>",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "ReadProof"
+            }
+        },
+        {
+            "name": "state_getChildStorage",
+            "summary": "Retrieves the child storage for a key",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childStorageKey",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childDefinition",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childType",
+                        "type": "u32",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "StorageData"
+            }
+        },
+        {
+            "name": "state_getChildStorageHash",
+            "summary": "Retrieves the child storage hash",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childStorageKey",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childDefinition",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childType",
+                        "type": "u32",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Hash"
+            }
+        },
+        {
+            "name": "state_getChildStorageSize",
+            "summary": "Retrieves the child storage size",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "childStorageKey",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childDefinition",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "childType",
+                        "type": "u32",
+                        "optional": false
+                    },
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "u64"
+            }
+        },
+        {
+            "name": "state_getKeys",
+            "summary": "Retrieves the keys with a certain prefix",
+            "deprecated": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<StorageKey>"
+            }
+        },
+        {
+            "name": "state_getKeysPaged",
+            "summary": "Returns the keys with prefix with pagination support.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "count",
+                        "type": "u32",
+                        "optional": false
+                    },
+                    {
+                        "name": "startKey",
+                        "type": "StorageKey",
+                        "optional": true
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<StorageKey>"
+            }
+        },
+        {
+            "name": "state_getMetadata",
+            "summary": "Returns the runtime metadata",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Metadata"
+            }
+        },
+        {
+            "name": "state_getPairs",
+            "summary": "Returns the keys with prefix, leave empty to get all the keys (deprecated: Use getKeysPaged)",
+            "deprecated": true,
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "prefix",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<KeyValue>"
+            }
+        },
+        {
+            "name": "state_getReadProof",
+            "summary": "Returns proof of storage entries at a specific block state",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "keys",
+                        "type": "Vec<StorageKey>",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "ReadProof"
+            }
+        },
+        {
+            "name": "state_getRuntimeVersion",
+            "summary": "Get the runtime version",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "RuntimeVersion"
+            }
+        },
+        {
+            "name": "state_getStorage",
+            "summary": "Retrieves the storage for a key",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "StorageData"
+            }
+        },
+        {
+            "name": "state_getStorageHash",
+            "summary": "Retrieves the storage hash",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Hash"
+            }
+        },
+        {
+            "name": "state_getStorageSize",
+            "summary": "Retrieves the storage size",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "key",
+                        "type": "StorageKey",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "u64"
+            }
+        },
+        {
+            "name": "state_queryStorage",
+            "summary": "Query historical storage entries (by key) starting from a start block",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "keys",
+                        "type": "Vec<StorageKey>",
+                        "optional": false
+                    },
+                    {
+                        "name": "fromBlock",
+                        "type": "Hash",
+                        "optional": false
+                    },
+                    {
+                        "name": "toBlock",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<StorageChangeSet>"
+            }
+        },
+        {
+            "name": "state_queryStorageAt",
+            "summary": "Query storage entries (by key) starting at block hash given as the second parameter",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "keys",
+                        "type": "Vec<StorageKey>",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "Vec<StorageChangeSet>"
+            }
+        },
+        {
+            "name": "state_subscribeRuntimeVersion",
+            "summary": "Retrieves the runtime version via subscription",
+            "method": {
+                "parameters": [],
+                "returnType": "RuntimeVersion"
+            }
+        },
+        {
+            "name": "state_subscribeStorage",
+            "summary": "Subscribes to storage changes for the provided keys",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "keys",
+                        "type": "Vec<StorageKey>",
+                        "optional": true
+                    }
+                ],
+                "returnType": "StorageChangeSet"
+            }
+        },
+        {
+            "name": "state_traceBlock",
+            "summary": "Provides a way to trace the re-execution of a single block",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "block",
+                        "type": "Hash",
+                        "optional": false
+                    },
+                    {
+                        "name": "targets",
+                        "type": "Option<Text>",
+                        "optional": false
+                    },
+                    {
+                        "name": "storageKeys",
+                        "type": "Option<Text>",
+                        "optional": false
+                    },
+                    {
+                        "name": "methods",
+                        "type": "Option<Text>",
+                        "optional": false
+                    }
+                ],
+                "returnType": "TraceBlockResponse"
+            }
+        },
+        {
+            "name": "state_trieMigrationStatus",
+            "summary": "Check current migration state",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "MigrationStatusResult"
+            }
+        }
+    ],
+    "syncstate": [
+        {
+            "name": "sync_state_genSyncSpec",
+            "summary": "Returns the json-serialized chainspec running the node, with a sync state.",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "raw",
+                        "type": "bool",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Json"
+            }
+        }
+    ],
+    "system": [
+        {
+            "name": "system_accountNextIndex",
+            "summary": "Retrieves the next accountIndex as available on the node",
+            "method": {
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "type": "AccountId",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Index"
+            }
+        },
+        {
+            "name": "system_addLogFilter",
+            "summary": "Adds the supplied directives to the current log filter",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "directives",
+                        "type": "Text",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Null"
+            }
+        },
+        {
+            "name": "system_addReservedPeer",
+            "summary": "Adds a reserved peer",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "peer",
+                        "type": "Text",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Text"
+            }
+        },
+        {
+            "name": "system_chain",
+            "summary": "Retrieves the chain",
+            "method": {
+                "parameters": [],
+                "returnType": "Text"
+            }
+        },
+        {
+            "name": "system_chainType",
+            "summary": "Retrieves the chain type",
+            "method": {
+                "parameters": [],
+                "returnType": "ChainType"
+            }
+        },
+        {
+            "name": "system_dryRun",
+            "summary": "Dry run an extrinsic at a given block",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "extrinsic",
+                        "type": "Bytes",
+                        "optional": false
+                    },
+                    {
+                        "name": "at",
+                        "type": "BlockHash",
+                        "optional": true
+                    }
+                ],
+                "returnType": "ApplyExtrinsicResult"
+            }
+        },
+        {
+            "name": "system_health",
+            "summary": "Return health status of the node",
+            "method": {
+                "parameters": [],
+                "returnType": "Health"
+            }
+        },
+        {
+            "name": "system_localListenAddresses",
+            "summary": "The addresses include a trailing /p2p/ with the local PeerId, and are thus suitable to be passed to addReservedPeer or as a bootnode address for example",
+            "method": {
+                "parameters": [],
+                "returnType": "Vec<Text>"
+            }
+        },
+        {
+            "name": "system_localPeerId",
+            "summary": "Returns the base58-encoded PeerId of the node",
+            "method": {
+                "parameters": [],
+                "returnType": "Text"
+            }
+        },
+        {
+            "name": "system_name",
+            "summary": "Retrieves the node name",
+            "method": {
+                "parameters": [],
+                "returnType": "Text"
+            }
+        },
+        {
+            "name": "system_networkState",
+            "summary": "Returns current state of the network",
+            "unsafe": true,
+            "method": {
+                "parameters": [],
+                "returnType": "NetworkState"
+            }
+        },
+        {
+            "name": "system_nodeRoles",
+            "summary": "Returns the roles the node is running as",
+            "method": {
+                "parameters": [],
+                "returnType": "Vec<NodeRole>"
+            }
+        },
+        {
+            "name": "system_peers",
+            "summary": "Returns the currently connected peers",
+            "unsafe": true,
+            "method": {
+                "parameters": [],
+                "returnType": "Vec<PeerInfo>"
+            }
+        },
+        {
+            "name": "system_properties",
+            "summary": "Get a custom set of properties as a JSON object, defined in the chain spec",
+            "method": {
+                "parameters": [],
+                "returnType": "ChainProperties"
+            }
+        },
+        {
+            "name": "system_removeReservedPeer",
+            "summary": "Remove a reserved peer",
+            "unsafe": true,
+            "method": {
+                "parameters": [
+                    {
+                        "name": "peerId",
+                        "type": "Text",
+                        "optional": false
+                    }
+                ],
+                "returnType": "Text"
+            }
+        },
+        {
+            "name": "system_reservedPeers",
+            "summary": "Returns the list of reserved peers",
+            "method": {
+                "parameters": [],
+                "returnType": "Vec<Text>"
+            }
+        },
+        {
+            "name": "system_resetLogFilter",
+            "summary": "Resets the log filter to Substrate defaults",
+            "unsafe": true,
+            "method": {
+                "parameters": [],
+                "returnType": "Null"
+            }
+        },
+        {
+            "name": "system_syncState",
+            "summary": "Returns the state of the syncing of the node",
+            "method": {
+                "parameters": [],
+                "returnType": "SyncState"
+            }
+        },
+        {
+            "name": "system_version",
+            "summary": "Retrieves the version of the node",
+            "method": {
+                "parameters": [],
+                "returnType": "Text"
+            }
+        }
+    ]
+}

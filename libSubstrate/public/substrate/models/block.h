@@ -24,5 +24,12 @@ namespace substrate::models
    static_assert(sizeof(BlockNumber) == sizeof(uint32_t), "BlockNumber must be the same size as uint32_t");
 }
 
+namespace substrate::rpc
+{
+   // TODO: Refactor
+   using SignedBlock = substrate::models::BlockData;
+   using BlockNumber = substrate::models::BlockNumber;
+}
+
 LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::BlockNumber& v);
 LIB_SUBSTRATE_EXPORT substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::BlockNumber& v);

@@ -11,5 +11,11 @@ namespace substrate::models
    };
 }
 
+namespace substrate::rpc
+{
+   // TODO: Refactor
+   using AccountId = substrate::models::AccountId32;
+}
+
 LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::AccountId32& v);
 LIB_SUBSTRATE_EXPORT substrate::decoder& operator>>(substrate::decoder& decoder, substrate::models::AccountId32& v);
