@@ -69,12 +69,18 @@ if (LSUB_WITH_TESTS)
     find_package(GTest)
 
     enable_testing()
-    file (GLOB_RECURSE libSubstrate_tests_sources ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp)
 
+    # lib
+    file (GLOB_RECURSE libSubstrate_tests_sources ${CMAKE_CURRENT_SOURCE_DIR}/tests/lib/*.cpp)
     add_executable(libSubstrate_tests ${libSubstrate_tests_sources})
     target_link_libraries(libSubstrate_tests PRIVATE GTest::gtest_main libSubstrate)
     add_test(NAME libSubstrate_tests COMMAND $<TARGET_FILE:libSubstrate_tests>)
 
-    # include(GoogleTest)
-    # gtest_discover_tests(libSubstrate_tests)
+    # node
+    file (GLOB_RECURSE libSubstrate_node_tests_sources ${CMAKE_CURRENT_SOURCE_DIR}/tests/node/*.cpp)
+    add_executable(libSubstrate_node_tests ${libSubstrate_node_tests_sources})
+    target_link_libraries(libSubstrate_node_tests PRIVATE GTest::gtest_main libSubstrate)
+    add_test(NAME libSubstrate_node_tests COMMAND $<TARGET_FILE:libSubstrate_node_tests>)
+
+
 endif ()

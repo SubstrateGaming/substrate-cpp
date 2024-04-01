@@ -225,7 +225,6 @@ namespace substrate::rpc
    using StorageData = Bytes;
    using Justification = Bytes;
    using Null = Bytes;
-
    using FeeDetails = Bytes;
    using RuntimeDispatchInfoV1 = Bytes;
    using RpcMethods = Bytes;
