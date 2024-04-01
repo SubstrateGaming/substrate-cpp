@@ -121,6 +121,7 @@ TEST_F(rpc_state_test, subscribeRuntimeVersion)
 
 TEST_F(rpc_state_test, subscribeStorage)
 {
-   auto subscriptionId = client->state_subscribeStorage([](const nlohmann::json&) {});
+   auto keys = client->state_getKeysPaged(substrate::rpc::StorageKey("0x"), 10);
+   auto subscriptionId = client->state_subscribeStorage([](const nlohmann::json&) {}, keys);
    EXPECT_FALSE(subscriptionId.empty());
 }
