@@ -170,7 +170,7 @@ namespace substrate::rpc
       std::vector<Extrinsic> Extrinsics;
       Header Header;
    };
-   LIB_SUBSTRATE_DECLARE_CONVERT(Block);
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(Block);
 
    // BlockNumber
    struct BlockNumberTag { };
@@ -178,17 +178,21 @@ namespace substrate::rpc
    {
       using strong_type::strong_type;
    };
-   LIB_SUBSTRATE_DECLARE_CONVERT(BlockNumber);
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(BlockNumber);
    LIB_SUBSTRATE_DECLARE_CONVERT_JSON_OPTIONAL(BlockNumber);
    static_assert(sizeof(BlockNumber) == sizeof(uint32_t), "BlockNumber must be the same size as uint32_t");
+
+   // Not really sure. Should be a tuple but have seen different things during development.
+   // Not really needing this yet so we simply pass the default type to at least allow custom parsing.
+   using Justification = nlohmann::json;
 
    // SignedBlock
    struct SignedBlock
    {
       Block Block;
-      substrate::bytes Justification;
+      std::optional<std::vector<Justification>> Justifications;
    };
-   LIB_SUBSTRATE_DECLARE_CONVERT(SignedBlock);
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(SignedBlock);
 
    // RuntimeVersion
    struct RuntimeVersion
@@ -295,7 +299,6 @@ namespace substrate::rpc
    using StorageKey = Bytes;
    using PrefixedStorageKey = Bytes;
    using StorageData = Bytes;
-   using Justification = Bytes;
    using Null = Bytes;
    using RpcMethods = Bytes;
    using ReadProof = Bytes;

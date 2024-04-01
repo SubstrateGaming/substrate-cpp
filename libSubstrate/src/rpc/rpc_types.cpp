@@ -423,39 +423,21 @@ void substrate::rpc::from_json(const nlohmann::json &j, Extrinsic &v)
 //
 // Block
 //
-substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const Block &v)
-{
-   throw std::runtime_error("not implemented");
-}
-
-substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Block &v)
-{
-   throw std::runtime_error("not implemented");
-}
-
 void substrate::rpc::to_json(nlohmann::json &j, const Block &v)
 {
-   throw std::runtime_error("not implemented");
+   to_json(j["extrinsics"], v.Extrinsics);
+   to_json(j["header"], v.Header);
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, Block &v)
 {
-   throw std::runtime_error("not implemented");
+   from_json(j["extrinsics"], v.Extrinsics);
+   from_json(j["header"], v.Header);
 }
 
 //
 // BlockNumber
 //
-substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const BlockNumber &v)
-{
-   throw std::runtime_error("not implemented");
-}
-
-substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, BlockNumber &v)
-{
-   throw std::runtime_error("not implemented");
-}
-
 void substrate::rpc::to_json(nlohmann::json &j, const BlockNumber &v)
 {
    to_json(j, v.const_value());
@@ -491,24 +473,28 @@ void substrate::rpc::from_json(const nlohmann::json &j, std::optional<BlockNumbe
 //
 // SignedBlock
 //
-substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const SignedBlock &v)
-{
-   throw std::runtime_error("not implemented");
-}
-
-substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, SignedBlock &v)
-{
-   throw std::runtime_error("not implemented");
-}
-
 void substrate::rpc::to_json(nlohmann::json &j, const SignedBlock &v)
 {
-   throw std::runtime_error("not implemented");
+   to_json(j["block"], v.Block);
+   if (v.Justifications.has_value())
+      j["justifications"] = v.Justifications.value();
+   else
+      j["justifications"] = nlohmann::json();
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, SignedBlock &v)
 {
-   throw std::runtime_error("not implemented");
+   from_json(j["block"], v.Block);
+   if (!j["justifications"].is_null())
+   {
+      std::vector<Justification> justifications;
+      from_json(j["justifications"], justifications);
+      v.Justifications = justifications;
+   }
+   else
+   {
+      v.Justifications = std::nullopt;
+   }
 }
 
 //
