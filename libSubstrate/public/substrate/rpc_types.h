@@ -9,6 +9,12 @@
    LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, type &v);
 #endif
 
+#ifndef LIB_SUBSTRATE_DECLARE_CONVERT_JSON_OPTIONAL
+#define LIB_SUBSTRATE_DECLARE_CONVERT_JSON_OPTIONAL(type) \
+   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const std::optional<type> &v); \
+   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, std::optional<type> &v);
+#endif
+
 #ifndef LIB_SUBSTRATE_DECLARE_CONVERT_SCALE
 #define LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(type) \
    LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const type& v); \
@@ -167,6 +173,7 @@ namespace substrate::rpc
       using strong_type::strong_type;
    };
    LIB_SUBSTRATE_DECLARE_CONVERT(BlockNumber);
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON_OPTIONAL(BlockNumber);
    static_assert(sizeof(BlockNumber) == sizeof(uint32_t), "BlockNumber must be the same size as uint32_t");
 
    // SignedBlock
@@ -217,6 +224,31 @@ namespace substrate::rpc
    LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload::additional_t);
    LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload);
 
+   struct Health
+   {
+      u64 peers{0};
+      bool isSyncing{false};
+      bool shouldHavePeers{false};
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(Health);
+
+   struct SyncState
+   {
+      BlockNumber startingBlock{0};
+      BlockNumber currentBlock{0};
+      std::optional<BlockNumber> highestBlock;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(SyncState);
+
+   // The PolkadotJs type is different, but I have not yet seen any other encoding of that from the RPC.
+   // So we use the text encoded variant at this time.
+   using NodeRole = Text;
+
+   // Is different depending on chain.
+   // We simply provide the raw object once the chain properties are queried.
+   // Users of this API should know what they're looking for in the properties.
+   using ChainProperties = nlohmann::json;
+
    // TODO:
    using ExtrinsicOrHash = Bytes;
    using ExtrinsicStatus = Bytes;
@@ -236,12 +268,9 @@ namespace substrate::rpc
    using MigrationStatusResult = Bytes;
    using ChainType = Bytes;
    using ApplyExtrinsicResult = Bytes;
-   using Health = Bytes;
    using NetworkState = Bytes;
-   using NodeRole = Bytes;
+
    using PeerInfo = Bytes;
-   using ChainProperties = Bytes;
-   using SyncState = Bytes;
 
    LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const Bytes &p);
    LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, Bytes &p);

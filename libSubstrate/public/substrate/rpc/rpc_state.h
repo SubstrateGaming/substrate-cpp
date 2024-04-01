@@ -96,16 +96,6 @@ namespace substrate::rpc
       virtual Metadata state_getMetadata(std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
-       * @brief Returns the keys with prefix, leave empty to get all the keys (deprecated: Use getKeysPaged)
-       * @warning This method is marked as unsafe.
-       * @deprecated This method is deprecated.
-       * @param prefix StorageKey
-       * @param at BlockHash
-       * @return Vec<KeyValue>
-       */
-      virtual Vec<KeyValue> state_getPairs(StorageKey prefix, std::optional<BlockHash> at = std::nullopt) const = 0;
-
-      /**
        * @brief Returns proof of storage entries at a specific block state
        * @param keys Vec<StorageKey>
        * @param at BlockHash
@@ -145,16 +135,6 @@ namespace substrate::rpc
       virtual u64 state_getStorageSize(StorageKey key, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
-       * @brief Query historical storage entries (by key) starting from a start block
-       * @warning This method is marked as unsafe.
-       * @param keys Vec<StorageKey>
-       * @param fromBlock Hash
-       * @param toBlock BlockHash
-       * @return Vec<StorageChangeSet>
-       */
-      virtual Vec<StorageChangeSet> state_queryStorage(Vec<StorageKey> keys, Hash fromBlock, std::optional<BlockHash> toBlock = std::nullopt) const = 0;
-
-      /**
        * @brief Query storage entries (by key) starting at block hash given as the second parameter
        * @param keys Vec<StorageKey>
        * @param at BlockHash
@@ -175,24 +155,6 @@ namespace substrate::rpc
        */
       virtual StorageChangeSet state_subscribeStorage(std::optional<Vec<StorageKey>> keys = std::nullopt) const = 0;
 
-      /**
-       * @brief Provides a way to trace the re-execution of a single block
-       * @warning This method is marked as unsafe.
-       * @param block Hash
-       * @param targets Option<Text>
-       * @param storageKeys Option<Text>
-       * @param methods Option<Text>
-       * @return TraceBlockResponse
-       */
-      virtual TraceBlockResponse state_traceBlock(Hash block, Option<Text> targets, Option<Text> storageKeys, Option<Text> methods) const = 0;
-
-      /**
-       * @brief Check current migration state
-       * @warning This method is marked as unsafe.
-       * @param at BlockHash
-       * @return MigrationStatusResult
-       */
-      virtual MigrationStatusResult state_trieMigrationStatus(std::optional<BlockHash> at = std::nullopt) const = 0;
    };
 }
 
@@ -207,16 +169,12 @@ namespace substrate::rpc
    virtual Vec<StorageKey> state_getKeys(StorageKey key, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual Vec<StorageKey> state_getKeysPaged(StorageKey key, u32 count, std::optional<StorageKey> startKey = std::nullopt, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual Metadata state_getMetadata(std::optional<BlockHash> at = std::nullopt) const override; \
-   virtual Vec<KeyValue> state_getPairs(StorageKey prefix, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual ReadProof state_getReadProof(Vec<StorageKey> keys, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual RuntimeVersion state_getRuntimeVersion(std::optional<BlockHash> at = std::nullopt) const override; \
    virtual StorageData state_getStorage(StorageKey key, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual Hash state_getStorageHash(StorageKey key, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual u64 state_getStorageSize(StorageKey key, std::optional<BlockHash> at = std::nullopt) const override; \
-   virtual Vec<StorageChangeSet> state_queryStorage(Vec<StorageKey> keys, Hash fromBlock, std::optional<BlockHash> toBlock = std::nullopt) const override; \
    virtual Vec<StorageChangeSet> state_queryStorageAt(Vec<StorageKey> keys, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual RuntimeVersion state_subscribeRuntimeVersion() const override; \
-   virtual StorageChangeSet state_subscribeStorage(std::optional<Vec<StorageKey>> keys = std::nullopt) const override; \
-   virtual TraceBlockResponse state_traceBlock(Hash block, Option<Text> targets, Option<Text> storageKeys, Option<Text> methods) const override; \
-   virtual MigrationStatusResult state_trieMigrationStatus(std::optional<BlockHash> at = std::nullopt) const override;
+   virtual StorageChangeSet state_subscribeStorage(std::optional<Vec<StorageKey>> keys = std::nullopt) const override;
 #endif

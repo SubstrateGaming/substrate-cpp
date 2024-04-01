@@ -48,11 +48,6 @@ Metadata substrate_client::state_getMetadata(std::optional<BlockHash> at) const
    return rpc<Metadata>("state_getMetadata", at);
 }
 
-Vec<KeyValue> substrate_client::state_getPairs(StorageKey prefix, std::optional<BlockHash> at) const
-{
-   return rpc<Vec<KeyValue>>("state_getPairs", prefix, at);
-}
-
 ReadProof substrate_client::state_getReadProof(Vec<StorageKey> keys, std::optional<BlockHash> at) const
 {
    return rpc<ReadProof>("state_getReadProof", keys, at);
@@ -78,11 +73,6 @@ u64 substrate_client::state_getStorageSize(StorageKey key, std::optional<BlockHa
    return rpc<u64>("state_getStorageSize", key, at);
 }
 
-Vec<StorageChangeSet> substrate_client::state_queryStorage(Vec<StorageKey> keys, Hash fromBlock, std::optional<BlockHash> toBlock) const
-{
-   return rpc<Vec<StorageChangeSet>>("state_queryStorage", keys, fromBlock, toBlock);
-}
-
 Vec<StorageChangeSet> substrate_client::state_queryStorageAt(Vec<StorageKey> keys, std::optional<BlockHash> at) const
 {
    return rpc<Vec<StorageChangeSet>>("state_queryStorageAt", keys, at);
@@ -96,15 +86,5 @@ RuntimeVersion substrate_client::state_subscribeRuntimeVersion() const
 StorageChangeSet substrate_client::state_subscribeStorage(std::optional<Vec<StorageKey>> keys) const
 {
    return rpc<StorageChangeSet>("state_subscribeStorage", keys);
-}
-
-TraceBlockResponse substrate_client::state_traceBlock(Hash block, Option<Text> targets, Option<Text> storageKeys, Option<Text> methods) const
-{
-   return rpc<TraceBlockResponse>("state_traceBlock", block, targets, storageKeys, methods);
-}
-
-MigrationStatusResult substrate_client::state_trieMigrationStatus(std::optional<BlockHash> at) const
-{
-   return rpc<MigrationStatusResult>("state_trieMigrationStatus", at);
 }
 

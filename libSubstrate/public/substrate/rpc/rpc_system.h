@@ -15,22 +15,6 @@ namespace substrate::rpc
       virtual Index system_accountNextIndex(AccountId accountId) const = 0;
 
       /**
-       * @brief Adds the supplied directives to the current log filter
-       * @warning This method is marked as unsafe.
-       * @param directives Text
-       * @return Null
-       */
-      virtual Null system_addLogFilter(Text directives) const = 0;
-
-      /**
-       * @brief Adds a reserved peer
-       * @warning This method is marked as unsafe.
-       * @param peer Text
-       * @return Text
-       */
-      virtual Text system_addReservedPeer(Text peer) const = 0;
-
-      /**
        * @brief Retrieves the chain
        * @return Text
        */
@@ -41,15 +25,6 @@ namespace substrate::rpc
        * @return ChainType
        */
       virtual ChainType system_chainType() const = 0;
-
-      /**
-       * @brief Dry run an extrinsic at a given block
-       * @warning This method is marked as unsafe.
-       * @param extrinsic Bytes
-       * @param at BlockHash
-       * @return ApplyExtrinsicResult
-       */
-      virtual ApplyExtrinsicResult system_dryRun(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Return health status of the node
@@ -76,24 +51,10 @@ namespace substrate::rpc
       virtual Text system_name() const = 0;
 
       /**
-       * @brief Returns current state of the network
-       * @warning This method is marked as unsafe.
-       * @return NetworkState
-       */
-      virtual NetworkState system_networkState() const = 0;
-
-      /**
        * @brief Returns the roles the node is running as
        * @return Vec<NodeRole>
        */
       virtual Vec<NodeRole> system_nodeRoles() const = 0;
-
-      /**
-       * @brief Returns the currently connected peers
-       * @warning This method is marked as unsafe.
-       * @return Vec<PeerInfo>
-       */
-      virtual Vec<PeerInfo> system_peers() const = 0;
 
       /**
        * @brief Get a custom set of properties as a JSON object, defined in the chain spec
@@ -102,25 +63,10 @@ namespace substrate::rpc
       virtual ChainProperties system_properties() const = 0;
 
       /**
-       * @brief Remove a reserved peer
-       * @warning This method is marked as unsafe.
-       * @param peerId Text
-       * @return Text
-       */
-      virtual Text system_removeReservedPeer(Text peerId) const = 0;
-
-      /**
        * @brief Returns the list of reserved peers
        * @return Vec<Text>
        */
       virtual Vec<Text> system_reservedPeers() const = 0;
-
-      /**
-       * @brief Resets the log filter to Substrate defaults
-       * @warning This method is marked as unsafe.
-       * @return Null
-       */
-      virtual Null system_resetLogFilter() const = 0;
 
       /**
        * @brief Returns the state of the syncing of the node
@@ -139,22 +85,15 @@ namespace substrate::rpc
 #ifndef SUBSTRATE_IMPL_RPC_SYSTEM
 #define SUBSTRATE_IMPL_RPC_SYSTEM \
    virtual Index system_accountNextIndex(AccountId accountId) const override; \
-   virtual Null system_addLogFilter(Text directives) const override; \
-   virtual Text system_addReservedPeer(Text peer) const override; \
    virtual Text system_chain() const override; \
    virtual ChainType system_chainType() const override; \
-   virtual ApplyExtrinsicResult system_dryRun(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual Health system_health() const override; \
    virtual Vec<Text> system_localListenAddresses() const override; \
    virtual Text system_localPeerId() const override; \
    virtual Text system_name() const override; \
-   virtual NetworkState system_networkState() const override; \
    virtual Vec<NodeRole> system_nodeRoles() const override; \
-   virtual Vec<PeerInfo> system_peers() const override; \
    virtual ChainProperties system_properties() const override; \
-   virtual Text system_removeReservedPeer(Text peerId) const override; \
    virtual Vec<Text> system_reservedPeers() const override; \
-   virtual Null system_resetLogFilter() const override; \
    virtual SyncState system_syncState() const override; \
    virtual Text system_version() const override;
 #endif

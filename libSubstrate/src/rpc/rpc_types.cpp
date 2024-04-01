@@ -440,6 +440,28 @@ void substrate::rpc::from_json(const nlohmann::json &j, BlockNumber &v)
    v = BlockNumber{bn};
 }
 
+void substrate::rpc::to_json(nlohmann::json &j, const std::optional<BlockNumber> &v)
+{
+   if (v.has_value())
+      to_json(j, v.value().value());
+   else
+      j = nlohmann::json();
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, std::optional<BlockNumber> &v)
+{
+   if (!j.is_null())
+   {
+      uint32_t bn{0};
+      from_json(j, bn);
+      v = BlockNumber{bn};
+   }
+   else
+   {
+      v = std::nullopt;
+   }
+}
+
 //
 // SignedBlock
 //
@@ -620,4 +642,38 @@ void substrate::rpc::from_json(const nlohmann::json &j, CompactInteger &p)
    {
       throw std::runtime_error("CompactInteger json representation not expected");
    }
+}
+
+//
+// Health
+//
+void substrate::rpc::to_json(nlohmann::json &j, const Health &v)
+{
+   to_json(j["peers"], v.peers);
+   to_json(j["isSyncing"], v.isSyncing);
+   to_json(j["shouldHavePeers"], v.shouldHavePeers);
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, Health &v)
+{
+   from_json(j["peers"], v.peers);
+   from_json(j["isSyncing"], v.isSyncing);
+   from_json(j["shouldHavePeers"], v.shouldHavePeers);
+}
+
+//
+// SyncState
+//
+void substrate::rpc::to_json(nlohmann::json &j, const SyncState &v)
+{
+   to_json(j["currentBlock"], v.currentBlock);
+   to_json(j["highestBlock"], v.highestBlock);
+   to_json(j["startingBlock"], v.startingBlock);
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, SyncState &v)
+{
+   from_json(j["currentBlock"], v.currentBlock);
+   from_json(j["highestBlock"], v.highestBlock);
+   from_json(j["startingBlock"], v.startingBlock);
 }

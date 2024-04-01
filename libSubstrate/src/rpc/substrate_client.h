@@ -15,6 +15,16 @@ struct is_std_optional<std::optional<T>> : std::true_type { };
 template <typename T>
 inline constexpr bool is_std_optional_v = is_std_optional<T>::value;
 
+// A helper trait to detect nlohmann::json
+template <typename T>
+struct is_json : std::false_type { };
+
+template <>
+struct is_json<nlohmann::json> : std::true_type { };
+
+template <typename T>
+inline constexpr bool is_json_v = is_json<T>::value;
+
 namespace substrate::rpc::detail
 {
    using namespace substrate::rpc;
@@ -97,9 +107,16 @@ namespace substrate::rpc::detail
          }
          else
          {
-            TReturn ret;
-            from_json(result, ret);
-            return ret;
+            if constexpr (is_json_v<TReturn>)
+            {
+               return result;
+            }
+            else
+            {
+               TReturn ret;
+               from_json(result, ret);
+               return ret;
+            }
          }
       }
 
@@ -107,10 +124,16 @@ namespace substrate::rpc::detail
       TReturn rpc(const std::string &name) const
       {
          const auto result = _socket->send_rpc_result(name);
-
-         TReturn ret;
-         from_json(result, ret);
-         return ret;
+         if constexpr (is_json_v<TReturn>)
+         {
+            return result;
+         }
+         else
+         {
+            TReturn ret;
+            from_json(result, ret);
+            return ret;
+         }
       }
    };
 }
