@@ -78,13 +78,13 @@ Vec<StorageChangeSet> substrate_client::state_queryStorageAt(Vec<StorageKey> key
    return rpc<Vec<StorageChangeSet>>("state_queryStorageAt", keys, at);
 }
 
-RuntimeVersion substrate_client::state_subscribeRuntimeVersion() const
+std::string substrate_client::state_subscribeRuntimeVersion(subscription_callback_t callback) const
 {
-   return rpc<RuntimeVersion>("state_subscribeRuntimeVersion");
+   return rpc<std::string>("state_subscribeRuntimeVersion", callback);
 }
 
-StorageChangeSet substrate_client::state_subscribeStorage(std::optional<Vec<StorageKey>> keys) const
+std::string substrate_client::state_subscribeStorage(subscription_callback_t callback, std::optional<Vec<StorageKey>> keys) const
 {
-   return rpc<StorageChangeSet>("state_subscribeStorage", keys);
+   return rpc<std::string>("state_subscribeStorage", callback, keys);
 }
 

@@ -115,10 +115,12 @@ TEST_F(rpc_state_test, queryStorageAt)
 
 TEST_F(rpc_state_test, subscribeRuntimeVersion)
 {
-   // TODO: Implement subscribe
+   auto subscriptionId = client->state_subscribeRuntimeVersion([](const nlohmann::json&) {});
+   EXPECT_FALSE(subscriptionId.empty());
 }
 
 TEST_F(rpc_state_test, subscribeStorage)
 {
-   // TODO: Implement subscribe
+   auto subscriptionId = client->state_subscribeStorage([](const nlohmann::json&) {});
+   EXPECT_FALSE(subscriptionId.empty());
 }

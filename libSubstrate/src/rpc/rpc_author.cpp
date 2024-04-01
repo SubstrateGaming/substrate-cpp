@@ -8,9 +8,9 @@ Vec<Extrinsic> substrate_client::author_pendingExtrinsics() const
    return rpc<Vec<Extrinsic>>("author_pendingExtrinsics");
 }
 
-ExtrinsicStatus substrate_client::author_submitAndWatchExtrinsic(Extrinsic extrinsic) const
+std::string substrate_client::author_submitAndWatchExtrinsic(subscription_callback_t callback, Extrinsic extrinsic) const
 {
-   return rpc<ExtrinsicStatus>("author_submitAndWatchExtrinsic", extrinsic);
+   return rpc<std::string>("author_submitAndWatchExtrinsic", callback, extrinsic);
 }
 
 Hash substrate_client::author_submitExtrinsic(Extrinsic extrinsic) const

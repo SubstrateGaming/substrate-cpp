@@ -43,6 +43,7 @@ void rpc_test::SetUp()
 
    client->setRuntimeVersion(client->state_getRuntimeVersion());
    client->setGenesisHash(client->chain_getBlockHash(substrate::rpc::BlockNumber(0)));
+
 }
 
 void rpc_test::TearDown()

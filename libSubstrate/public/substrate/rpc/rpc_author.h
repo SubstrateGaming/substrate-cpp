@@ -15,10 +15,11 @@ namespace substrate::rpc
 
       /**
        * @brief Submit and subscribe to watch an extrinsic until unsubscribed
+       * @param callback subscription_callback_t
        * @param extrinsic Extrinsic
-       * @return ExtrinsicStatus
+       * @return std::string
        */
-      virtual ExtrinsicStatus author_submitAndWatchExtrinsic(Extrinsic extrinsic) const = 0;
+      virtual std::string author_submitAndWatchExtrinsic(subscription_callback_t callback, Extrinsic extrinsic) const = 0;
 
       /**
        * @brief Submit a fully formatted extrinsic for block inclusion
@@ -32,6 +33,6 @@ namespace substrate::rpc
 #ifndef SUBSTRATE_IMPL_RPC_AUTHOR
 #define SUBSTRATE_IMPL_RPC_AUTHOR \
    virtual Vec<Extrinsic> author_pendingExtrinsics() const override; \
-   virtual ExtrinsicStatus author_submitAndWatchExtrinsic(Extrinsic extrinsic) const override; \
+   virtual std::string author_submitAndWatchExtrinsic(subscription_callback_t callback, Extrinsic extrinsic) const override; \
    virtual Hash author_submitExtrinsic(Extrinsic extrinsic) const override;
 #endif

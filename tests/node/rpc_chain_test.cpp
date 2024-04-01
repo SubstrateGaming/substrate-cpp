@@ -35,18 +35,18 @@ TEST_F(rpc_chain_test, getHeader)
 
 TEST_F(rpc_chain_test, subscribeAllHeads)
 {
-   // TODO: Implement subscribe
-   // auto result = client->chain_subscribeAllHeads();
+   auto subscriptionId = client->chain_subscribeAllHeads([](const nlohmann::json&) {});
+   EXPECT_FALSE(subscriptionId.empty());
 }
 
 TEST_F(rpc_chain_test, subscribeFinalizedHeads)
 {
-   // TODO: Implement subscribe
-   // auto result = client->chain_subscribeFinalizedHeads();
+   auto subscriptionId = client->chain_subscribeFinalizedHeads([](const nlohmann::json&) {});
+   EXPECT_FALSE(subscriptionId.empty());
 }
 
 TEST_F(rpc_chain_test, subscribeNewHeads)
 {
-   // TODO: Implement subscribe
-   // auto result = client->chain_subscribeNewHeads();
+   auto subscriptionId = client->chain_subscribeNewHeads([](const nlohmann::json&) {});
+   EXPECT_FALSE(subscriptionId.empty());
 }

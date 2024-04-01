@@ -144,16 +144,18 @@ namespace substrate::rpc
 
       /**
        * @brief Retrieves the runtime version via subscription
-       * @return RuntimeVersion
+       * @param callback subscription_callback_t
+       * @return std::string
        */
-      virtual RuntimeVersion state_subscribeRuntimeVersion() const = 0;
+      virtual std::string state_subscribeRuntimeVersion(subscription_callback_t callback) const = 0;
 
       /**
        * @brief Subscribes to storage changes for the provided keys
+       * @param callback subscription_callback_t
        * @param keys Vec<StorageKey>
-       * @return StorageChangeSet
+       * @return std::string
        */
-      virtual StorageChangeSet state_subscribeStorage(std::optional<Vec<StorageKey>> keys = std::nullopt) const = 0;
+      virtual std::string state_subscribeStorage(subscription_callback_t callback, std::optional<Vec<StorageKey>> keys = std::nullopt) const = 0;
 
    };
 }
@@ -175,6 +177,6 @@ namespace substrate::rpc
    virtual Hash state_getStorageHash(StorageKey key, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual u64 state_getStorageSize(StorageKey key, std::optional<BlockHash> at = std::nullopt) const override; \
    virtual Vec<StorageChangeSet> state_queryStorageAt(Vec<StorageKey> keys, std::optional<BlockHash> at = std::nullopt) const override; \
-   virtual RuntimeVersion state_subscribeRuntimeVersion() const override; \
-   virtual StorageChangeSet state_subscribeStorage(std::optional<Vec<StorageKey>> keys = std::nullopt) const override;
+   virtual std::string state_subscribeRuntimeVersion(subscription_callback_t callback) const override; \
+   virtual std::string state_subscribeStorage(subscription_callback_t callback, std::optional<Vec<StorageKey>> keys = std::nullopt) const override;
 #endif

@@ -91,33 +91,42 @@ namespace substrate::rpc::detail
          return result;
       }
 
+      // Could think about removing TReturn here.
+      // I guess, all subscriptions are strings anyways.
+      template <typename TReturn, typename... Args>
+      TReturn rpc(const std::string &name, subscription_callback_t callback, Args &&...args) const
+      {
+         const auto params = json_encode_params(std::forward<Args>(args)...);
+         const auto result = _socket->send_rpc_result(name, params, callback);
+         return result;
+
+         if constexpr (is_json_v<TReturn>)
+         {
+            return result;
+         }
+         else
+         {
+            TReturn ret;
+            from_json(result, ret);
+            return ret;
+         }
+      }
+
       template <typename TReturn, typename... Args>
       TReturn rpc(const std::string &name, Args &&...args) const
       {
          const auto params = json_encode_params(std::forward<Args>(args)...);
          const auto result = _socket->send_rpc_result(name, params);
 
-         if constexpr (is_std_optional_v<std::decay_t<TReturn>>)
+         if constexpr (is_json_v<TReturn>)
          {
-            if (result.is_null() || result.empty())
-               return std::nullopt;
-
-
-            // TODO: Get actual type of TReturn and parse it.
-            return std::nullopt;
+            return result;
          }
          else
          {
-            if constexpr (is_json_v<TReturn>)
-            {
-               return result;
-            }
-            else
-            {
-               TReturn ret;
-               from_json(result, ret);
-               return ret;
-            }
+            TReturn ret;
+            from_json(result, ret);
+            return ret;
          }
       }
 

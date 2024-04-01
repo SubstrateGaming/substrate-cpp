@@ -98,12 +98,17 @@
             "method": {
                 "parameters": [
                     {
+                        "name": "callback",
+                        "type": "subscription_callback_t",
+                        "optional": false
+                    },
+                    {
                         "name": "extrinsic",
                         "type": "Extrinsic",
                         "optional": false
                     }
                 ],
-                "returnType": "ExtrinsicStatus"
+                "returnType": "std::string"
             }
         },
         {
@@ -205,24 +210,42 @@
             "name": "chain_subscribeAllHeads",
             "summary": "Retrieves the newest header via subscription",
             "method": {
-                "parameters": [],
-                "returnType": "Header"
+                "parameters": [
+                    {
+                        "name": "callback",
+                        "type": "subscription_callback_t",
+                        "optional": false
+                    }
+                ],
+                "returnType": "std::string"
             }
         },
         {
             "name": "chain_subscribeFinalizedHeads",
             "summary": "Retrieves the best finalized header via subscription",
             "method": {
-                "parameters": [],
-                "returnType": "Header"
+                "parameters": [
+                    {
+                        "name": "callback",
+                        "type": "subscription_callback_t",
+                        "optional": false
+                    }
+                ],
+                "returnType": "std::string"
             }
         },
         {
             "name": "chain_subscribeNewHeads",
             "summary": "Retrieves the best header via subscription",
             "method": {
-                "parameters": [],
-                "returnType": "Header"
+                "parameters": [
+                    {
+                        "name": "callback",
+                        "type": "subscription_callback_t",
+                        "optional": false
+                    }
+                ],
+                "returnType": "std::string"
             }
         }
     ],
@@ -1843,8 +1866,14 @@
             "name": "state_subscribeRuntimeVersion",
             "summary": "Retrieves the runtime version via subscription",
             "method": {
-                "parameters": [],
-                "returnType": "RuntimeVersion"
+                "parameters": [
+                    {
+                        "name": "callback",
+                        "type": "subscription_callback_t",
+                        "optional": false
+                    }
+                ],
+                "returnType": "std::string"
             }
         },
         {
@@ -1853,12 +1882,17 @@
             "method": {
                 "parameters": [
                     {
+                        "name": "callback",
+                        "type": "subscription_callback_t",
+                        "optional": false
+                    },
+                    {
                         "name": "keys",
                         "type": "Vec<StorageKey>",
                         "optional": true
                     }
                 ],
-                "returnType": "StorageChangeSet"
+                "returnType": "std::string"
             }
         },
         {

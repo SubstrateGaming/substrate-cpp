@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 
+#include <functional>
 #include <nlohmann/json.hpp>
 
 #ifndef LIB_SUBSTRATE_DECLARE_CONVERT_JSON
@@ -326,6 +327,9 @@ namespace substrate::rpc
    // We can still use the .NET API for that as the SDK generators are in .NET aswell.
    // If needed, we must define all the structs here and scale decoders.
    using Metadata = std::string;
+
+   // Susbcription Callbacks
+   using subscription_callback_t = std::function<void(const nlohmann::json&)>;
 
    // TODO:
    using ExtrinsicOrHash = Bytes;

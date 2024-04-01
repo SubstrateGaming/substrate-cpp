@@ -9,7 +9,7 @@ json_rpc_client::json_rpc_client(substrate::Logger logger, const std::string &ur
 {
 }
 
-nlohmann::json json_rpc_client::send_rpc(const std::string &method, const nlohmann::json &params, subscription_callback_t callback)
+nlohmann::json json_rpc_client::send_rpc(const std::string &method, const nlohmann::json &params, substrate::rpc::subscription_callback_t callback)
 {
    // generate a unique request id for this rpc call
    const auto request_id = _counter.fetch_add(1u);
@@ -95,7 +95,7 @@ std::string json_rpc_client::send(const std::string &method, const nlohmann::jso
    throw std::runtime_error(method);
 }
 
-nlohmann::json json_rpc_client::send_rpc_result(const std::string &method, const nlohmann::json &params, subscription_callback_t callback)
+nlohmann::json json_rpc_client::send_rpc_result(const std::string &method, const nlohmann::json &params, substrate::rpc::subscription_callback_t callback)
 {
    auto response = send_rpc(method, params, callback);
    if (response.contains("result"))
@@ -149,7 +149,7 @@ void json_rpc_client::on_message(const std::string &message)
       {
          // handle messages tied to a specific subscription
          const std::string subscription_id{response[kParams][kSubscription]};
-         subscription_callback_t callback;
+         substrate::rpc::subscription_callback_t callback;
          {
             std::lock_guard<std::mutex> lock(_mutex);
 

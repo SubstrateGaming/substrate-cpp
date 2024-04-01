@@ -10,13 +10,12 @@ namespace substrate::detail::web
    {
       constexpr static auto kCategory = "json_rpc_client";
       using counter_t = uint32_t;
-      using subscription_callback_t = std::function<void(nlohmann::json)>;
 
       std::atomic<counter_t> _counter{1};
       std::mutex _mutex;
       std::condition_variable _cv;
       std::unordered_map<counter_t, nlohmann::json> _pending_messages;
-      std::unordered_map<std::string, subscription_callback_t> _subscriptions;
+      std::unordered_map<std::string, substrate::rpc::subscription_callback_t> _subscriptions;
 
       // TODO: This only works as long send_rpc() is called from within one thread.
       //       Should refactor that to allow multi-threading for users.
@@ -26,10 +25,10 @@ namespace substrate::detail::web
       json_rpc_client(substrate::Logger logger, const std::string &url);
       virtual ~json_rpc_client() override = default;
 
-      nlohmann::json send_rpc(const std::string &method, const nlohmann::json &params = nullptr, subscription_callback_t callback = nullptr);
+      nlohmann::json send_rpc(const std::string &method, const nlohmann::json &params = nullptr, substrate::rpc::subscription_callback_t callback = nullptr);
 
       std::string send(const std::string &method, const nlohmann::json &params = nullptr);
-      nlohmann::json send_rpc_result(const std::string &method, const nlohmann::json &params = nullptr, subscription_callback_t callback = nullptr);
+      nlohmann::json send_rpc_result(const std::string &method, const nlohmann::json &params = nullptr, substrate::rpc::subscription_callback_t callback = nullptr);
 
    protected:
       virtual void on_message(const std::string& message) override final;

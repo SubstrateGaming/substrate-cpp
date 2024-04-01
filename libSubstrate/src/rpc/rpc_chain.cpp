@@ -23,18 +23,18 @@ Header substrate_client::chain_getHeader(std::optional<BlockHash> hash) const
    return rpc<Header>("chain_getHeader", hash);
 }
 
-Header substrate_client::chain_subscribeAllHeads() const
+std::string substrate_client::chain_subscribeAllHeads(subscription_callback_t callback) const
 {
-   return rpc<Header>("chain_subscribeAllHeads");
+   return rpc<std::string>("chain_subscribeAllHeads", callback);
 }
 
-Header substrate_client::chain_subscribeFinalizedHeads() const
+std::string substrate_client::chain_subscribeFinalizedHeads(subscription_callback_t callback) const
 {
-   return rpc<Header>("chain_subscribeFinalizedHeads");
+   return rpc<std::string>("chain_subscribeFinalizedHeads", callback);
 }
 
-Header substrate_client::chain_subscribeNewHeads() const
+std::string substrate_client::chain_subscribeNewHeads(subscription_callback_t callback) const
 {
-   return rpc<Header>("chain_subscribeNewHeads");
+   return rpc<std::string>("chain_subscribeNewHeads", callback);
 }
 

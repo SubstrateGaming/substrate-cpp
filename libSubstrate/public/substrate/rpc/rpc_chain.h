@@ -36,21 +36,24 @@ namespace substrate::rpc
 
       /**
        * @brief Retrieves the newest header via subscription
-       * @return Header
+       * @param callback subscription_callback_t
+       * @return std::string
        */
-      virtual Header chain_subscribeAllHeads() const = 0;
+      virtual std::string chain_subscribeAllHeads(subscription_callback_t callback) const = 0;
 
       /**
        * @brief Retrieves the best finalized header via subscription
-       * @return Header
+       * @param callback subscription_callback_t
+       * @return std::string
        */
-      virtual Header chain_subscribeFinalizedHeads() const = 0;
+      virtual std::string chain_subscribeFinalizedHeads(subscription_callback_t callback) const = 0;
 
       /**
        * @brief Retrieves the best header via subscription
-       * @return Header
+       * @param callback subscription_callback_t
+       * @return std::string
        */
-      virtual Header chain_subscribeNewHeads() const = 0;
+      virtual std::string chain_subscribeNewHeads(subscription_callback_t callback) const = 0;
    };
 }
 
@@ -60,7 +63,7 @@ namespace substrate::rpc
    virtual BlockHash chain_getBlockHash(std::optional<BlockNumber> blockNumber = std::nullopt) const override; \
    virtual BlockHash chain_getFinalizedHead() const override; \
    virtual Header chain_getHeader(std::optional<BlockHash> hash = std::nullopt) const override; \
-   virtual Header chain_subscribeAllHeads() const override; \
-   virtual Header chain_subscribeFinalizedHeads() const override; \
-   virtual Header chain_subscribeNewHeads() const override;
+   virtual std::string chain_subscribeAllHeads(subscription_callback_t callback) const override; \
+   virtual std::string chain_subscribeFinalizedHeads(subscription_callback_t callback) const override; \
+   virtual std::string chain_subscribeNewHeads(subscription_callback_t callback) const override;
 #endif
