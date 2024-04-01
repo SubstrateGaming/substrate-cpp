@@ -83,7 +83,7 @@ void substrate_client::setRuntimeVersion(substrate::modules::RuntimeVersion vers
    _runtimeVersion = version;
 }
 
-substrate::models::Hash substrate_client::getGenesisHash() const
+Hash substrate_client::getGenesisHash() const
 {
    if (!_genesisHash.has_value())
    {
@@ -92,15 +92,15 @@ substrate::models::Hash substrate_client::getGenesisHash() const
    return _genesisHash.value();
 }
 
-void substrate_client::setGenesisHash(substrate::models::Hash hash)
+void substrate_client::setGenesisHash(Hash hash)
 {
    _genesisHash = hash;
 }
 
-substrate::models::Extrinsic substrate_client::make_extrinsic(
+Extrinsic substrate_client::make_extrinsic(
     substrate::Account account,
-    substrate::models::Method call,
-    substrate::models::ChargeType charge,
+    Method call,
+    ChargeType charge,
     uint32_t lifeTime) const
 {
    using namespace substrate::models;
@@ -109,7 +109,7 @@ substrate::models::Extrinsic substrate_client::make_extrinsic(
    const auto runtimeVersion = getRuntimeVersion();
 
    Hash checkpoint;
-   substrate::models::Extrinsic extrinsic;
+   Extrinsic extrinsic;
 
    extrinsic.Signed = true;
    extrinsic.TransactionVersion = substrate::constants::TransactionVersion;
