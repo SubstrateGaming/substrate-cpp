@@ -16,7 +16,7 @@ class EraTest : public testing::TestWithParam<EraTestParams>
 TEST_P(EraTest, Encode)
 {
    auto params = GetParam();
-   substrate::models::Era era;
+   substrate::rpc::Era era;
    era.Period = params.Period;
    era.Phase = params.Phase;
 
@@ -29,7 +29,7 @@ TEST_P(EraTest, Decode)
 {
    auto params = GetParam();
    substrate::decoder decoder(params.Expected);
-   substrate::models::Era era;
+   substrate::rpc::Era era;
    decoder >> era;
    EXPECT_EQ(era.Period, params.Period);
    EXPECT_EQ(era.Phase, params.Phase);
@@ -37,13 +37,13 @@ TEST_P(EraTest, Decode)
 
 TEST(EraTest, EraBeginTest)
 {
-   substrate::models::Era era{false, 64, 49};
+   substrate::rpc::Era era{false, 64, 49};
    EXPECT_EQ(1585, era.get_start(1587));
 }
 
 TEST(EraTest, EraCreateTest)
 {
-   substrate::models::Era era = substrate::models::Era::make(12, 15686);
+   substrate::rpc::Era era = substrate::rpc::Era::make(12, 15686);
    EXPECT_EQ(era.Period, 16);
    EXPECT_EQ(era.Phase, 6);
 }

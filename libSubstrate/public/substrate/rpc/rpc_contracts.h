@@ -14,7 +14,7 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return ContractExecResult
        */
-      virtual ContractExecResult contracts_call(ContractCallRequest callRequest, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual ContractExecResult contracts_call(ContractCallRequest callRequest, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Returns the value under a specified storage key in a contract
@@ -24,7 +24,7 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return Option<Bytes>
        */
-      virtual Option<Bytes> contracts_getStorage(AccountId address, H256 key, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual Option<Bytes> contracts_getStorage(AccountId address, H256 key, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Instantiate a new contract
@@ -33,7 +33,7 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return ContractInstantiateResult
        */
-      virtual ContractInstantiateResult contracts_instantiate(InstantiateRequestV1 request, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual ContractInstantiateResult contracts_instantiate(InstantiateRequestV1 request, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Returns the projected time a given contract will be able to sustain paying its rent
@@ -42,7 +42,7 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return Option<BlockNumber>
        */
-      virtual Option<BlockNumber> contracts_rentProjection(AccountId address, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual Option<BlockNumber> contracts_rentProjection(AccountId address, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Upload new code without instantiating a contract from it
@@ -51,15 +51,15 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return CodeUploadResult
        */
-      virtual CodeUploadResult contracts_upload_code(CodeUploadRequest uploadRequest, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual CodeUploadResult contracts_upload_code(CodeUploadRequest uploadRequest, std::optional<BlockHash> at = std::nullopt) const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_CONTRACTS
 #define SUBSTRATE_IMPL_RPC_CONTRACTS \
-   virtual ContractExecResult contracts_call(ContractCallRequest callRequest, std::optional<BlockHash> at = std::nullopt) override; \
-   virtual Option<Bytes> contracts_getStorage(AccountId address, H256 key, std::optional<BlockHash> at = std::nullopt) override; \
-   virtual ContractInstantiateResult contracts_instantiate(InstantiateRequestV1 request, std::optional<BlockHash> at = std::nullopt) override; \
-   virtual Option<BlockNumber> contracts_rentProjection(AccountId address, std::optional<BlockHash> at = std::nullopt) override; \
-   virtual CodeUploadResult contracts_upload_code(CodeUploadRequest uploadRequest, std::optional<BlockHash> at = std::nullopt) override;
+   virtual ContractExecResult contracts_call(ContractCallRequest callRequest, std::optional<BlockHash> at = std::nullopt) const override; \
+   virtual Option<Bytes> contracts_getStorage(AccountId address, H256 key, std::optional<BlockHash> at = std::nullopt) const override; \
+   virtual ContractInstantiateResult contracts_instantiate(InstantiateRequestV1 request, std::optional<BlockHash> at = std::nullopt) const override; \
+   virtual Option<BlockNumber> contracts_rentProjection(AccountId address, std::optional<BlockHash> at = std::nullopt) const override; \
+   virtual CodeUploadResult contracts_upload_code(CodeUploadRequest uploadRequest, std::optional<BlockHash> at = std::nullopt) const override;
 #endif

@@ -1,7 +1,7 @@
 #pragma once
 #include <substrate/substrate.h>
 
-namespace substrate::models::detail
+namespace substrate::rpc::detail
 {
    struct Payload
    {
@@ -30,6 +30,6 @@ namespace substrate::models::detail
    Payload make_payload(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion);
 }
 
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::detail::Payload::extra_t& v);
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::detail::Payload::additional_t& v);
-substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::models::detail::Payload& v);
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::rpc::detail::Payload::extra_t& v);
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::rpc::detail::Payload::additional_t& v);
+substrate::encoder& operator<<(substrate::encoder& encoder, const substrate::rpc::detail::Payload& v);

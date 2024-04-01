@@ -42,47 +42,49 @@ int main(int argc, char **argv)
 {
    std::cout << "Hello, Substrate Client!" << std::endl;
 
-   auto client = substrate::make_client(std::make_shared<logger>(), "ws://192.168.88.147:9944");
-   if (!client->connect())
-      return -1;
+   // auto client = substrate::make_client(std::make_shared<logger>(), "ws://172.16.20.2:9944");
+   // if (!client->connect())
+   //    return -1;
 
-   std::cout << "Get metadata...";
-   const auto runtimeVersion = client->getStateModule()->getRuntimeVersion();
-   client->setRuntimeVersion(runtimeVersion);
+   // auto test = client->chain_getBlockHash();
 
-   std::cout << std::format("Runtime version is: {}, spec version is {}, transaction version is {}, node is {}",
-      runtimeVersion.ImplVersion,
-      runtimeVersion.SpecVersion,
-      runtimeVersion.TransactionVersion,
-      runtimeVersion.ImplName) << std::endl;
+   // std::cout << "Get metadata...";
+   // const auto runtimeVersion = client->getStateModule()->getRuntimeVersion();
+   // client->setRuntimeVersion(runtimeVersion);
 
-   const auto genesisHash = client->getChainModule()->getBlockHash(substrate::models::BlockNumber(0));
-   client->setGenesisHash(genesisHash);
-   std::cout << std::format("Genesis hash is {}", genesisHash.value()) << std::endl;
+   // std::cout << std::format("Runtime version is: {}, spec version is {}, transaction version is {}, node is {}",
+   //    runtimeVersion.ImplVersion,
+   //    runtimeVersion.SpecVersion,
+   //    runtimeVersion.TransactionVersion,
+   //    runtimeVersion.ImplName) << std::endl;
 
-   std::cout << "Client is connected, waiting until exit!" << std::endl;
+   // const auto genesisHash = client->getChainModule()->getBlockHash(substrate::rpc::BlockNumber(0));
+   // client->setGenesisHash(genesisHash);
+   // std::cout << std::format("Genesis hash is {}", genesisHash.value()) << std::endl;
 
-   auto account = substrate::development::make_account_alice();
-   substrate::models::Method method;
-   method.ModuleIndex = 6;
-   method.CallIndex = 7;
-   method.Parameters = substrate::hex_decode("0x008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480b00a014e33226");
+   // std::cout << "Client is connected, waiting until exit!" << std::endl;
 
-   const auto extrinsic = client->make_extrinsic(account, method);
-   auto id = client->getAuthorModule()->submitExtrinsicSubscribe(extrinsic);
-   std::cout << "Extrinsic subscription id is " << id << std::endl;
+   // auto account = substrate::development::make_account_alice();
+   // substrate::rpc::Method method;
+   // method.ModuleIndex = 6;
+   // method.CallIndex = 7;
+   // method.Parameters = substrate::hex_decode("0x008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480b00a014e33226");
 
-   // Debug
-   // client->getChainModule()->getBlockHash(1);
-   // client->getChainModule()->getFinalizedHead();
-   // auto header = client->getChainModule()->getHeader();
-   // auto block = client->getChainModule()->getBlock();
-   // auto pending = client->getAuthorModule()->getPendingExtrinsic();
+   // const auto extrinsic = client->make_extrinsic(account, method);
+   // auto id = client->getAuthorModule()->submitExtrinsicSubscribe(extrinsic);
+   // std::cout << "Extrinsic subscription id is " << id << std::endl;
 
-   client->wait();
+   // // Debug
+   // // client->getChainModule()->getBlockHash(1);
+   // // client->getChainModule()->getFinalizedHead();
+   // // auto header = client->getChainModule()->getHeader();
+   // // auto block = client->getChainModule()->getBlock();
+   // // auto pending = client->getAuthorModule()->getPendingExtrinsic();
 
-   std::cout << "Stopping" << std::endl;
-   client = nullptr;
+   // client->wait();
+
+   // std::cout << "Stopping" << std::endl;
+   // client = nullptr;
 
    return 0;
 }

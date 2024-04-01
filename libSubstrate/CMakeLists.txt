@@ -34,10 +34,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 # Right now boost is the only library we expose to public.
-target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost)
+target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost nlohmann_json::nlohmann_json)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    nlohmann_json::nlohmann_json
     libsodium::libsodium
     sr25519::sr25519
     ${CURL_LIBRARIES})

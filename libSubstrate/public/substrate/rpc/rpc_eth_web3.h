@@ -11,19 +11,19 @@ namespace substrate::rpc
        * @brief Returns current client version.
        * @return Text
        */
-      virtual Text web3_clientVersion() = 0;
+      virtual Text web3_clientVersion() const = 0;
 
       /**
        * @brief Returns sha3 of the given data
        * @param data Bytes
        * @return H256
        */
-      virtual H256 web3_sha3(Bytes data) = 0;
+      virtual H256 web3_sha3(Bytes data) const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_ETH_WEB3
 #define SUBSTRATE_IMPL_RPC_ETH_WEB3 \
-   virtual Text web3_clientVersion() override; \
-   virtual H256 web3_sha3(Bytes data) override;
+   virtual Text web3_clientVersion() const override; \
+   virtual H256 web3_sha3(Bytes data) const override;
 #endif

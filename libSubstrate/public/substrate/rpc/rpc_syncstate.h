@@ -12,11 +12,11 @@ namespace substrate::rpc
        * @param raw bool
        * @return Json
        */
-      virtual Json sync_state_genSyncSpec(bool raw) = 0;
+      virtual Json sync_state_genSyncSpec(bool raw) const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_SYNCSTATE
 #define SUBSTRATE_IMPL_RPC_SYNCSTATE \
-   virtual Json sync_state_genSyncSpec(bool raw) override;
+   virtual Json sync_state_genSyncSpec(bool raw) const override;
 #endif

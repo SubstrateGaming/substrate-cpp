@@ -11,7 +11,7 @@ TEST(ExtrinsicTest, ExtrinsicDecodeEncodeTest1)
    substrate::decoder decoder(substrate::hex_decode(hex));
 
    // Decode extrinsic
-   substrate::models::Extrinsic extrinsic;
+   substrate::rpc::Extrinsic extrinsic;
    decoder >> extrinsic;
 
    EXPECT_EQ(extrinsic.Signed, false);
@@ -40,7 +40,7 @@ TEST(ExtrinsicTest, ExtrinsicDecodeTest2)
    substrate::decoder decoder(substrate::hex_decode(hex));
 
    // Decode extrinsic
-   substrate::models::Extrinsic extrinsic;
+   substrate::rpc::Extrinsic extrinsic;
    decoder >> extrinsic;
 
    EXPECT_EQ(extrinsic.Signed, true);
@@ -53,7 +53,7 @@ TEST(ExtrinsicTest, ExtrinsicDecodeTest2)
    EXPECT_EQ(decoder.remaining_bytes(), 0);
 
    // Decode extrinsic's parameters
-   substrate::models::AccountId32 dest;
+   substrate::rpc::AccountId dest;
    substrate::CompactInteger value;
 
    substrate::decoder decoder2(extrinsic.Method.Parameters);
@@ -74,7 +74,7 @@ TEST(ExtrinsicTest, ExtrinsicDecodeSignedTransaction)
    const std::string signed_extrinsic = "0x45028400d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d015ee8a223bd50126312c7dd4e052cbd596c362e18b576caebf88a46f37f0ae645f8d83b6841c2bcbe7e875de25ab90ffc69cb719ba9f98eb5c66718a47683db8a000800000607008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480b00a014e33226";
 
    substrate::decoder decoder(substrate::hex_decode(signed_extrinsic));
-   substrate::models::Extrinsic extrinsic;
+   substrate::rpc::Extrinsic extrinsic;
    decoder >> extrinsic;
 
    substrate::encoder encoder;

@@ -14,7 +14,7 @@ namespace substrate::rpc
        * @param key Bytes
        * @return Option<Bytes>
        */
-      virtual Option<Bytes> offchain_localStorageGet(StorageKind kind, Bytes key) = 0;
+      virtual Option<Bytes> offchain_localStorageGet(StorageKind kind, Bytes key) const = 0;
 
       /**
        * @brief Set offchain local storage under given key and prefix
@@ -24,12 +24,12 @@ namespace substrate::rpc
        * @param value Bytes
        * @return Null
        */
-      virtual Null offchain_localStorageSet(StorageKind kind, Bytes key, Bytes value) = 0;
+      virtual Null offchain_localStorageSet(StorageKind kind, Bytes key, Bytes value) const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_OFFCHAIN
 #define SUBSTRATE_IMPL_RPC_OFFCHAIN \
-   virtual Option<Bytes> offchain_localStorageGet(StorageKind kind, Bytes key) override; \
-   virtual Null offchain_localStorageSet(StorageKind kind, Bytes key, Bytes value) override;
+   virtual Option<Bytes> offchain_localStorageGet(StorageKind kind, Bytes key) const override; \
+   virtual Null offchain_localStorageSet(StorageKind kind, Bytes key, Bytes value) const override;
 #endif

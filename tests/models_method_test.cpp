@@ -17,7 +17,7 @@ class MethodTest : public testing::TestWithParam<MethodTestParams>
 TEST_P(MethodTest, Encode)
 {
    auto params = GetParam();
-   const substrate::models::Method method{params.ModuleIndex, params.CallIndex, params.Parameters};
+   const substrate::rpc::Method method{params.ModuleIndex, params.CallIndex, params.Parameters};
 
    substrate::encoder encoder;
    encoder << method;
@@ -28,7 +28,7 @@ TEST_P(MethodTest, Decode)
 {
    auto params = GetParam();
    substrate::decoder decoder(substrate::hex_decode(params.Hex));
-   substrate::models::Method method;
+   substrate::rpc::Method method;
    decoder >> method;
 
    EXPECT_EQ(method.ModuleIndex, params.ModuleIndex);

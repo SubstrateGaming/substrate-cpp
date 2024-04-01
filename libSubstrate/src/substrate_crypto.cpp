@@ -1,15 +1,15 @@
 #include <substrate/substrate.h>
 #include <sodium.h>
 
-substrate::Crypto substrate::make_crypto(substrate::models::KeyType provider)
+substrate::Crypto substrate::make_crypto(substrate::rpc::KeyType provider)
 {
    switch (provider)
    {
-   case substrate::models::KeyType::Ed25519:
+   case substrate::rpc::KeyType::Ed25519:
       return substrate::make_crypto_ed25519();
-   case substrate::models::KeyType::Sr25519:
+   case substrate::rpc::KeyType::Sr25519:
       return substrate::make_crypto_sr25519();
-   case substrate::models::KeyType::Ecdsa:
+   case substrate::rpc::KeyType::Ecdsa:
       return substrate::make_crypto_ed25519();
    default:
       break;

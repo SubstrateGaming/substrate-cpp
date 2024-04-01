@@ -67,10 +67,10 @@ TEST_P(MnemonicFromEntropyTest, MnemonicFromEntropyTest)
    EXPECT_EQ(join_vector_accumulate(mnemonicList), params.ExpectedMnemonic);
 
    const std::string password;
-   const auto account1 = substrate::make_account_with_mnemonic(substrate::models::KeyType::Sr25519, params.ExpectedMnemonic, params.WordList, password);
+   const auto account1 = substrate::make_account_with_mnemonic(substrate::rpc::KeyType::Sr25519, params.ExpectedMnemonic, params.WordList, password);
    EXPECT_EQ(account1->get_address(), params.Sr25519AccountAddress);
 
-   const auto account2 = substrate::make_account_with_mnemonic(substrate::models::KeyType::Ed25519, params.ExpectedMnemonic, params.WordList, password);
+   const auto account2 = substrate::make_account_with_mnemonic(substrate::rpc::KeyType::Ed25519, params.ExpectedMnemonic, params.WordList, password);
    EXPECT_EQ(account2->get_address(), params.Ed25519AccountAddress);
 }
 

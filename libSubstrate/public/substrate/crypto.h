@@ -1,6 +1,6 @@
 #pragma once
 #include "types.h"
-#include "models/keytype.h"
+#include "rpc_types.h"
 
 namespace substrate
 {
@@ -29,7 +29,7 @@ namespace substrate
       [[nodiscard]] virtual bool verify(const bytes &message, const bytes &signature, const bytes &public_key) const = 0;
    };
 
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto(substrate::models::KeyType provider);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto(substrate::rpc::KeyType provider);
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_ed25519();
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_sr25519();
    [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_secp256k1();

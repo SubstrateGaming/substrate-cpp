@@ -13,11 +13,11 @@ namespace substrate::rpc
        * @param at Hash
        * @return Option<BlockStats>
        */
-      virtual Option<BlockStats> dev_getBlockStats(Hash at) = 0;
+      virtual Option<BlockStats> dev_getBlockStats(Hash at) const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_DEV
 #define SUBSTRATE_IMPL_RPC_DEV \
-   virtual Option<BlockStats> dev_getBlockStats(Hash at) override;
+   virtual Option<BlockStats> dev_getBlockStats(Hash at) const override;
 #endif

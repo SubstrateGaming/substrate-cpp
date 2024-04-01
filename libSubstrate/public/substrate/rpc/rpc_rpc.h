@@ -11,11 +11,11 @@ namespace substrate::rpc
        * @brief Retrieves the list of RPC methods that are exposed by the node
        * @return RpcMethods
        */
-      virtual RpcMethods rpc_methods() = 0;
+      virtual RpcMethods rpc_methods() const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_RPC
 #define SUBSTRATE_IMPL_RPC_RPC \
-   virtual RpcMethods rpc_methods() override;
+   virtual RpcMethods rpc_methods() const override;
 #endif

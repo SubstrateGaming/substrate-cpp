@@ -14,21 +14,21 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return MmrLeafBatchProof
        */
-      virtual MmrLeafBatchProof mmr_generateProof(Vec<u64> blockNumbers, std::optional<u64> bestKnownBlockNumber = std::nullopt, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual MmrLeafBatchProof mmr_generateProof(Vec<u64> blockNumbers, std::optional<u64> bestKnownBlockNumber = std::nullopt, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Get the MMR root hash for the current best block.
        * @param at BlockHash
        * @return MmrHash
        */
-      virtual MmrHash mmr_root(std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual MmrHash mmr_root(std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Verify an MMR proof
        * @param proof MmrLeafBatchProof
        * @return bool
        */
-      virtual bool mmr_verifyProof(MmrLeafBatchProof proof) = 0;
+      virtual bool mmr_verifyProof(MmrLeafBatchProof proof) const = 0;
 
       /**
        * @brief Verify an MMR proof statelessly given an mmr_root
@@ -36,14 +36,14 @@ namespace substrate::rpc
        * @param proof MmrLeafBatchProof
        * @return bool
        */
-      virtual bool mmr_verifyProofStateless(MmrHash root, MmrLeafBatchProof proof) = 0;
+      virtual bool mmr_verifyProofStateless(MmrHash root, MmrLeafBatchProof proof) const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_MMR
 #define SUBSTRATE_IMPL_RPC_MMR \
-   virtual MmrLeafBatchProof mmr_generateProof(Vec<u64> blockNumbers, std::optional<u64> bestKnownBlockNumber = std::nullopt, std::optional<BlockHash> at = std::nullopt) override; \
-   virtual MmrHash mmr_root(std::optional<BlockHash> at = std::nullopt) override; \
-   virtual bool mmr_verifyProof(MmrLeafBatchProof proof) override; \
-   virtual bool mmr_verifyProofStateless(MmrHash root, MmrLeafBatchProof proof) override;
+   virtual MmrLeafBatchProof mmr_generateProof(Vec<u64> blockNumbers, std::optional<u64> bestKnownBlockNumber = std::nullopt, std::optional<BlockHash> at = std::nullopt) const override; \
+   virtual MmrHash mmr_root(std::optional<BlockHash> at = std::nullopt) const override; \
+   virtual bool mmr_verifyProof(MmrLeafBatchProof proof) const override; \
+   virtual bool mmr_verifyProofStateless(MmrHash root, MmrLeafBatchProof proof) const override;
 #endif

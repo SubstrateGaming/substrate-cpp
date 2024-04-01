@@ -14,7 +14,7 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return FeeDetails
        */
-      virtual FeeDetails payment_queryFeeDetails(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual FeeDetails payment_queryFeeDetails(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) const = 0;
 
       /**
        * @brief Retrieves the fee information for an encoded extrinsic
@@ -23,12 +23,12 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return RuntimeDispatchInfoV1
        */
-      virtual RuntimeDispatchInfoV1 payment_queryInfo(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) = 0;
+      virtual RuntimeDispatchInfoV1 payment_queryInfo(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) const = 0;
    };
 }
 
 #ifndef SUBSTRATE_IMPL_RPC_PAYMENT
 #define SUBSTRATE_IMPL_RPC_PAYMENT \
-   virtual FeeDetails payment_queryFeeDetails(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) override; \
-   virtual RuntimeDispatchInfoV1 payment_queryInfo(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) override;
+   virtual FeeDetails payment_queryFeeDetails(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) const override; \
+   virtual RuntimeDispatchInfoV1 payment_queryInfo(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) const override;
 #endif

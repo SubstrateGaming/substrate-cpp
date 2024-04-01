@@ -3,29 +3,33 @@
 #include "../web/json_rpc_client.h"
 #include "../substrate_models.h"
 
-namespace substrate::detail::rpc
+#include <optional>
+#include <type_traits>
+
+// A helper trait to detect std::optional
+template <typename T>
+struct is_std_optional : std::false_type { };
+
+template <typename T>
+struct is_std_optional<std::optional<T>> : std::true_type { };
+
+template <typename T>
+inline constexpr bool is_std_optional_v = is_std_optional<T>::value;
+
+namespace substrate::rpc::detail
 {
    using namespace substrate::rpc;
    using namespace substrate::detail::web;
 
-   // TODO: Remove this completely
-   using namespace substrate::models;
-
-   class substrate_client final : public substrate::IClient
+   class substrate_client final : public IClient
    {
       substrate::Logger _logger;
 
       std::string _url;
       json_rpc_client_ptr _socket;
 
-      std::optional<substrate::modules::RuntimeVersion> _runtimeVersion;
+      std::optional<RuntimeVersion> _runtimeVersion;
       std::optional<Hash> _genesisHash;
-      substrate::modules::Author _module_author;
-      substrate::modules::Chain _module_chain;
-      substrate::modules::Payment _module_payment;
-      substrate::modules::State _module_state;
-      substrate::modules::System _module_system;
-      substrate::modules::UnstableCalls _module_unstable_calls;
 
       constexpr static auto kCategory = "substrate_client";
 
@@ -38,35 +42,55 @@ namespace substrate::detail::rpc
 
       virtual void wait() override;
 
-      [[nodiscard]] virtual substrate::modules::RuntimeVersion getRuntimeVersion() const override;
-      virtual void setRuntimeVersion(substrate::modules::RuntimeVersion version) override;
+      [[nodiscard]] virtual RuntimeVersion getRuntimeVersion() const override;
+      virtual void setRuntimeVersion(RuntimeVersion version) override;
 
       [[nodiscard]] virtual Hash getGenesisHash() const override;
       virtual void setGenesisHash(Hash hash) override;
 
       [[nodiscard]] Extrinsic make_extrinsic(
-         substrate::Account account,
-         Method call,
-         ChargeType charge = ChargeType(),
-         uint32_t lifeTime = 0) const override;
+          substrate::Account account,
+          Method call,
+          ChargeType charge = ChargeType(),
+          uint32_t lifeTime = 0) const override;
 
       SUBSTRATE_IMPL_RPC_CLIENT
 
-      [[nodiscard]] substrate::modules::Author getAuthorModule() const override { return _module_author; }
-      [[nodiscard]] substrate::modules::Chain getChainModule() const override { return _module_chain; }
-      [[nodiscard]] substrate::modules::Payment getPaymentModule() const override { return _module_payment; }
-      [[nodiscard]] substrate::modules::State getStateModule() const override { return _module_state; }
-      [[nodiscard]] substrate::modules::System getSystemModule() const override { return _module_system; }
-      [[nodiscard]] substrate::modules::UnstableCalls getUnstableCallsModule() const override { return _module_unstable_calls; }
-
-      template<typename TReturn, typename... Args>
-      TReturn rpc(const std::string& name, Args&&... args)
+   private:
+      template <typename T>
+      void add_to_json(nlohmann::json &json, T &&value) const
       {
+         if constexpr (is_std_optional_v<std::decay_t<T>>)
+         {
+            if (value.has_value())
+            {
+               json.push_back(nlohmann::json(*value));
+            }
+         }
+         else
+         {
+            json.push_back(nlohmann::json(value));
+         }
+      }
+
+      template <typename... Args>
+      nlohmann::json json_encode_params(Args &&...args) const
+      {
+         auto result = nlohmann::json::array();
+         // (add_to_json(result, std::forward<Args>(args)), ...);
+         return result;
+      }
+
+      template <typename TReturn, typename... Args>
+      TReturn rpc(const std::string &name, Args &&...args) const
+      {
+         // const auto params = json_encode_params(std::forward<Args>(args)...);
+         // const auto result = _socket->send(name, params);
          return TReturn{};
       }
 
-      template<typename TReturn, typename... Args>
-      TReturn rpc(const std::string& name)
+      template <typename TReturn, typename... Args>
+      TReturn rpc(const std::string &name) const
       {
          return TReturn{};
       }
