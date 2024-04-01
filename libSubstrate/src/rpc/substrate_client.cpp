@@ -103,7 +103,7 @@ Extrinsic substrate_client::make_extrinsic(
    {
       checkpoint = chain_getFinalizedHead();
       const auto finalizedHeader = chain_getHeader(checkpoint);
-      extrinsic.Era = Era::make(lifeTime, finalizedHeader.Number);
+      extrinsic.Era = Era::make(lifeTime, finalizedHeader.number);
    }
 
    extrinsic.Nonce = system_accountNextIndex(account->get_account_id());

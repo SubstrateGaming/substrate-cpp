@@ -68,25 +68,25 @@ namespace substrate::rpc
    {
       using strong_type::strong_type;
    };
-   LIB_SUBSTRATE_DECLARE_CONVERT(AccountId);
+   LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(AccountId);
 
    // Digest
    struct Digest
    {
       std::vector<std::string> Logs;
    };
-   LIB_SUBSTRATE_DECLARE_CONVERT(Digest);
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(Digest);
 
    // Header
    struct Header
    {
-      Digest Digest;
-      Hash ExtrinsicsRoot;
-      uint64_t Number{0};
-      Hash ParentHash;
-      Hash StateRoot;
+      Digest digest;
+      Hash extrinsicsRoot;
+      CompactInteger number{0};
+      Hash parentHash;
+      Hash stateRoot;
    };
-   LIB_SUBSTRATE_DECLARE_CONVERT(Header);
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(Header);
 
    // Charge Type
    struct ChargeTypeBase { };
@@ -121,7 +121,7 @@ namespace substrate::rpc
       uint64_t Phase{0};
 
       uint64_t get_start(uint64_t blockNumber) const;
-      static Era make(uint32_t lifeTime, uint64_t finalizedHeaderBlockNumber);
+      static Era make(uint32_t lifeTime, CompactInteger finalizedHeaderBlockNumber);
    };
    LIB_SUBSTRATE_DECLARE_CONVERT(Era);
 
@@ -176,12 +176,12 @@ namespace substrate::rpc
    // RuntimeVersion
    struct RuntimeVersion
    {
-      uint32_t AuthoringVersion{0};
-      uint32_t ImplVersion{0};
-      uint32_t SpecVersion{0};
-      uint32_t TransactionVersion{0};
-      std::string ImplName;
-      std::string SpecName;
+      uint32_t authoringVersion{0};
+      uint32_t implVersion{0};
+      uint32_t specVersion{0};
+      uint32_t transactionVersion{0};
+      std::string implName;
+      std::string specName;
    };
    LIB_SUBSTRATE_DECLARE_CONVERT(RuntimeVersion);
 
@@ -217,6 +217,9 @@ namespace substrate::rpc
 
    LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const Bytes &p);
    LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, Bytes &p);
+
+   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const CompactInteger &p);
+   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, CompactInteger &p);
 
    // TODO:
    using ExtrinsicOrHash = Bytes;

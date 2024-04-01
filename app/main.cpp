@@ -51,10 +51,10 @@ int main(int argc, char **argv)
    client->setRuntimeVersion(runtimeVersion);
 
    std::cout << std::format("Runtime version is: {}, spec version is {}, transaction version is {}, node is {}",
-      runtimeVersion.ImplVersion,
-      runtimeVersion.SpecVersion,
-      runtimeVersion.TransactionVersion,
-      runtimeVersion.ImplName) << std::endl;
+      runtimeVersion.implVersion,
+      runtimeVersion.specVersion,
+      runtimeVersion.transactionVersion,
+      runtimeVersion.implName) << std::endl;
 
    const auto genesisHash = client->chain_getBlockHash(substrate::rpc::BlockNumber(0));
    client->setGenesisHash(genesisHash);
