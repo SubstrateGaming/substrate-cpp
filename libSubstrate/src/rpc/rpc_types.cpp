@@ -3,11 +3,39 @@
 using namespace substrate::rpc;
 
 //
+// Bytes
+//
+substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const Bytes& v)
+{
+   encoder << v.const_value();
+   return encoder;
+}
+
+substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Bytes& v)
+{
+   decoder >> v.value();
+   return decoder;
+}
+
+void substrate::rpc::to_json(nlohmann::json &j, const Bytes &v)
+{
+   substrate::encoder encoder;
+   encoder << v;
+   j = encoder.assemble_hex();
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, Bytes &v)
+{
+   substrate::decoder decoder(substrate::hex_decode(j.get<std::string>()));
+   decoder >> v;
+}
+
+//
 // Hash
 //
 substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const Hash &v)
 {
-   encoder << substrate::hex_decode(v.value());
+   encoder << substrate::hex_decode(v.const_value());
    return encoder;
 }
 
@@ -19,7 +47,7 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Hash
 
 void substrate::rpc::to_json(nlohmann::json &j, const Hash &v)
 {
-   j = v.value();
+   j = v.const_value();
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, Hash &v)
@@ -35,13 +63,13 @@ substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, cons
    switch (substrate::constants::AddressVersion)
    {
    case 0:
-      encoder << substrate::hex_decode(v.value());
+      encoder << substrate::hex_decode(v.const_value());
       break;
    case 1:
-      encoder << static_cast<const uint8_t>(0xFF) << substrate::hex_decode(v.value());
+      encoder << static_cast<const uint8_t>(0xFF) << substrate::hex_decode(v.const_value());
       break;
    case 2:
-      encoder << static_cast<const uint8_t>(0x00) << substrate::hex_decode(v.value());
+      encoder << static_cast<const uint8_t>(0x00) << substrate::hex_decode(v.const_value());
       break;
    default:
       static_assert(substrate::constants::AddressVersion >= 0 && substrate::constants::AddressVersion <= 2, "not implemented address version");
@@ -81,7 +109,7 @@ void substrate::rpc::to_json(nlohmann::json &j, const AccountId &v)
 {
    // If not encoded in Base58 the RPC would result into the following error message:
    // "Base 58 requirement is violated"
-   j = substrate::get_address(substrate::hex_decode(v.value()));
+   j = substrate::get_address(substrate::hex_decode(v.const_value()));
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, AccountId &v)
@@ -430,20 +458,18 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Bloc
 
 void substrate::rpc::to_json(nlohmann::json &j, const BlockNumber &v)
 {
-   to_json(j, v.value());
+   to_json(j, v.const_value());
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, BlockNumber &v)
 {
-   uint32_t bn{0};
-   from_json(j, bn);
-   v = BlockNumber{bn};
+   from_json(j, v.value());
 }
 
 void substrate::rpc::to_json(nlohmann::json &j, const std::optional<BlockNumber> &v)
 {
    if (v.has_value())
-      to_json(j, v.value().value());
+      to_json(j, v.value());
    else
       j = nlohmann::json();
 }
@@ -452,9 +478,9 @@ void substrate::rpc::from_json(const nlohmann::json &j, std::optional<BlockNumbe
 {
    if (!j.is_null())
    {
-      uint32_t bn{0};
+      BlockNumber bn{0};
       from_json(j, bn);
-      v = BlockNumber{bn};
+      v = bn;
    }
    else
    {
@@ -600,49 +626,6 @@ void substrate::rpc::from_json(const nlohmann::json &j, RuntimeVersion &v)
    from_json(j["specName"], v.specName);
 }
 
-//
-// Bytes
-//
-void substrate::rpc::to_json(nlohmann::json &j, const Bytes &p)
-{
-   j = substrate::hex_encode(p);
-}
-
-void substrate::rpc::from_json(const nlohmann::json &j, Bytes &p)
-{
-   p = substrate::hex_decode(j.get<std::string>());
-}
-
-//
-// CompactInteger
-//
-void substrate::rpc::to_json(nlohmann::json &j, const CompactInteger &p)
-{
-   substrate::encoder encoder;
-   encoder << p;
-   j = encoder.assemble_hex();
-}
-
-void substrate::rpc::from_json(const nlohmann::json &j, CompactInteger &p)
-{
-   if (j.is_string())
-   {
-      // Nonce types (Index aswell) is encoded as real Compact Integer.
-      substrate::decoder decoder(substrate::hex_decode(j.get<std::string>()));
-      decoder >> p;
-   }
-   else if (j.is_number_integer())
-   {
-      // The account index type is simply encoded as is.
-      uint64_t value{0};
-      from_json(j, value);
-      p = value;
-   }
-   else
-   {
-      throw std::runtime_error("CompactInteger json representation not expected");
-   }
-}
 
 //
 // Health
@@ -676,4 +659,112 @@ void substrate::rpc::from_json(const nlohmann::json &j, SyncState &v)
    from_json(j["currentBlock"], v.currentBlock);
    from_json(j["highestBlock"], v.highestBlock);
    from_json(j["startingBlock"], v.startingBlock);
+}
+
+//
+// InclusionFee
+//
+void substrate::rpc::to_json(nlohmann::json &j, const InclusionFee &v)
+{
+   to_json(j["adjustedWeightFee"], v.adjustedWeightFee);
+   to_json(j["baseFee"], v.baseFee);
+   to_json(j["lenFee"], v.lenFee);
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, InclusionFee &v)
+{
+   from_json(j["adjustedWeightFee"], v.adjustedWeightFee);
+   from_json(j["baseFee"], v.baseFee);
+   from_json(j["lenFee"], v.lenFee);
+}
+
+//
+// FeeDetails
+//
+void substrate::rpc::to_json(nlohmann::json &j, const FeeDetails &v)
+{
+   if (v.inclusionFee.has_value())
+      to_json(j["inclusionFee"], v.inclusionFee.value());
+   else
+      to_json(j["inclusionFee"], nlohmann::json());
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, FeeDetails &v)
+{
+   if (j["inclusionFee"].is_object())
+   {
+      InclusionFee inclusionFee;
+      from_json(j["inclusionFee"], inclusionFee);
+      v.inclusionFee = inclusionFee;
+   }
+   else
+   {
+      v.inclusionFee = std::nullopt;
+   }
+}
+
+//
+// RuntimeDispatchInfoV1::Weight
+//
+void substrate::rpc::to_json(nlohmann::json &j, const RuntimeDispatchInfoV1::Weight &v)
+{
+   to_json(j["proof_size"], v.proof_size);
+   to_json(j["ref_time"], v.ref_time);
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, RuntimeDispatchInfoV1::Weight &v)
+{
+   from_json(j["proof_size"], v.proof_size);
+   from_json(j["ref_time"], v.ref_time);
+}
+
+//
+// RuntimeDispatchInfoV1
+//
+void substrate::rpc::to_json(nlohmann::json &j, const RuntimeDispatchInfoV1 &v)
+{
+   to_json(j["class"], v.classz);
+   to_json(j["partialFee"], v.partialFee);
+   to_json(j["weight"], v.weight);
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, RuntimeDispatchInfoV1 &v)
+{
+   from_json(j["class"], v.classz);
+   from_json(j["partialFee"], v.partialFee);
+   from_json(j["weight"], v.weight);
+}
+
+
+//
+// CompactInteger
+//
+void substrate::rpc::to_json(nlohmann::json &j, const CompactInteger &p)
+{
+   substrate::encoder encoder;
+   encoder << p;
+   j = encoder.assemble_hex();
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, CompactInteger &p)
+{
+   // I am not sure why but in RPC the compact integer is encoded differently than expected?!
+   // This seems odd but also works.
+
+   if (j.is_string())
+   {
+      const auto s = j.get<std::string>();
+      p = std::stoull(s, nullptr, 16);
+   }
+   else if (j.is_number_integer())
+   {
+      // The account index type is simply encoded as is.
+      uint64_t value{0};
+      from_json(j, value);
+      p = value;
+   }
+   else
+   {
+      throw std::runtime_error("CompactInteger json representation not expected");
+   }
 }

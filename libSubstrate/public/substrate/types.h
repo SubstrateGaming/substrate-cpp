@@ -33,7 +33,8 @@ namespace substrate
       explicit constexpr strong_type(T v) : _value(v) {}
       constexpr strong_type() : _value(T()) {}
       explicit operator T() const { return _value; }
-      T value() const { return _value; }
+      T& value() { return _value; }
+      const T& const_value() const { return _value; }
 
       static size_t GetTypeSize() { return TypeSize; }
    };

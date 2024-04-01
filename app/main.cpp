@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
    const auto genesisHash = client->chain_getBlockHash(substrate::rpc::BlockNumber(0));
    client->setGenesisHash(genesisHash);
-   std::cout << std::format("Genesis hash is {}", genesisHash.value()) << std::endl;
+   std::cout << std::format("Genesis hash is {}", genesisHash.const_value()) << std::endl;
 
    std::cout << "Client is connected, waiting until exit!" << std::endl;
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
    const auto extrinsic = client->make_extrinsic(account, method);
    auto id = client->author_submitExtrinsic(extrinsic);
-   std::cout << "Extrinsic is " << id.value() << std::endl;
+   std::cout << "Extrinsic is " << id.const_value() << std::endl;
 
    // Debug
    // std::cout << "Extrinsic subscription id is " << id << std::endl;

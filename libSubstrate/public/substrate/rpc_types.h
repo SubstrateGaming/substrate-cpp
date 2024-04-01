@@ -32,7 +32,6 @@ namespace substrate::rpc
    using u32 = uint32_t;
    using u64 = uint64_t;
 
-   using Bytes = substrate::bytes;
    using Text = std::string;
 
    using Index = CompactInteger;
@@ -62,6 +61,13 @@ namespace substrate::rpc
       /// ECDSA/SECP256k1 signature
       Ecdsa    = 2
    };
+
+   struct BytesTag { };
+   struct Bytes : strong_type<substrate::bytes, BytesTag, 0>
+   {
+      using strong_type::strong_type;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT(Bytes);
 
    // Hash
    struct HashTag { };
@@ -249,6 +255,40 @@ namespace substrate::rpc
    // Users of this API should know what they're looking for in the properties.
    using ChainProperties = nlohmann::json;
 
+   using Balance = CompactInteger;
+
+   struct InclusionFee
+   {
+      Balance baseFee;
+      Balance lenFee;
+      Balance adjustedWeightFee;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(InclusionFee);
+
+   struct FeeDetails
+   {
+      std::optional<InclusionFee> inclusionFee;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(FeeDetails);
+
+   struct RuntimeDispatchInfoV1
+   {
+      struct Weight
+      {
+         uint32_t ref_time{0};
+         uint32_t proof_size{0};
+      };
+
+      Weight weight;
+      std::string classz;
+
+      // Is a large number but really encoded as string.
+      std::string partialFee;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(RuntimeDispatchInfoV1::Weight);
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(RuntimeDispatchInfoV1);
+
+
    // TODO:
    using ExtrinsicOrHash = Bytes;
    using ExtrinsicStatus = Bytes;
@@ -257,8 +297,6 @@ namespace substrate::rpc
    using StorageData = Bytes;
    using Justification = Bytes;
    using Null = Bytes;
-   using FeeDetails = Bytes;
-   using RuntimeDispatchInfoV1 = Bytes;
    using RpcMethods = Bytes;
    using ReadProof = Bytes;
    using KeyValue = Bytes;
@@ -271,9 +309,6 @@ namespace substrate::rpc
    using NetworkState = Bytes;
 
    using PeerInfo = Bytes;
-
-   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const Bytes &p);
-   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, Bytes &p);
 
    LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const CompactInteger &p);
    LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, CompactInteger &p);

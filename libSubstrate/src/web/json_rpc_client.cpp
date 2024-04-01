@@ -101,6 +101,8 @@ nlohmann::json json_rpc_client::send_rpc_result(const std::string &method, const
    if (response.contains("result"))
       return response["result"];
 
+   auto s = response.dump();
+   printf(s.c_str());
    throw std::runtime_error(method);
 }
 
