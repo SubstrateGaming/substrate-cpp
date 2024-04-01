@@ -25,6 +25,7 @@ namespace substrate::rpc
 {
    using Bytes = substrate::bytes;
    using Text = std::string;
+
    using Index = CompactInteger;
 
    template<typename T>
@@ -68,7 +69,7 @@ namespace substrate::rpc
    {
       using strong_type::strong_type;
    };
-   LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(AccountId);
+   LIB_SUBSTRATE_DECLARE_CONVERT(AccountId);
 
    // Digest
    struct Digest
@@ -215,12 +216,6 @@ namespace substrate::rpc
    LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload::additional_t);
    LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload);
 
-   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const Bytes &p);
-   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, Bytes &p);
-
-   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const CompactInteger &p);
-   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, CompactInteger &p);
-
    // TODO:
    using ExtrinsicOrHash = Bytes;
    using ExtrinsicStatus = Bytes;
@@ -261,7 +256,14 @@ namespace substrate::rpc
    using f64 = Bytes;
    using u32 = uint32_t;
    using u64 = uint64_t;
-   using U256 = CompactInteger;
+   // using U256 = CompactInteger;
+
+   struct U256Tag {};
+   struct U256  : strong_type<CompactInteger, U256Tag, 64>
+   {
+      using strong_type::strong_type;
+   };
+
    using U64 = u64;
    using MmrLeafBatchProof = Bytes;
    using MmrHash = Bytes;
@@ -287,4 +289,16 @@ namespace substrate::rpc
    using PeerInfo = Bytes;
    using ChainProperties = Bytes;
    using SyncState = Bytes;
+
+   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const Bytes &p);
+   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, Bytes &p);
+
+   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const CompactInteger &p);
+   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, CompactInteger &p);
+
+   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const U256 &p);
+   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, U256 &p);
+
+   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json& j, std::vector<std::optional<substrate::rpc::StorageKey>>& v);
+
 }

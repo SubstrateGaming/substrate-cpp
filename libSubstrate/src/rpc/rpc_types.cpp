@@ -24,7 +24,7 @@ void substrate::rpc::to_json(nlohmann::json &j, const Hash &v)
 
 void substrate::rpc::from_json(const nlohmann::json &j, Hash &v)
 {
-   v = Hash{ j.get<std::string>() };
+   v = Hash{j.get<std::string>()};
 }
 
 //
@@ -77,6 +77,19 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Acco
    return decoder;
 }
 
+void substrate::rpc::to_json(nlohmann::json &j, const AccountId &v)
+{
+   // If not encoded in Base58 the RPC would result into the following error message:
+   // "Base 58 requirement is violated"
+   j = substrate::get_address(substrate::hex_decode(v.value()));
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, AccountId &v)
+{
+   // We do not really need that.
+   throw std::runtime_error("not implemented");
+}
+
 //
 // Digest
 //
@@ -118,15 +131,15 @@ void substrate::rpc::from_json(const nlohmann::json &j, Header &v)
 //
 substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const ChargeAssetTxPayment &v)
 {
-   encoder << v.AssetId;
    encoder << v.Tip;
+   encoder << v.AssetId;
    return encoder;
 }
 
 substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, ChargeAssetTxPayment &v)
 {
-   decoder >> v.AssetId;
    decoder >> v.Tip;
+   decoder >> v.AssetId;
    return decoder;
 }
 
@@ -213,13 +226,13 @@ Era Era::make(uint32_t lifeTime, CompactInteger finalizedHeaderBlockNumber)
    if (lifeTime == static_cast<uint32_t>(0))
       return Era{true, 0ull, 0ull};
 
-    uint64_t period = static_cast<uint64_t>(std::pow(2, std::round(std::log2(static_cast<double>(lifeTime)))));
-    period = std::max(period, static_cast<uint64_t>(4));
-    period = std::min(period, static_cast<uint64_t>(65536));
-    const uint64_t phase = static_cast<uint64_t>(finalizedHeaderBlockNumber) % period;
-    const uint64_t quantize_factor = std::max(period >> 12, static_cast<uint64_t>(1));
-    const uint64_t quantized_phase = (phase / quantize_factor) * quantize_factor;
-    return Era{false, period, quantized_phase};
+   uint64_t period = static_cast<uint64_t>(std::pow(2, std::round(std::log2(static_cast<double>(lifeTime)))));
+   period = std::max(period, static_cast<uint64_t>(4));
+   period = std::min(period, static_cast<uint64_t>(65536));
+   const uint64_t phase = static_cast<uint64_t>(finalizedHeaderBlockNumber) % period;
+   const uint64_t quantize_factor = std::max(period >> 12, static_cast<uint64_t>(1));
+   const uint64_t quantized_phase = (phase / quantize_factor) * quantize_factor;
+   return Era{false, period, quantized_phase};
 }
 
 substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const Era &v)
@@ -231,7 +244,7 @@ substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, cons
    }
 
    const uint64_t quantizeFactor = std::max<uint64_t>(1, v.Period / 4096);
-   const uint64_t lastBit = v.Period & (uint64_t)-(int64_t)v.Period;
+   const uint64_t lastBit = v.Period & (uint64_t) - (int64_t)v.Period;
    const double logOf2 = lastBit != 0 ? std::log2(lastBit) : 64;
    const uint16_t low = static_cast<uint16_t>(std::min(15.0, std::max(1.0, logOf2 - 1)));
    const uint16_t high = static_cast<uint16_t>((v.Phase / quantizeFactor) << 4);
@@ -262,7 +275,8 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Era 
       const uint64_t quantizeFactor = std::max(static_cast<uint64_t>(1), period >> 12);
       const uint64_t phase = (encoded >> 4) * quantizeFactor;
 
-      if (period < 4 || phase >= period) {
+      if (period < 4 || phase >= period)
+      {
          throw std::invalid_argument("invalid byte stream to represente Era");
       }
       v = Era{false, period, phase};
@@ -317,7 +331,7 @@ substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, cons
 {
    substrate::encoder sub;
 
-   const uint8_t signed_flag{ static_cast<uint8_t>((v.Signed ? static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)) + substrate::constants::TransactionVersion) };
+   const uint8_t signed_flag{static_cast<uint8_t>((v.Signed ? static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)) + substrate::constants::TransactionVersion)};
    sub << signed_flag;
 
    if (v.Signed)
@@ -348,7 +362,7 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Extr
    decoder >> signed_flag;
 
    v.Signed = signed_flag >= 0x80;
-   v.TransactionVersion = static_cast<uint8_t>(signed_flag - (v.Signed ?  static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)));
+   v.TransactionVersion = static_cast<uint8_t>(signed_flag - (v.Signed ? static_cast<uint8_t>(0x80) : static_cast<uint8_t>(0x00)));
 
    if (v.Signed)
    {
@@ -367,12 +381,15 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Extr
 
 void substrate::rpc::to_json(nlohmann::json &j, const Extrinsic &v)
 {
-   throw std::runtime_error("not implemented");
+   substrate::encoder encoder;
+   encoder << v;
+   j = encoder.assemble_hex();
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, Extrinsic &v)
 {
-   throw std::runtime_error("not implemented");
+   substrate::decoder decoder(substrate::hex_decode(j.get<std::string>()));
+   decoder >> v;
 }
 
 //
@@ -413,12 +430,14 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Bloc
 
 void substrate::rpc::to_json(nlohmann::json &j, const BlockNumber &v)
 {
-   throw std::runtime_error("not implemented");
+   to_json(j, v.value());
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, BlockNumber &v)
 {
-   throw std::runtime_error("not implemented");
+   uint32_t bn{0};
+   from_json(j, bn);
+   v = BlockNumber{bn};
 }
 
 //
@@ -447,7 +466,7 @@ void substrate::rpc::from_json(const nlohmann::json &j, SignedBlock &v)
 //
 // Payload::extra_t
 //
-substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const Payload::extra_t& v)
+substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const Payload::extra_t &v)
 {
    encoder << v.Mortality;
    encoder << v.Nonce;
@@ -455,7 +474,7 @@ substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, cons
    return encoder;
 }
 
-substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payload::extra_t& v)
+substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Payload::extra_t &v)
 {
    // We do not really need that.
    (void)decoder;
@@ -466,7 +485,7 @@ substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payl
 //
 // Payload::additional_t
 //
-substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const Payload::additional_t& v)
+substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const Payload::additional_t &v)
 {
    encoder << v.SpecVersion;
    encoder << v.TransactionVersion;
@@ -475,7 +494,7 @@ substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, cons
    return encoder;
 }
 
-substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payload::additional_t& v)
+substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Payload::additional_t &v)
 {
    // We do not really need that.
    (void)decoder;
@@ -486,7 +505,7 @@ substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payl
 //
 // Payload
 //
-substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const Payload& v)
+substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const Payload &v)
 {
    substrate::encoder sub;
    sub << v.Call;
@@ -502,7 +521,7 @@ substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, cons
    return encoder;
 }
 
-substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payload& v)
+substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Payload &v)
 {
    // We do not really need that.
    (void)decoder;
@@ -510,7 +529,7 @@ substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payl
    throw std::runtime_error("not implemented");
 }
 
-Payload Payload::make(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion)
+Payload Payload::make(const Extrinsic &extrinsic, const Hash &genesis, const Hash &checkpoint, const RuntimeVersion &runtimeVersion)
 {
    Payload payload;
    payload.Call = extrinsic.Method;
@@ -523,7 +542,6 @@ Payload Payload::make(const Extrinsic& extrinsic, const Hash& genesis, const Has
 
    payload.Additional.SpecVersion = runtimeVersion.specVersion;
    payload.Additional.TransactionVersion = runtimeVersion.transactionVersion;
-
    return payload;
 }
 
@@ -542,22 +560,22 @@ substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Runt
 
 void substrate::rpc::to_json(nlohmann::json &j, const RuntimeVersion &v)
 {
-  to_json(j["authoringVersion"], v.authoringVersion);
-  to_json(j["implVersion"], v.implVersion);
-  to_json(j["specVersion"], v.specVersion);
-  to_json(j["transactionVersion"], v.transactionVersion);
-  to_json(j["implName"], v.implName);
-  to_json(j["specName"], v.specName);
+   to_json(j["authoringVersion"], v.authoringVersion);
+   to_json(j["implVersion"], v.implVersion);
+   to_json(j["specVersion"], v.specVersion);
+   to_json(j["transactionVersion"], v.transactionVersion);
+   to_json(j["implName"], v.implName);
+   to_json(j["specName"], v.specName);
 }
 
 void substrate::rpc::from_json(const nlohmann::json &j, RuntimeVersion &v)
 {
-  from_json(j["authoringVersion"], v.authoringVersion);
-  from_json(j["implVersion"], v.implVersion);
-  from_json(j["specVersion"], v.specVersion);
-  from_json(j["transactionVersion"], v.transactionVersion);
-  from_json(j["implName"], v.implName);
-  from_json(j["specName"], v.specName);
+   from_json(j["authoringVersion"], v.authoringVersion);
+   from_json(j["implVersion"], v.implVersion);
+   from_json(j["specVersion"], v.specVersion);
+   from_json(j["transactionVersion"], v.transactionVersion);
+   from_json(j["implName"], v.implName);
+   from_json(j["specName"], v.specName);
 }
 
 //
@@ -585,6 +603,41 @@ void substrate::rpc::to_json(nlohmann::json &j, const CompactInteger &p)
 
 void substrate::rpc::from_json(const nlohmann::json &j, CompactInteger &p)
 {
+   if (j.is_string())
+   {
+      // Nonce types (Index aswell) is encoded as real Compact Integer.
+      substrate::decoder decoder(substrate::hex_decode(j.get<std::string>()));
+      decoder >> p;
+   }
+   else if (j.is_number_integer())
+   {
+      // The account index type is simply encoded as is.
+      uint64_t value{0};
+      from_json(j, value);
+      p = value;
+   }
+   else
+   {
+      throw std::runtime_error("CompactInteger json representation not expected");
+   }
+}
+
+void substrate::rpc::to_json(nlohmann::json &j, const U256 &p)
+{
+   substrate::encoder encoder;
+   encoder << p.value();
+   j = encoder.assemble_hex();
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, U256 &p)
+{
    substrate::decoder decoder(substrate::hex_decode(j.get<std::string>()));
-   decoder >> p;
+   CompactInteger tmp;
+   decoder >> tmp;
+   p = U256{tmp};
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, std::vector<std::optional<substrate::rpc::StorageKey>> &v)
+{
+   throw std::runtime_error("not implemented");
 }

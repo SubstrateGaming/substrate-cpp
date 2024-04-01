@@ -76,22 +76,41 @@ namespace substrate::rpc::detail
       nlohmann::json json_encode_params(Args &&...args) const
       {
          auto result = nlohmann::json::array();
-         // (add_to_json(result, std::forward<Args>(args)), ...);
+         (add_to_json(result, std::forward<Args>(args)), ...);
          return result;
       }
 
       template <typename TReturn, typename... Args>
       TReturn rpc(const std::string &name, Args &&...args) const
       {
-         // const auto params = json_encode_params(std::forward<Args>(args)...);
-         // const auto result = _socket->send(name, params);
-         return TReturn{};
+         const auto params = json_encode_params(std::forward<Args>(args)...);
+         const auto result = _socket->send_rpc_result(name, params);
+
+         if constexpr (is_std_optional_v<std::decay_t<TReturn>>)
+         {
+            if (result.is_null() || result.empty())
+               return std::nullopt;
+
+
+            // TODO: Get actual type of TReturn and parse it.
+            return std::nullopt;
+         }
+         else
+         {
+            TReturn ret;
+            from_json(result, ret);
+            return ret;
+         }
       }
 
       template <typename TReturn, typename... Args>
       TReturn rpc(const std::string &name) const
       {
-         return TReturn{};
+         const auto result = _socket->send_rpc_result(name);
+
+         TReturn ret;
+         from_json(result, ret);
+         return ret;
       }
    };
 }
