@@ -14,3 +14,8 @@ namespace substrate::rpc
       virtual RpcMethods rpc_methods() = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_RPC
+#define SUBSTRATE_IMPL_RPC_RPC \
+   virtual RpcMethods rpc_methods() override;
+#endif

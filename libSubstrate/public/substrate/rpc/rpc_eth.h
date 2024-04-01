@@ -25,7 +25,7 @@ namespace substrate::rpc
        * @param number BlockNumber
        * @return Bytes
        */
-      virtual Bytes eth_call(EthCallRequest request, BlockNumber number = {}) = 0;
+      virtual Bytes eth_call(EthCallRequest request, std::optional<BlockNumber> number = std::nullopt) = 0;
 
       /**
        * @brief Returns the chain ID used for transaction signing at the current best block. None is returned if not available.
@@ -45,7 +45,7 @@ namespace substrate::rpc
        * @param number BlockNumber
        * @return U256
        */
-      virtual U256 eth_estimateGas(EthCallRequest request, BlockNumber number = {}) = 0;
+      virtual U256 eth_estimateGas(EthCallRequest request, std::optional<BlockNumber> number = std::nullopt) = 0;
 
       /**
        * @brief Returns fee history for given block count & reward percentiles
@@ -68,7 +68,7 @@ namespace substrate::rpc
        * @param number BlockNumber
        * @return U256
        */
-      virtual U256 eth_getBalance(H160 address, BlockNumber number = {}) = 0;
+      virtual U256 eth_getBalance(H160 address, std::optional<BlockNumber> number = std::nullopt) = 0;
 
       /**
        * @brief Returns block with given hash.
@@ -106,7 +106,7 @@ namespace substrate::rpc
        * @param number BlockNumber
        * @return Bytes
        */
-      virtual Bytes eth_getCode(H160 address, BlockNumber number = {}) = 0;
+      virtual Bytes eth_getCode(H160 address, std::optional<BlockNumber> number = std::nullopt) = 0;
 
       /**
        * @brief Returns filter changes since last poll.
@@ -145,7 +145,7 @@ namespace substrate::rpc
        * @param number BlockNumber
        * @return H256
        */
-      virtual H256 eth_getStorageAt(H160 address, U256 index, BlockNumber number = {}) = 0;
+      virtual H256 eth_getStorageAt(H160 address, U256 index, std::optional<BlockNumber> number = std::nullopt) = 0;
 
       /**
        * @brief Returns transaction at given block hash and index.
@@ -176,7 +176,7 @@ namespace substrate::rpc
        * @param number BlockNumber
        * @return U256
        */
-      virtual U256 eth_getTransactionCount(H160 address, BlockNumber number = {}) = 0;
+      virtual U256 eth_getTransactionCount(H160 address, std::optional<BlockNumber> number = std::nullopt) = 0;
 
       /**
        * @brief Returns transaction receipt by transaction hash.
@@ -301,7 +301,7 @@ namespace substrate::rpc
        * @param params EthSubParams
        * @return Null
        */
-      virtual Null eth_subscribe(EthSubKind kind, EthSubParams params = {}) = 0;
+      virtual Null eth_subscribe(EthSubKind kind, std::optional<EthSubParams> params = std::nullopt) = 0;
 
       /**
        * @brief Returns an object with data about the sync status or false.
@@ -317,3 +317,50 @@ namespace substrate::rpc
       virtual bool eth_uninstallFilter(U256 index) = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_ETH
+#define SUBSTRATE_IMPL_RPC_ETH \
+   virtual Vec<H160> eth_accounts() override; \
+   virtual U256 eth_blockNumber() override; \
+   virtual Bytes eth_call(EthCallRequest request, std::optional<BlockNumber> number = std::nullopt) override; \
+   virtual U64 eth_chainId() override; \
+   virtual H160 eth_coinbase() override; \
+   virtual U256 eth_estimateGas(EthCallRequest request, std::optional<BlockNumber> number = std::nullopt) override; \
+   virtual EthFeeHistory eth_feeHistory(U256 blockCount, BlockNumber newestBlock, Option<Vec<f64>> rewardPercentiles) override; \
+   virtual U256 eth_gasPrice() override; \
+   virtual U256 eth_getBalance(H160 address, std::optional<BlockNumber> number = std::nullopt) override; \
+   virtual Option<EthRichBlock> eth_getBlockByHash(H256 hash, bool full) override; \
+   virtual Option<EthRichBlock> eth_getBlockByNumber(BlockNumber block, bool full) override; \
+   virtual U256 eth_getBlockTransactionCountByHash(H256 hash) override; \
+   virtual U256 eth_getBlockTransactionCountByNumber(BlockNumber block) override; \
+   virtual Bytes eth_getCode(H160 address, std::optional<BlockNumber> number = std::nullopt) override; \
+   virtual EthFilterChanges eth_getFilterChanges(U256 index) override; \
+   virtual Vec<EthLog> eth_getFilterLogs(U256 index) override; \
+   virtual Vec<EthLog> eth_getLogs(EthFilter filter) override; \
+   virtual EthAccount eth_getProof(H160 address, Vec<H256> storageKeys, BlockNumber number) override; \
+   virtual H256 eth_getStorageAt(H160 address, U256 index, std::optional<BlockNumber> number = std::nullopt) override; \
+   virtual EthTransaction eth_getTransactionByBlockHashAndIndex(H256 hash, U256 index) override; \
+   virtual EthTransaction eth_getTransactionByBlockNumberAndIndex(BlockNumber number, U256 index) override; \
+   virtual EthTransaction eth_getTransactionByHash(H256 hash) override; \
+   virtual U256 eth_getTransactionCount(H160 address, std::optional<BlockNumber> number = std::nullopt) override; \
+   virtual EthReceipt eth_getTransactionReceipt(H256 hash) override; \
+   virtual EthRichBlock eth_getUncleByBlockHashAndIndex(H256 hash, U256 index) override; \
+   virtual EthRichBlock eth_getUncleByBlockNumberAndIndex(BlockNumber number, U256 index) override; \
+   virtual U256 eth_getUncleCountByBlockHash(H256 hash) override; \
+   virtual U256 eth_getUncleCountByBlockNumber(BlockNumber number) override; \
+   virtual EthWork eth_getWork() override; \
+   virtual U256 eth_hashrate() override; \
+   virtual U256 eth_maxPriorityFeePerGas() override; \
+   virtual bool eth_mining() override; \
+   virtual U256 eth_newBlockFilter() override; \
+   virtual U256 eth_newFilter(EthFilter filter) override; \
+   virtual U256 eth_newPendingTransactionFilter() override; \
+   virtual u64 eth_protocolVersion() override; \
+   virtual H256 eth_sendRawTransaction(Bytes bytes) override; \
+   virtual H256 eth_sendTransaction(EthTransactionRequest tx) override; \
+   virtual bool eth_submitHashrate(U256 index, H256 hash) override; \
+   virtual bool eth_submitWork(H64 nonce, H256 headerHash, H256 mixDigest) override; \
+   virtual Null eth_subscribe(EthSubKind kind, std::optional<EthSubParams> params = std::nullopt) override; \
+   virtual EthSyncStatus eth_syncing() override; \
+   virtual bool eth_uninstallFilter(U256 index) override;
+#endif

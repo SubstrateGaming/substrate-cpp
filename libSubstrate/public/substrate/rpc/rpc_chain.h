@@ -12,14 +12,14 @@ namespace substrate::rpc
        * @param hash BlockHash
        * @return SignedBlock
        */
-      virtual SignedBlock chain_getBlock(BlockHash hash = {}) = 0;
+      virtual SignedBlock chain_getBlock(std::optional<BlockHash> hash = std::nullopt) = 0;
 
       /**
        * @brief Get the block hash for a specific block
        * @param blockNumber BlockNumber
        * @return BlockHash
        */
-      virtual BlockHash chain_getBlockHash(BlockNumber blockNumber = {}) = 0;
+      virtual BlockHash chain_getBlockHash(std::optional<BlockNumber> blockNumber = std::nullopt) = 0;
 
       /**
        * @brief Get hash of the last finalized block in the canon chain
@@ -32,7 +32,7 @@ namespace substrate::rpc
        * @param hash BlockHash
        * @return Header
        */
-      virtual Header chain_getHeader(BlockHash hash = {}) = 0;
+      virtual Header chain_getHeader(std::optional<BlockHash> hash = std::nullopt) = 0;
 
       /**
        * @brief Retrieves the newest header via subscription
@@ -53,3 +53,14 @@ namespace substrate::rpc
       virtual Header chain_subscribeNewHeads() = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_CHAIN
+#define SUBSTRATE_IMPL_RPC_CHAIN \
+   virtual SignedBlock chain_getBlock(std::optional<BlockHash> hash = std::nullopt) override; \
+   virtual BlockHash chain_getBlockHash(std::optional<BlockNumber> blockNumber = std::nullopt) override; \
+   virtual BlockHash chain_getFinalizedHead() override; \
+   virtual Header chain_getHeader(std::optional<BlockHash> hash = std::nullopt) override; \
+   virtual Header chain_subscribeAllHeads() override; \
+   virtual Header chain_subscribeFinalizedHeads() override; \
+   virtual Header chain_subscribeNewHeads() override;
+#endif

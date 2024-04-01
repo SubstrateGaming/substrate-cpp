@@ -27,3 +27,10 @@ namespace substrate::rpc
       virtual JustificationNotification grandpa_subscribeJustifications() = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_GRANDPA
+#define SUBSTRATE_IMPL_RPC_GRANDPA \
+   virtual Option<EncodedFinalityProofs> grandpa_proveFinality(BlockNumber blockNumber) override; \
+   virtual ReportedRoundStates grandpa_roundState() override; \
+   virtual JustificationNotification grandpa_subscribeJustifications() override;
+#endif

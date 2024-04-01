@@ -49,7 +49,7 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return ApplyExtrinsicResult
        */
-      virtual ApplyExtrinsicResult system_dryRun(Bytes extrinsic, BlockHash at = {}) = 0;
+      virtual ApplyExtrinsicResult system_dryRun(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) = 0;
 
       /**
        * @brief Return health status of the node
@@ -135,3 +135,26 @@ namespace substrate::rpc
       virtual Text system_version() = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_SYSTEM
+#define SUBSTRATE_IMPL_RPC_SYSTEM \
+   virtual Index system_accountNextIndex(AccountId accountId) override; \
+   virtual Null system_addLogFilter(Text directives) override; \
+   virtual Text system_addReservedPeer(Text peer) override; \
+   virtual Text system_chain() override; \
+   virtual ChainType system_chainType() override; \
+   virtual ApplyExtrinsicResult system_dryRun(Bytes extrinsic, std::optional<BlockHash> at = std::nullopt) override; \
+   virtual Health system_health() override; \
+   virtual Vec<Text> system_localListenAddresses() override; \
+   virtual Text system_localPeerId() override; \
+   virtual Text system_name() override; \
+   virtual NetworkState system_networkState() override; \
+   virtual Vec<NodeRole> system_nodeRoles() override; \
+   virtual Vec<PeerInfo> system_peers() override; \
+   virtual ChainProperties system_properties() override; \
+   virtual Text system_removeReservedPeer(Text peerId) override; \
+   virtual Vec<Text> system_reservedPeers() override; \
+   virtual Null system_resetLogFilter() override; \
+   virtual SyncState system_syncState() override; \
+   virtual Text system_version() override;
+#endif

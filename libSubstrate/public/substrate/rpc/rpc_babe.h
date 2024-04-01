@@ -15,3 +15,8 @@ namespace substrate::rpc
       virtual HashMap<AuthorityId, EpochAuthorship> babe_epochAuthorship() = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_BABE
+#define SUBSTRATE_IMPL_RPC_BABE \
+   virtual HashMap<AuthorityId, EpochAuthorship> babe_epochAuthorship() override;
+#endif

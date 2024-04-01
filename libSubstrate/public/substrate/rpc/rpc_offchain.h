@@ -27,3 +27,9 @@ namespace substrate::rpc
       virtual Null offchain_localStorageSet(StorageKind kind, Bytes key, Bytes value) = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_OFFCHAIN
+#define SUBSTRATE_IMPL_RPC_OFFCHAIN \
+   virtual Option<Bytes> offchain_localStorageGet(StorageKind kind, Bytes key) override; \
+   virtual Null offchain_localStorageSet(StorageKind kind, Bytes key, Bytes value) override;
+#endif

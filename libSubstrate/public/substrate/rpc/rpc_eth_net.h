@@ -26,3 +26,10 @@ namespace substrate::rpc
       virtual Text net_version() = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_ETH_NET
+#define SUBSTRATE_IMPL_RPC_ETH_NET \
+   virtual bool net_listening() override; \
+   virtual Text net_peerCount() override; \
+   virtual Text net_version() override;
+#endif

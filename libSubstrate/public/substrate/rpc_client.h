@@ -1,25 +1,25 @@
 #pragma once
 #include "types.h"
 
-#include "rpc/author.h"
-#include "rpc/babe.h"
-#include "rpc/beefy.h"
-#include "rpc/chain.h"
-#include "rpc/childstate.h"
-#include "rpc/contracts.h"
-#include "rpc/dev.h"
-#include "rpc/engine.h"
-#include "rpc/eth.h"
-#include "rpc/eth_net.h"
-#include "rpc/eth_web3.h"
-#include "rpc/grandpa.h"
-#include "rpc/mmr.h"
-#include "rpc/offchain.h"
-#include "rpc/payment.h"
-#include "rpc/rpc.h"
-#include "rpc/state.h"
-#include "rpc/syncstate.h"
-#include "rpc/system.h"
+#include "rpc/rpc_author.h"
+#include "rpc/rpc_babe.h"
+#include "rpc/rpc_beefy.h"
+#include "rpc/rpc_chain.h"
+#include "rpc/rpc_childstate.h"
+#include "rpc/rpc_contracts.h"
+#include "rpc/rpc_dev.h"
+#include "rpc/rpc_engine.h"
+#include "rpc/rpc_eth.h"
+#include "rpc/rpc_eth_net.h"
+#include "rpc/rpc_eth_web3.h"
+#include "rpc/rpc_grandpa.h"
+#include "rpc/rpc_mmr.h"
+#include "rpc/rpc_offchain.h"
+#include "rpc/rpc_payment.h"
+#include "rpc/rpc_rpc.h"
+#include "rpc/rpc_state.h"
+#include "rpc/rpc_syncstate.h"
+#include "rpc/rpc_system.h"
 
 namespace substrate::rpc
 {
@@ -48,3 +48,25 @@ namespace substrate::rpc
       virtual ~rpc_client() = default;
    };
 }
+#ifndef SUBSTRATE_IMPL_RPC_CLIENT
+#define SUBSTRATE_IMPL_RPC_CLIENT \
+   SUBSTRATE_IMPL_RPC_AUTHOR \
+   SUBSTRATE_IMPL_RPC_BABE \
+   SUBSTRATE_IMPL_RPC_BEEFY \
+   SUBSTRATE_IMPL_RPC_CHAIN \
+   SUBSTRATE_IMPL_RPC_CHILDSTATE \
+   SUBSTRATE_IMPL_RPC_CONTRACTS \
+   SUBSTRATE_IMPL_RPC_DEV \
+   SUBSTRATE_IMPL_RPC_ENGINE \
+   SUBSTRATE_IMPL_RPC_ETH \
+   SUBSTRATE_IMPL_RPC_ETH_NET \
+   SUBSTRATE_IMPL_RPC_ETH_WEB3 \
+   SUBSTRATE_IMPL_RPC_GRANDPA \
+   SUBSTRATE_IMPL_RPC_MMR \
+   SUBSTRATE_IMPL_RPC_OFFCHAIN \
+   SUBSTRATE_IMPL_RPC_PAYMENT \
+   SUBSTRATE_IMPL_RPC_RPC \
+   SUBSTRATE_IMPL_RPC_STATE \
+   SUBSTRATE_IMPL_RPC_SYNCSTATE \
+   SUBSTRATE_IMPL_RPC_SYSTEM
+#endif

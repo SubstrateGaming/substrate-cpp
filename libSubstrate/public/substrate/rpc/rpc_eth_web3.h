@@ -21,3 +21,9 @@ namespace substrate::rpc
       virtual H256 web3_sha3(Bytes data) = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_ETH_WEB3
+#define SUBSTRATE_IMPL_RPC_ETH_WEB3 \
+   virtual Text web3_clientVersion() override; \
+   virtual H256 web3_sha3(Bytes data) override;
+#endif

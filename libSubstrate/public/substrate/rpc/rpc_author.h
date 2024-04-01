@@ -70,3 +70,15 @@ namespace substrate::rpc
       virtual Hash author_submitExtrinsic(Extrinsic extrinsic) = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_AUTHOR
+#define SUBSTRATE_IMPL_RPC_AUTHOR \
+   virtual bool author_hasKey(Bytes publicKey, Text keyType) override; \
+   virtual bool author_hasSessionKeys(Bytes sessionKeys) override; \
+   virtual Bytes author_insertKey(Text keyType, Text suri, Bytes publicKey) override; \
+   virtual Vec<Extrinsic> author_pendingExtrinsics() override; \
+   virtual Vec<Hash> author_removeExtrinsic(Vec<ExtrinsicOrHash> bytesOrHash) override; \
+   virtual Bytes author_rotateKeys() override; \
+   virtual ExtrinsicStatus author_submitAndWatchExtrinsic(Extrinsic extrinsic) override; \
+   virtual Hash author_submitExtrinsic(Extrinsic extrinsic) override;
+#endif

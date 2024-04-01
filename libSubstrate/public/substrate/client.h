@@ -5,7 +5,7 @@
 
 namespace substrate
 {
-   class LIB_SUBSTRATE_EXPORT IClient
+   class LIB_SUBSTRATE_EXPORT IClient : public substrate::rpc::rpc_client
    {
    public:
       virtual ~IClient() = default;

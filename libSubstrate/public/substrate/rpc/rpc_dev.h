@@ -16,3 +16,8 @@ namespace substrate::rpc
       virtual Option<BlockStats> dev_getBlockStats(Hash at) = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_DEV
+#define SUBSTRATE_IMPL_RPC_DEV \
+   virtual Option<BlockStats> dev_getBlockStats(Hash at) override;
+#endif

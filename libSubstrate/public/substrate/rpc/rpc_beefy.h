@@ -20,3 +20,9 @@ namespace substrate::rpc
       virtual BeefyVersionedFinalityProof beefy_subscribeJustifications() = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_BEEFY
+#define SUBSTRATE_IMPL_RPC_BEEFY \
+   virtual H256 beefy_getFinalizedHead() override; \
+   virtual BeefyVersionedFinalityProof beefy_subscribeJustifications() override;
+#endif

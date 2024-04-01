@@ -14,14 +14,14 @@ namespace substrate::rpc
        * @param at BlockHash
        * @return MmrLeafBatchProof
        */
-      virtual MmrLeafBatchProof mmr_generateProof(Vec<u64> blockNumbers, u64 bestKnownBlockNumber = {}, BlockHash at = {}) = 0;
+      virtual MmrLeafBatchProof mmr_generateProof(Vec<u64> blockNumbers, std::optional<u64> bestKnownBlockNumber = std::nullopt, std::optional<BlockHash> at = std::nullopt) = 0;
 
       /**
        * @brief Get the MMR root hash for the current best block.
        * @param at BlockHash
        * @return MmrHash
        */
-      virtual MmrHash mmr_root(BlockHash at = {}) = 0;
+      virtual MmrHash mmr_root(std::optional<BlockHash> at = std::nullopt) = 0;
 
       /**
        * @brief Verify an MMR proof
@@ -39,3 +39,11 @@ namespace substrate::rpc
       virtual bool mmr_verifyProofStateless(MmrHash root, MmrLeafBatchProof proof) = 0;
    };
 }
+
+#ifndef SUBSTRATE_IMPL_RPC_MMR
+#define SUBSTRATE_IMPL_RPC_MMR \
+   virtual MmrLeafBatchProof mmr_generateProof(Vec<u64> blockNumbers, std::optional<u64> bestKnownBlockNumber = std::nullopt, std::optional<BlockHash> at = std::nullopt) override; \
+   virtual MmrHash mmr_root(std::optional<BlockHash> at = std::nullopt) override; \
+   virtual bool mmr_verifyProof(MmrLeafBatchProof proof) override; \
+   virtual bool mmr_verifyProofStateless(MmrHash root, MmrLeafBatchProof proof) override;
+#endif
