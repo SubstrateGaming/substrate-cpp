@@ -3,18 +3,29 @@
 
 #include <nlohmann/json.hpp>
 
+#ifndef LIB_SUBSTRATE_DECLARE_CONVERT_JSON
+#define LIB_SUBSTRATE_DECLARE_CONVERT_JSON(type) \
+   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const type &v); \
+   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, type &v);
+#endif
+
+#ifndef LIB_SUBSTRATE_DECLARE_CONVERT_SCALE
+#define LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(type) \
+   LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const type& v); \
+   LIB_SUBSTRATE_EXPORT substrate::decoder& operator>>(substrate::decoder& decoder, type& v);
+#endif
+
 #ifndef LIB_SUBSTRATE_DECLARE_CONVERT
 #define LIB_SUBSTRATE_DECLARE_CONVERT(type) \
-   LIB_SUBSTRATE_EXPORT substrate::encoder& operator<<(substrate::encoder& encoder, const type& v); \
-   LIB_SUBSTRATE_EXPORT substrate::decoder& operator>>(substrate::decoder& decoder, type& v); \
-   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const type &v); \
-   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, type &v)
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(type) \
+   LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(type)
 #endif
 
 namespace substrate::rpc
 {
    using Bytes = substrate::bytes;
    using Text = std::string;
+   using Index = CompactInteger;
 
    template<typename T>
    using Vec = std::vector<T>;
@@ -130,7 +141,7 @@ namespace substrate::rpc
       uint8_t TransactionVersion{0};
       AccountId Account;
       Era Era;
-      CompactInteger Nonce;
+      Index Nonce;
       ChargeType Charge;
       Method Method;
       Signature Signature;
@@ -173,6 +184,36 @@ namespace substrate::rpc
       std::string SpecName;
    };
    LIB_SUBSTRATE_DECLARE_CONVERT(RuntimeVersion);
+
+   // Payload
+   struct Payload
+   {
+      struct extra_t
+      {
+         Era Mortality;
+         CompactInteger Nonce;
+         ChargeType Charge;
+      };
+
+      struct additional_t
+      {
+         uint32_t SpecVersion;
+         uint32_t TransactionVersion;
+         Hash GenesisHash;
+         // Immortal: Use Genesis Hash
+         //           otherwise use StartEra
+         Hash CheckpointHash;
+      };
+
+      Method Call;
+      extra_t Extra;
+      additional_t Additional;
+
+      static Payload make(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion);
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload::extra_t);
+   LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload::additional_t);
+   LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload);
 
    LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const Bytes &p);
    LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, Bytes &p);
@@ -235,7 +276,6 @@ namespace substrate::rpc
    using TraceBlockResponse = Bytes;
    using MigrationStatusResult = Bytes;
    using Json = Bytes;
-   using Index = Bytes;
    using ChainType = Bytes;
    using ApplyExtrinsicResult = Bytes;
    using Health = Bytes;

@@ -1,7 +1,6 @@
 #pragma once
 #include "../logger.h"
 #include "../web/json_rpc_client.h"
-#include "../substrate_models.h"
 
 #include <optional>
 #include <type_traits>

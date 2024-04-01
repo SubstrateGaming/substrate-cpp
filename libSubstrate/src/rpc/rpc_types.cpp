@@ -312,6 +312,50 @@ void substrate::rpc::from_json(const nlohmann::json &j, SignedBlock &v)
 }
 
 //
+// Payload::extra_t
+//
+substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const Payload::extra_t& v)
+{
+   throw std::runtime_error("not implemented");
+}
+
+substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payload::extra_t& v)
+{
+   throw std::runtime_error("not implemented");
+}
+
+//
+// Payload::additional_t
+//
+substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const Payload::additional_t& v)
+{
+   throw std::runtime_error("not implemented");
+}
+
+substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payload::additional_t& v)
+{
+   throw std::runtime_error("not implemented");
+}
+
+//
+// Payload
+//
+substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const Payload& v)
+{
+   throw std::runtime_error("not implemented");
+}
+
+substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, Payload& v)
+{
+   throw std::runtime_error("not implemented");
+}
+
+Payload Payload::make(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion)
+{
+   throw std::runtime_error("not implemented");
+}
+
+//
 // RuntimeVersion
 //
 substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, const RuntimeVersion &v)

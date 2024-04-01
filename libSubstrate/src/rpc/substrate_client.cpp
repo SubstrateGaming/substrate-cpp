@@ -84,39 +84,38 @@ Extrinsic substrate_client::make_extrinsic(
     ChargeType charge,
     uint32_t lifeTime) const
 {
-   // TODO: Implement again.
-   // const auto genesisHash = getGenesisHash();
-   // const auto runtimeVersion = getRuntimeVersion();
+   const auto genesisHash = getGenesisHash();
+   const auto runtimeVersion = getRuntimeVersion();
 
-   // Hash checkpoint;
+   Hash checkpoint;
    Extrinsic extrinsic;
 
-   // extrinsic.Signed = true;
-   // extrinsic.TransactionVersion = substrate::constants::TransactionVersion;
-   // extrinsic.Account = account->get_account_id();
+   extrinsic.Signed = true;
+   extrinsic.TransactionVersion = substrate::constants::TransactionVersion;
+   extrinsic.Account = account->get_account_id();
 
-   // if (lifeTime == 0)
-   // {
-   //    extrinsic.Era = Era::make(0, 0);
-   //    checkpoint = genesisHash;
-   // }
-   // else
-   // {
-   //    checkpoint = chain_getFinalizedHead();
-   //    const auto finalizedHeader = chain_getHeader(checkpoint);
-   //    extrinsic.Era = Era::make(lifeTime, finalizedHeader.Number);
-   // }
+   if (lifeTime == 0)
+   {
+      extrinsic.Era = Era::make(0, 0);
+      checkpoint = genesisHash;
+   }
+   else
+   {
+      checkpoint = chain_getFinalizedHead();
+      const auto finalizedHeader = chain_getHeader(checkpoint);
+      extrinsic.Era = Era::make(lifeTime, finalizedHeader.Number);
+   }
 
-   // extrinsic.Nonce = system_accountNextIndex(account->get_account_id());
+   extrinsic.Nonce = system_accountNextIndex(account->get_account_id());
 
-   // extrinsic.Charge = charge;
-   // extrinsic.Method = call;
+   extrinsic.Charge = charge;
+   extrinsic.Method = call;
 
-   // substrate::encoder encoder;
-   // encoder << substrate::rpc::detail::make_payload(extrinsic, genesisHash, checkpoint, runtimeVersion);
+   substrate::encoder encoder;
+   encoder << substrate::rpc::Payload::make(extrinsic, genesisHash, checkpoint, runtimeVersion);
 
-   // extrinsic.Signature.Bytes = account->sign(encoder.assemble());
-   // extrinsic.Signature.Type = account->get_type();
+   extrinsic.Signature.Bytes = account->sign(encoder.assemble());
+   extrinsic.Signature.Type = account->get_type();
    return extrinsic;
 }
 
