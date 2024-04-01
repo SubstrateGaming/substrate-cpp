@@ -63,7 +63,6 @@ if (NOT CURL_FOUND)
 endif ()
 
 add_subdirectory(libSubstrate)
-add_subdirectory(app)
 
 if (LSUB_WITH_TESTS)
     find_package(GTest)
