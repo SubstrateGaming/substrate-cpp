@@ -13,6 +13,7 @@ namespace substrate::rpc
 
       [[nodiscard]] virtual bool connect() = 0;
       [[nodiscard]] virtual bool connected() const = 0;
+      [[nodiscard]] virtual void stop() = 0;
 
       virtual void wait() = 0;
 

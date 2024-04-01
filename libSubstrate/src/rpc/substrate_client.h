@@ -48,6 +48,7 @@ namespace substrate::rpc::detail
 
       [[nodiscard]] virtual bool connect() override;
       [[nodiscard]] virtual bool connected() const override;
+      [[nodiscard]] virtual void stop() override;
 
       virtual void wait() override;
 

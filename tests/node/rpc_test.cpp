@@ -39,11 +39,26 @@ void rpc_test::SetUp()
       client = nullptr;
    }
 
+   _event_loop = std::thread(&rpc_test::on_event_loop, this);
+
    client->setRuntimeVersion(client->state_getRuntimeVersion());
    client->setGenesisHash(client->chain_getBlockHash(substrate::rpc::BlockNumber(0)));
 }
 
 void rpc_test::TearDown()
 {
+   if (client)
+   {
+      client->stop();
+   }
+
+   if (_event_loop.joinable())
+      _event_loop.join();
+
    client = nullptr;
+}
+
+void rpc_test::on_event_loop()
+{
+   client->wait();
 }

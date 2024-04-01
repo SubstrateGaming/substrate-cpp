@@ -41,7 +41,7 @@ substrate::encoder &substrate::rpc::operator<<(substrate::encoder &encoder, cons
 
 substrate::decoder &substrate::rpc::operator>>(substrate::decoder &decoder, Hash &v)
 {
-   // If we need that, we need to make sure we know the hash size in advance?
+   // If we need that here, we need to make sure we know the hash size in advance?
    throw std::runtime_error("not implemented");
 }
 
@@ -53,6 +53,56 @@ void substrate::rpc::to_json(nlohmann::json &j, const Hash &v)
 void substrate::rpc::from_json(const nlohmann::json &j, Hash &v)
 {
    v = Hash{j.get<std::string>()};
+}
+
+//
+// StorageKey
+//
+substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const StorageKey& v)
+{
+   encoder << substrate::hex_decode(v.const_value());
+   return encoder;
+}
+
+substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, StorageKey& v)
+{
+   // If we need that here, we need to make sure we know the storage key size in advance?
+   throw std::runtime_error("not implemented");
+}
+
+void substrate::rpc::to_json(nlohmann::json &j, const StorageKey &v)
+{
+   j = v.const_value();
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, StorageKey &v)
+{
+   v = StorageKey{j.get<std::string>()};
+}
+
+//
+// StorageData
+//
+substrate::encoder& substrate::rpc::operator<<(substrate::encoder& encoder, const StorageData& v)
+{
+   encoder << substrate::hex_decode(v.const_value());
+   return encoder;
+}
+
+substrate::decoder& substrate::rpc::operator>>(substrate::decoder& decoder, StorageData& v)
+{
+   // If we need that here, we need to make sure we know the storage data size in advance?
+   throw std::runtime_error("not implemented");
+}
+
+void substrate::rpc::to_json(nlohmann::json &j, const StorageData &v)
+{
+   j = v.const_value();
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, StorageData &v)
+{
+   v = StorageData{j.get<std::string>()};
 }
 
 //
@@ -721,6 +771,35 @@ void substrate::rpc::from_json(const nlohmann::json &j, RuntimeDispatchInfoV1 &v
    from_json(j["weight"], v.weight);
 }
 
+//
+// StorageChangeSet
+//
+void substrate::rpc::to_json(nlohmann::json &j, const StorageChangeSet &v)
+{
+   to_json(j["block"], v.block);
+   to_json(j["changes"], v.changes);
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, StorageChangeSet &v)
+{
+   from_json(j["block"], v.block);
+   from_json(j["changes"], v.changes);
+}
+
+//
+// ReadProof
+//
+void substrate::rpc::to_json(nlohmann::json &j, const ReadProof &v)
+{
+   to_json(j["at"], v.at);
+   to_json(j["proof"], v.proof);
+}
+
+void substrate::rpc::from_json(const nlohmann::json &j, ReadProof &v)
+{
+   from_json(j["at"], v.at);
+   from_json(j["proof"], v.proof);
+}
 
 //
 // CompactInteger

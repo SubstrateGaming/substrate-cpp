@@ -92,11 +92,6 @@ void websocket_client::on_receive()
 
    while (!_shouldStop.load())
    {
-      // There is no curl_ws_poll API (yet).
-      // We (could) extract the socket and select() on that but for now we simply wait a short time.
-      _cv.wait_for(lock, std::chrono::milliseconds(100), [this]
-                   { return _shouldStop.load(); });
-
       if (_shouldStop.load())
       {
          // Expected exit. All good.
@@ -107,7 +102,12 @@ void websocket_client::on_receive()
       res = curl_ws_recv(_curl, buffer, sizeof(buffer), &rlen, &meta);
 
       if (res == CURLE_AGAIN)
+      {
+         // There is no curl_ws_poll API (yet).
+         // We (could) extract the socket and select() on that but for now we simply wait a short time.
+         _cv.wait_for(lock, std::chrono::milliseconds(100), [this] { return _shouldStop.load(); });
          continue;
+      }
 
       if (res != CURLE_OK)
       {

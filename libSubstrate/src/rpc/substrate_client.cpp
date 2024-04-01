@@ -40,6 +40,15 @@ bool substrate_client::connected() const
    return _socket && _socket->connected();
 }
 
+void substrate_client::stop()
+{
+   if (_socket)
+   {
+      _socket->stop();
+   }
+}
+
+
 void substrate_client::wait()
 {
    assert(_socket != nullptr);

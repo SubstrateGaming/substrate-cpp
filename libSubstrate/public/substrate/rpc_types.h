@@ -78,6 +78,22 @@ namespace substrate::rpc
    using BlockHash = Hash;
    LIB_SUBSTRATE_DECLARE_CONVERT(Hash);
 
+   // StorageKey
+   struct StorageKeyTag { };
+   struct StorageKey : strong_type<std::string, StorageKeyTag, 0>
+   {
+      using strong_type::strong_type;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT(StorageKey);
+
+   // StorageData
+   struct StorageDataTag { };
+   struct StorageData : strong_type<std::string, StorageDataTag, 0>
+   {
+      using strong_type::strong_type;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT(StorageData);
+
    // AccountId
    struct AccountIdTag { };
    struct AccountId : strong_type<std::string, AccountIdTag, 32>
@@ -292,19 +308,32 @@ namespace substrate::rpc
    LIB_SUBSTRATE_DECLARE_CONVERT_JSON(RuntimeDispatchInfoV1::Weight);
    LIB_SUBSTRATE_DECLARE_CONVERT_JSON(RuntimeDispatchInfoV1);
 
+   struct StorageChangeSet
+   {
+      Hash block;
+      Vec<Vec<Text>> changes;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(StorageChangeSet);
+
+   struct ReadProof
+   {
+      Hash at;
+      Vec<Hash> proof;
+   };
+   LIB_SUBSTRATE_DECLARE_CONVERT_JSON(ReadProof);
+
+   // There is no need for now to parse the metadata in C++.
+   // We can still use the .NET API for that as the SDK generators are in .NET aswell.
+   // If needed, we must define all the structs here and scale decoders.
+   using Metadata = std::string;
 
    // TODO:
    using ExtrinsicOrHash = Bytes;
    using ExtrinsicStatus = Bytes;
-   using StorageKey = Bytes;
    using PrefixedStorageKey = Bytes;
-   using StorageData = Bytes;
    using Null = Bytes;
    using RpcMethods = Bytes;
-   using ReadProof = Bytes;
    using KeyValue = Bytes;
-   using StorageChangeSet = Bytes;
-   using Metadata = Bytes;
    using TraceBlockResponse = Bytes;
    using MigrationStatusResult = Bytes;
    using ChainType = Bytes;
