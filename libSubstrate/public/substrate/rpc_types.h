@@ -23,6 +23,9 @@
 
 namespace substrate::rpc
 {
+   using u32 = uint32_t;
+   using u64 = uint64_t;
+
    using Bytes = substrate::bytes;
    using Text = std::string;
 
@@ -201,8 +204,6 @@ namespace substrate::rpc
          uint32_t SpecVersion;
          uint32_t TransactionVersion;
          Hash GenesisHash;
-         // Immortal: Use Genesis Hash
-         //           otherwise use StartEra
          Hash CheckpointHash;
       };
 
@@ -219,58 +220,12 @@ namespace substrate::rpc
    // TODO:
    using ExtrinsicOrHash = Bytes;
    using ExtrinsicStatus = Bytes;
-   using AuthorityId = int32_t;
-   using EpochAuthorship = int32_t;
-   using H160 = Bytes;
-   using H256 = Bytes;
-   using H64 = Bytes;
-   using BeefyVersionedFinalityProof = Bytes;
    using StorageKey = Bytes;
    using PrefixedStorageKey = Bytes;
    using StorageData = Bytes;
-   using ContractExecResult = Bytes;
-   using ContractCallRequest = Bytes;
-   using ContractInstantiateResult = Bytes;
-   using InstantiateRequestV1 = Bytes;
-   using CodeUploadRequest = Bytes;
-   using CodeUploadResult = Bytes;
-   using BlockStats = Bytes;
-   using CreatedBlock = Bytes;
    using Justification = Bytes;
-   using EthCallRequest = Bytes;
-   using EthFeeHistory = Bytes;
-   using EthRichBlock = Bytes;
-   using EthFilterChanges = Bytes;
-   using EthLog = Bytes;
-   using EthFilter = Bytes;
-   using EthAccount = Bytes;
-   using EthTransaction = Bytes;
-   using EthReceipt = Bytes;
-   using EthRichBlock = Bytes;
-   using EthWork = Bytes;
-   using EthTransactionRequest = Bytes;
-   using EthSyncStatus = Bytes;
    using Null = Bytes;
-   using EthSubKind = Bytes;
-   using EthSubParams = Bytes;
-   using f64 = Bytes;
-   using u32 = uint32_t;
-   using u64 = uint64_t;
-   // using U256 = CompactInteger;
 
-   struct U256Tag {};
-   struct U256  : strong_type<CompactInteger, U256Tag, 64>
-   {
-      using strong_type::strong_type;
-   };
-
-   using U64 = u64;
-   using MmrLeafBatchProof = Bytes;
-   using MmrHash = Bytes;
-   using EncodedFinalityProofs = Bytes;
-   using ReportedRoundStates = Bytes;
-   using JustificationNotification = Bytes;
-   using StorageKind = Bytes;
    using FeeDetails = Bytes;
    using RuntimeDispatchInfoV1 = Bytes;
    using RpcMethods = Bytes;
@@ -280,7 +235,6 @@ namespace substrate::rpc
    using Metadata = Bytes;
    using TraceBlockResponse = Bytes;
    using MigrationStatusResult = Bytes;
-   using Json = Bytes;
    using ChainType = Bytes;
    using ApplyExtrinsicResult = Bytes;
    using Health = Bytes;
@@ -295,10 +249,4 @@ namespace substrate::rpc
 
    LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const CompactInteger &p);
    LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, CompactInteger &p);
-
-   LIB_SUBSTRATE_EXPORT void to_json(nlohmann::json &j, const U256 &p);
-   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json &j, U256 &p);
-
-   LIB_SUBSTRATE_EXPORT void from_json(const nlohmann::json& j, std::vector<std::optional<substrate::rpc::StorageKey>>& v);
-
 }

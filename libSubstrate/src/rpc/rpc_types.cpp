@@ -621,23 +621,3 @@ void substrate::rpc::from_json(const nlohmann::json &j, CompactInteger &p)
       throw std::runtime_error("CompactInteger json representation not expected");
    }
 }
-
-void substrate::rpc::to_json(nlohmann::json &j, const U256 &p)
-{
-   substrate::encoder encoder;
-   encoder << p.value();
-   j = encoder.assemble_hex();
-}
-
-void substrate::rpc::from_json(const nlohmann::json &j, U256 &p)
-{
-   substrate::decoder decoder(substrate::hex_decode(j.get<std::string>()));
-   CompactInteger tmp;
-   decoder >> tmp;
-   p = U256{tmp};
-}
-
-void substrate::rpc::from_json(const nlohmann::json &j, std::vector<std::optional<substrate::rpc::StorageKey>> &v)
-{
-   throw std::runtime_error("not implemented");
-}
