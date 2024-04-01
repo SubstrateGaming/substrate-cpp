@@ -38,6 +38,9 @@ void rpc_test::SetUp()
       throw std::runtime_error("could not prepare test, cannot connect to node");
       client = nullptr;
    }
+
+   client->setRuntimeVersion(client->state_getRuntimeVersion());
+   client->setGenesisHash(client->chain_getBlockHash(substrate::rpc::BlockNumber(0)));
 }
 
 void rpc_test::TearDown()
