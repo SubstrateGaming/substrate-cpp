@@ -5,36 +5,36 @@ using namespace substrate::detail::rpc;
 
 SignedBlock substrate_client::chain_getBlock(std::optional<BlockHash> hash)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<SignedBlock>("chain_getBlock", hash);
 }
 
 BlockHash substrate_client::chain_getBlockHash(std::optional<BlockNumber> blockNumber)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<BlockHash>("chain_getBlockHash", blockNumber);
 }
 
 BlockHash substrate_client::chain_getFinalizedHead()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<BlockHash>("chain_getFinalizedHead");
 }
 
 Header substrate_client::chain_getHeader(std::optional<BlockHash> hash)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Header>("chain_getHeader", hash);
 }
 
 Header substrate_client::chain_subscribeAllHeads()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Header>("chain_subscribeAllHeads");
 }
 
 Header substrate_client::chain_subscribeFinalizedHeads()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Header>("chain_subscribeFinalizedHeads");
 }
 
 Header substrate_client::chain_subscribeNewHeads()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Header>("chain_subscribeNewHeads");
 }
 

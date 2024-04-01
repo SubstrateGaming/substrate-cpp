@@ -5,6 +5,6 @@ using namespace substrate::detail::rpc;
 
 Option<BlockStats> substrate_client::dev_getBlockStats(Hash at)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Option<BlockStats>>("dev_getBlockStats", at);
 }
 

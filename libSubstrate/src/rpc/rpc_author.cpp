@@ -5,41 +5,41 @@ using namespace substrate::detail::rpc;
 
 bool substrate_client::author_hasKey(Bytes publicKey, Text keyType)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<bool>("author_hasKey", publicKey, keyType);
 }
 
 bool substrate_client::author_hasSessionKeys(Bytes sessionKeys)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<bool>("author_hasSessionKeys", sessionKeys);
 }
 
 Bytes substrate_client::author_insertKey(Text keyType, Text suri, Bytes publicKey)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Bytes>("author_insertKey", keyType, suri, publicKey);
 }
 
 Vec<Extrinsic> substrate_client::author_pendingExtrinsics()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Vec<Extrinsic>>("author_pendingExtrinsics");
 }
 
 Vec<Hash> substrate_client::author_removeExtrinsic(Vec<ExtrinsicOrHash> bytesOrHash)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Vec<Hash>>("author_removeExtrinsic", bytesOrHash);
 }
 
 Bytes substrate_client::author_rotateKeys()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Bytes>("author_rotateKeys");
 }
 
 ExtrinsicStatus substrate_client::author_submitAndWatchExtrinsic(Extrinsic extrinsic)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<ExtrinsicStatus>("author_submitAndWatchExtrinsic", extrinsic);
 }
 
 Hash substrate_client::author_submitExtrinsic(Extrinsic extrinsic)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Hash>("author_submitExtrinsic", extrinsic);
 }
 

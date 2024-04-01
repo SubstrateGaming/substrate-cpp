@@ -5,6 +5,6 @@ using namespace substrate::detail::rpc;
 
 HashMap<AuthorityId, EpochAuthorship> substrate_client::babe_epochAuthorship()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<HashMap<AuthorityId, EpochAuthorship>>("babe_epochAuthorship");
 }
 

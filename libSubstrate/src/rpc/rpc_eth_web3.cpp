@@ -5,11 +5,11 @@ using namespace substrate::detail::rpc;
 
 Text substrate_client::web3_clientVersion()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Text>("web3_clientVersion");
 }
 
 H256 substrate_client::web3_sha3(Bytes data)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<H256>("web3_sha3", data);
 }
 

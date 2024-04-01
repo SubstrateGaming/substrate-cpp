@@ -5,11 +5,11 @@ using namespace substrate::detail::rpc;
 
 Option<Bytes> substrate_client::offchain_localStorageGet(StorageKind kind, Bytes key)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Option<Bytes>>("offchain_localStorageGet", kind, key);
 }
 
 Null substrate_client::offchain_localStorageSet(StorageKind kind, Bytes key, Bytes value)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Null>("offchain_localStorageSet", kind, key, value);
 }
 

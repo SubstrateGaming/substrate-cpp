@@ -67,8 +67,8 @@ namespace substrate
       // TODO:
       using ExtrinsicOrHash = Bytes;
       using ExtrinsicStatus = Bytes;
-      using AuthorityId = Bytes;
-      using EpochAuthorship = Bytes;
+      using AuthorityId = int32_t;
+      using EpochAuthorship = int32_t;
       using H160 = Bytes;
       using H256 = Bytes;
       using H64 = Bytes;

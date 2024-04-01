@@ -5,6 +5,6 @@ using namespace substrate::detail::rpc;
 
 RpcMethods substrate_client::rpc_methods()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<RpcMethods>("rpc_methods");
 }
 

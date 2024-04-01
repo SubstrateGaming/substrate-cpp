@@ -58,5 +58,17 @@ namespace substrate::detail::rpc
       [[nodiscard]] substrate::modules::State getStateModule() const override { return _module_state; }
       [[nodiscard]] substrate::modules::System getSystemModule() const override { return _module_system; }
       [[nodiscard]] substrate::modules::UnstableCalls getUnstableCallsModule() const override { return _module_unstable_calls; }
+
+      template<typename TReturn, typename... Args>
+      TReturn rpc(const std::string& name, Args&&... args)
+      {
+         return TReturn{};
+      }
+
+      template<typename TReturn, typename... Args>
+      TReturn rpc(const std::string& name)
+      {
+         return TReturn{};
+      }
    };
 }

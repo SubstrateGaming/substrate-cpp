@@ -5,16 +5,16 @@ using namespace substrate::detail::rpc;
 
 Option<EncodedFinalityProofs> substrate_client::grandpa_proveFinality(BlockNumber blockNumber)
 {
-   throw std::runtime_error("not implemented");
+   return rpc<Option<EncodedFinalityProofs>>("grandpa_proveFinality", blockNumber);
 }
 
 ReportedRoundStates substrate_client::grandpa_roundState()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<ReportedRoundStates>("grandpa_roundState");
 }
 
 JustificationNotification substrate_client::grandpa_subscribeJustifications()
 {
-   throw std::runtime_error("not implemented");
+   return rpc<JustificationNotification>("grandpa_subscribeJustifications");
 }
 
