@@ -10,57 +10,13 @@ find_package(Boost)
 find_package(nlohmann_json)
 find_package(libsodium)
 find_package(sr25519)
-
-# TODO: Use this as soon as conan exposes ENABLE_WEBSOCKET define.
-# find_package(CURL)
+find_package(libcurl)
 
 set (LIB_SUBSTRATE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set (LIB_SUBSTRATE_DEPS ${LIB_SUBSTRATE_ROOT}/deps)
 set (LIB_SUBSTRATE_LIBSCALE ${LIB_SUBSTRATE_DEPS}/scale-codec-cpp)
 
-option(LSUB_WITH_TESTS "Build with tests. Default is ON." ON)
-
-# Dependencies
-find_package(CURL)
-
-if (NOT CURL_FOUND)
-    message(STATUS "Use cURL from deps/curl.")
-
-    set(BUILD_SHARED_LIBS OFF)
-    set(BUILD_TESTING OFF)
-    set(USE_ZLIB OFF)
-    set(USE_LIBSSH2 OFF)
-    set(BUILD_LIBCURL_DOCS OFF)
-    set(BUILD_CURL_EXE OFF)
-
-    set(HTTP_ONLY ON)
-    set(ENABLE_WEBSOCKETS ON)
-
-    if (WIN32)
-        set(CURL_USE_SCHANNEL ON)
-    endif ()
-
-    add_subdirectory(deps/curl)
-
-    # Set the CURL library and include directory manually, if needed
-    # This step might be unnecessary if cURL's CMakeLists.txt sets everything up automatically
-    set(CURL_LIBRARIES libcurl)
-    set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/curl/include)
-
-    unset(BUILD_SHARED_LIBS)
-    unset(BUILD_TESTING)
-    unset(USE_ZLIB)
-    unset(USE_LIBSSH2)
-    unset(BUILD_LIBCURL_DOCS)
-    unset(BUILD_CURL_EXE)
-
-    unset(HTTP_ONLY)
-    unset(ENABLE_WEBSOCKETS)
-
-    if (WIN32)
-        unset(CURL_USE_SCHANNEL)
-    endif ()
-endif ()
+option(LSUB_WITH_TESTS "Build with tests. Default is OFF." OFF)
 
 add_subdirectory(libSubstrate)
 

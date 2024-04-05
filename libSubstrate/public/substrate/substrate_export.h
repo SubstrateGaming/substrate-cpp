@@ -9,10 +9,10 @@
 #  ifndef LIB_SUBSTRATE_EXPORT
 #    ifdef libSubstrate_EXPORTS
         /* We are building this library */
-#      define LIB_SUBSTRATE_EXPORT 
+#      define LIB_SUBSTRATE_EXPORT __declspec(dllexport)
 #    else
         /* We are using this library */
-#      define LIB_SUBSTRATE_EXPORT 
+#      define LIB_SUBSTRATE_EXPORT __declspec(dllimport)
 #    endif
 #  endif
 

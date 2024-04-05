@@ -46,10 +46,10 @@ services:
 
 ```sh
 # Initialize the project (for development)
-conan install .\conanfile.py -s build_type=Debug --output-folder build --build=missing
+conan install conanfile.py -s build_type=Debug --output-folder build --build=missing
 
 # Initialize the project
-conan install .\conanfile.py -s build_type=Release --output-folder build --build=missing
+conan install conanfile.py -s build_type=Release --output-folder build --build=missing
 
 # Build (assuming Windows and MSVC)
 cd build

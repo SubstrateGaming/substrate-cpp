@@ -15,7 +15,7 @@ file (GLOB_RECURSE libSubstrate_src
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
-add_library(${PROJECT_NAME} STATIC ${libSubstrate_headers} ${libSubstrate_src})
+add_library(${PROJECT_NAME} ${libSubstrate_headers} ${libSubstrate_src})
 
 generate_export_header(${PROJECT_NAME}
     BASE_NAME LIB_SUBSTRATE
@@ -28,7 +28,6 @@ target_include_directories (${PROJECT_NAME} PUBLIC
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CURL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${LIB_SUBSTRATE_LIBSCALE}/include
 )
@@ -39,4 +38,4 @@ target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost nlohmann_json::nlohman
 target_link_libraries(${PROJECT_NAME} PRIVATE
     libsodium::libsodium
     sr25519::sr25519
-    ${CURL_LIBRARIES})
+    libcurl::libcurl)
