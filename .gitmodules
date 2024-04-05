@@ -1,6 +1,3 @@
 [submodule "deps/scale-codec-cpp"]
 	path = deps/scale-codec-cpp
 	url = https://github.com/svnscha/scale-codec-cpp.git
-[submodule "deps/sr25519"]
-	path = deps/sr25519
-	url = https://github.com/svnscha/sr25519.git
