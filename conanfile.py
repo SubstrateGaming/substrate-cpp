@@ -31,7 +31,7 @@ class libSubstratePackage(ConanFile):
     }
 
     # Sources are located in the same place as this recipe, copy them to the recipe
-    exports_sources = "CMakeLists.txt", "libSubstrate/*"
+    exports_sources = "CMakeLists.txt", "libSubstrate/*", "tests/*"
 
     def requirements(self):
         self.requires("boost/1.84.0")

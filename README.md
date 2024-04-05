@@ -1,8 +1,8 @@
-# libSubstrate
+# 📦 libSubstrate
 
-## Development
+This project has developed a comprehensive library that is compatible with the substrate ecosystem, akin to [Substrate.NET.API](https://github.com/SubstrateGaming/Substrate.NET.API). It offers all the necessary interfaces for interacting with a substrate node. For practical applications of this library, please consult the provided usage examples.
 
-### Setting up Git Hooks
+## Setup Git Hooks
 
 This project uses Git hooks to enforce certain rules and perform checks before committing code.
 
@@ -12,7 +12,7 @@ To enable these hooks, run the following command:
 git config core.hooksPath .githooks
 ```
 
-### Setup a development node
+## Setup a development node
 
 ```yaml
 version: '2'
@@ -42,19 +42,62 @@ services:
       - 80:80
 ```
 
-## Building
+## Requirements
+
+- [Conan](https://conan.io/)
+- CMake
+- A C++ compiler
+- Libraries, prebuild in your local Conan registry:
+  - [sr25519](https://github.com/svnscha/sr25519)
+  - [libcurl (with web sockets)](https://github.com/svnscha/libcurl-conan)
+  - [libscale](https://github.com/svnscha/scale-codec-cpp)
+
+## 🚀 Usage
+
+Add this package to your project's `conanfile.txt`:
+
+```ini
+[requires]
+libSubstrate/1.0.0@svnscha/dev
+
+[generators]
+cmake
+```
+
+To install dependencies, run:
 
 ```sh
-# Initialize the project (for development)
-conan install conanfile.py -s build_type=Debug --output-folder build --build=missing
+conan install .
+```
 
-# Initialize the project
-conan install conanfile.py -s build_type=Release --output-folder build --build=missing
+To build your project with Conan, run:
 
-# Build (assuming Windows and MSVC)
-cd build
-cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
-cmake --build . --config Release
+```sh
+mkdir build && cd build
+conan build ..
+```
+
+## 🧪 Building the Package
+
+To create the Conan package, navigate to the directory containing conanfile.py and run:
+
+```sh
+conan create --user svnscha --channel dev -s build_type=Debug .
+conan create --user svnscha --channel dev -s build_type=Release .
+```
+
+For local development you could simply use
+
+```sh
+conan create .
+```
+
+To work on this library run:
+
+
+```sh
+conan install conanfile.py -s build_type=Debug --build=missing
+conan install conanfile.py -s build_type=Release --build=missing
 ```
 
 ## References
