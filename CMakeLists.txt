@@ -25,8 +25,10 @@ if (BUILD_TESTS)
     # lib
     file (GLOB_RECURSE libSubstrate_tests_sources ${CMAKE_CURRENT_SOURCE_DIR}/tests/lib/*.cpp)
     add_executable(libSubstrate_tests ${libSubstrate_tests_sources})
-    target_link_libraries(libSubstrate_tests PRIVATE GTest::gtest_main libSubstrate)
+    target_link_libraries(libSubstrate_tests PUBLIC GTest::gtest_main libSubstrate)
     add_test(NAME libSubstrate_tests COMMAND $<TARGET_FILE:libSubstrate_tests>)
+
+    install(TARGETS libSubstrate_tests DESTINATION tests)
 
     # node
     file (GLOB_RECURSE libSubstrate_node_tests_sources ${CMAKE_CURRENT_SOURCE_DIR}/tests/node/*.cpp)
@@ -34,4 +36,8 @@ if (BUILD_TESTS)
     target_link_libraries(libSubstrate_node_tests PRIVATE GTest::gtest_main libSubstrate)
     add_test(NAME libSubstrate_node_tests COMMAND $<TARGET_FILE:libSubstrate_node_tests>)
 
+    install(TARGETS libSubstrate_node_tests DESTINATION tests)
+
+    # Copy libSubstrate to test binary directory on install.
+    install(TARGETS libSubstrate DESTINATION tests)
 endif ()
