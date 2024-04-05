@@ -2,15 +2,8 @@ project(libSubstrate)
 
 include(GenerateExportHeader)
 
-file (GLOB_RECURSE libSubstrate_headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
-    ${LIB_SUBSTRATE_LIBSCALE}/include/*.h
-)
-
-file (GLOB_RECURSE libSubstrate_src
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${LIB_SUBSTRATE_LIBSCALE}/src/*.cpp
-)
+file (GLOB_RECURSE libSubstrate_headers ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+file (GLOB_RECURSE libSubstrate_src ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
@@ -23,19 +16,15 @@ generate_export_header(${PROJECT_NAME}
     EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/public/substrate/substrate_export.h
 )
 
-target_include_directories (${PROJECT_NAME} PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/public
-)
+target_include_directories (${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/public)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${LIB_SUBSTRATE_LIBSCALE}/include
-)
-
-# Right now boost is the only library we expose to public.
+# Public exposed libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost nlohmann_json::nlohmann_json)
 
+# Private libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
     libsodium::libsodium
     sr25519::sr25519
-    libcurl::libcurl)
+    libcurl::libcurl
+    libscale::libscale)

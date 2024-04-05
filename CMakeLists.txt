@@ -11,10 +11,7 @@ find_package(nlohmann_json)
 find_package(libsodium)
 find_package(sr25519)
 find_package(libcurl)
-
-set (LIB_SUBSTRATE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-set (LIB_SUBSTRATE_DEPS ${LIB_SUBSTRATE_ROOT}/deps)
-set (LIB_SUBSTRATE_LIBSCALE ${LIB_SUBSTRATE_DEPS}/scale-codec-cpp)
+find_package(libscale)
 
 option(LSUB_WITH_TESTS "Build with tests. Default is OFF." OFF)
 
