@@ -13,11 +13,11 @@ find_package(sr25519)
 find_package(libcurl)
 find_package(libscale)
 
-option(LSUB_WITH_TESTS "Build with tests. Default is OFF." OFF)
+option(BUILD_TESTS "Build tests" ON)
 
 add_subdirectory(libSubstrate)
 
-if (LSUB_WITH_TESTS)
+if (BUILD_TESTS)
     find_package(GTest)
 
     enable_testing()
@@ -33,6 +33,5 @@ if (LSUB_WITH_TESTS)
     add_executable(libSubstrate_node_tests ${libSubstrate_node_tests_sources})
     target_link_libraries(libSubstrate_node_tests PRIVATE GTest::gtest_main libSubstrate)
     add_test(NAME libSubstrate_node_tests COMMAND $<TARGET_FILE:libSubstrate_node_tests>)
-
 
 endif ()

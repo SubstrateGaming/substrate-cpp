@@ -153,8 +153,8 @@ namespace substrate::rpc
       uint64_t Period{0};
       uint64_t Phase{0};
 
-      uint64_t get_start(uint64_t blockNumber) const;
-      static Era make(uint32_t lifeTime, CompactInteger finalizedHeaderBlockNumber);
+      LIB_SUBSTRATE_EXPORT [[nodiscard]] uint64_t get_start(uint64_t blockNumber) const;
+      static LIB_SUBSTRATE_EXPORT [[nodiscard]] Era make(uint32_t lifeTime, CompactInteger finalizedHeaderBlockNumber);
    };
    LIB_SUBSTRATE_DECLARE_CONVERT(Era);
 
@@ -245,7 +245,7 @@ namespace substrate::rpc
       extra_t Extra;
       additional_t Additional;
 
-      static Payload make(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion);
+      static LIB_SUBSTRATE_EXPORT [[nodiscard]] Payload make(const Extrinsic& extrinsic, const Hash& genesis, const Hash& checkpoint, const RuntimeVersion& runtimeVersion);
    };
    LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload::extra_t);
    LIB_SUBSTRATE_DECLARE_CONVERT_SCALE(Payload::additional_t);

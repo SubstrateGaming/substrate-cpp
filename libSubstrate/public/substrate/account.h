@@ -21,13 +21,13 @@ namespace substrate
    };
    using Account = std::shared_ptr<IAccount>;
 
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account(substrate::rpc::KeyType type, const substrate::bytes &seed);
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account_with_mnemonic(substrate::rpc::KeyType type, const std::string& mnemonic, substrate::mnemonic::BIP39WordList list = substrate::mnemonic::BIP39WordList::English, const std::string& password = std::string());
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] Account make_account(substrate::rpc::KeyType type, const substrate::bytes &seed);
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] Account make_account_with_mnemonic(substrate::rpc::KeyType type, const std::string& mnemonic, substrate::mnemonic::BIP39WordList list = substrate::mnemonic::BIP39WordList::English, const std::string& password = std::string());
 
    // Development
    namespace development
    {
-      [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account_alice();
-      [[nodiscard]] LIB_SUBSTRATE_EXPORT Account make_account_bob();
+      LIB_SUBSTRATE_EXPORT [[nodiscard]] Account make_account_alice();
+      LIB_SUBSTRATE_EXPORT [[nodiscard]] Account make_account_bob();
    }
 }

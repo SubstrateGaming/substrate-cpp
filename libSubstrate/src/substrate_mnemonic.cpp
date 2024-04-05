@@ -135,7 +135,7 @@ namespace substrate::mnemonic::detail
       return substrate::mnemonic::make_mnemonic_with_entropy(entropy, list);
    }
 
-   substrate::bytes make_seed_from_entropy(const substrate::bytes& entropy, const std::string& password)
+   substrate::bytes LIB_SUBSTRATE_EXPORT make_seed_from_entropy(const substrate::bytes& entropy, const std::string& password)
    {
       if (!is_entropy_valid(entropy.size()))
          throw std::runtime_error("invalid mnemonic entropy size");
@@ -146,7 +146,7 @@ namespace substrate::mnemonic::detail
       return result;
    }
 
-   substrate::bytes make_entropy_from_mnemonic(const std::string &mnemonic, BIP39WordList list)
+   substrate::bytes LIB_SUBSTRATE_EXPORT make_entropy_from_mnemonic(const std::string &mnemonic, BIP39WordList list)
    {
       const auto &wordlist = get_words(list);
       const auto words = make_words(mnemonic);

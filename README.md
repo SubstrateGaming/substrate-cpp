@@ -1,4 +1,4 @@
-# substrate-cpp
+# libSubstrate
 
 ## Development
 

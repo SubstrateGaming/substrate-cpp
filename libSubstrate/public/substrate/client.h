@@ -26,5 +26,5 @@ namespace substrate::rpc
       [[nodiscard]] virtual Extrinsic make_extrinsic(substrate::Account account, Method call, ChargeType charge = ChargeType(), uint32_t lifeTime = 0) const = 0;
    };
 
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Client make_client(Logger logger, const std::string &url);
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] Client make_client(Logger logger, const std::string &url);
 }

@@ -29,14 +29,14 @@ namespace substrate
       [[nodiscard]] virtual bool verify(const bytes &message, const bytes &signature, const bytes &public_key) const = 0;
    };
 
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto(substrate::rpc::KeyType provider);
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_ed25519();
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_sr25519();
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT Crypto make_crypto_secp256k1();
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes pbkdf2_hmac_sha512(uint32_t derived_key_length, const substrate::bytes& password, const substrate::bytes& salt, uint32_t iteration_count);
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] Crypto make_crypto(substrate::rpc::KeyType provider);
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] Crypto make_crypto_ed25519();
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] Crypto make_crypto_sr25519();
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] Crypto make_crypto_secp256k1();
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] substrate::bytes pbkdf2_hmac_sha512(uint32_t derived_key_length, const substrate::bytes& password, const substrate::bytes& salt, uint32_t iteration_count);
 
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes get_public_key(const std::string &address);
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes get_public_key_with_network(const std::string &address, uint16_t &network);
-   [[nodiscard]] LIB_SUBSTRATE_EXPORT std::string get_address(const substrate::bytes &bytes, uint16_t ss58_prefix = 42);
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] substrate::bytes get_public_key(const std::string &address);
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] substrate::bytes get_public_key_with_network(const std::string &address, uint16_t &network);
+   LIB_SUBSTRATE_EXPORT [[nodiscard]] std::string get_address(const substrate::bytes &bytes, uint16_t ss58_prefix = 42);
 
 }
