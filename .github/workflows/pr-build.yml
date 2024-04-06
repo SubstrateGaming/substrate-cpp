@@ -16,4 +16,4 @@ jobs:
     - name: Build
       run: |
         docker pull conanio/clang14-ubuntu16.04:latest
-        docker run -u $(id -u):$(id -g) -v .:/code conanio/clang14-ubuntu16.04:latest /bin/bash -c "cd /code && ./build-linux.sh"
+        docker run -v .:/code:z conanio/clang14-ubuntu16.04:latest /bin/bash -c "cd /code && ./build-linux.sh"
