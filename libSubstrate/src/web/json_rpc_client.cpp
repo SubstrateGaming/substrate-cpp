@@ -21,7 +21,6 @@ nlohmann::json json_rpc_client::send_rpc(const std::string &method, const nlohma
 
    // serialize the request to a json string for sending
    const std::string message = request.dump();
-   SLOG_DEBUG(kCategory, std::format("send rpc {} as json {}", method, message));
 
    // signal that a response is being awaited.
    // this affects how incoming messages are processed
@@ -106,8 +105,6 @@ nlohmann::json json_rpc_client::send_rpc_result(const std::string &method, const
 
 void json_rpc_client::on_message(const std::string &message)
 {
-   SLOG_DEBUG(kCategory, std::format("recv json {}", message));
-
    constexpr const char *kId = "id";
    constexpr const char *kSubscription = "subscription";
    constexpr const char *kParams = "params";
@@ -170,14 +167,14 @@ void json_rpc_client::on_message(const std::string &message)
       else
       {
          // log an error if the message doesn't match expected formats
-         SLOG_ERROR(kCategory, std::format("message <{}> response format not expected", message));
+         SLOG_ERROR(kCategory, std::string("message <") + message + std::string("> response format not expected"));
          return;
       }
    }
    else
    {
       // warn if the message is missing crucial identification fields
-      SLOG_WARN(kCategory, std::format("message <{}> missing id or subscription", message));
+      SLOG_WARN(kCategory, std::string("message <") + message + std::string("> missing id or subscription"));
       return;
    }
 }

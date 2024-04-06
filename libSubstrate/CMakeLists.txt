@@ -1,4 +1,4 @@
-project(libSubstrate)
+project(substrate)
 
 include(GenerateExportHeader)
 
@@ -26,13 +26,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost nlohmann_json::nlohman
 target_link_libraries(${PROJECT_NAME} PRIVATE
     libsodium::libsodium
     sr25519::sr25519
-    libcurl::libcurl
+    CURL::libcurl
     libscale::libscale)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
-install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> DESTINATION lib OPTIONAL)
 
-file (GLOB_RECURSE libSubstrate_includes ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
-install(FILES ${libSubstrate_includes} DESTINATION include/substrate)
-install(DIRECTORY ${nlohmann_json_INCLUDE_DIRS}/nlohmann DESTINATION include)
-install(DIRECTORY ${Boost_INCLUDE_DIRS}/boost/multiprecision DESTINATION include/boost/)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/substrate DESTINATION include)

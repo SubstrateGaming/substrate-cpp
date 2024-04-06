@@ -13,7 +13,7 @@ namespace substrate::rpc
 
       [[nodiscard]] virtual bool connect() = 0;
       [[nodiscard]] virtual bool connected() const = 0;
-      [[nodiscard]] virtual void stop() = 0;
+      virtual void stop() = 0;
 
       virtual void wait() = 0;
 
@@ -26,5 +26,5 @@ namespace substrate::rpc
       [[nodiscard]] virtual Extrinsic make_extrinsic(substrate::Account account, Method call, ChargeType charge = ChargeType(), uint32_t lifeTime = 0) const = 0;
    };
 
-   LIB_SUBSTRATE_EXPORT [[nodiscard]] Client make_client(Logger logger, const std::string &url);
+   [[nodiscard]] LIB_SUBSTRATE_EXPORT Client make_client(Logger logger, const std::string &url);
 }

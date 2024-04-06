@@ -4,9 +4,9 @@ from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
 class libSubstratePackage(ConanFile):
 
     # Metadata
-    name = "libsubstrate"
+    name = "substrate"
     version = "1.0.0"
-    license = "Apache-2.0 license"
+    license = "GPL 3"
     author = "svnscha"
     description = "C++ client interface to Polkadot (Substrate)"
     topics = ("crypto", "polkadot", "substrate", "sr25519")
@@ -17,15 +17,34 @@ class libSubstratePackage(ConanFile):
 
     options = {
         "shared": [True, False],
+        "fPIC": [True, False],
         "with_tests": [True, False]
     }
 
     default_options = {
-        "shared": True,
+        "shared": False,
+        "fPIC": True,
         "with_tests": True,
         "boost*:header_only": True,
         "libsodium*:shared": False,
         "libcurl*:shared": False,
+        "libcurl*:with_websockets": True,
+        "libcurl*:with_http": True,
+        "libcurl*:with_ssl": "openssl",
+        "libcurl*:with_file": False,
+        "libcurl*:with_ftp": False,
+        "libcurl*:with_gopher": False,
+        "libcurl*:with_imap": False,
+        "libcurl*:with_ldap": False,
+        "libcurl*:with_mqtt": False,
+        "libcurl*:with_pop3": False,
+        "libcurl*:with_rtsp": False,
+        "libcurl*:with_smb": False,
+        "libcurl*:with_smtp": False,
+        "libcurl*:with_telnet": False,
+        "libcurl*:with_tftp": False,
+        "libcurl*:with_ntlm": False,
+        "libcurl*:with_ntlm_wb": False,
         "libscale*:shared": False,
         "sr25519*:shared": False
     }
@@ -33,12 +52,22 @@ class libSubstratePackage(ConanFile):
     # Sources are located in the same place as this recipe, copy them to the recipe
     exports_sources = "CMakeLists.txt", "libSubstrate/*", "tests/*"
 
+    def config_options(self):
+        if self.settings.os == "Windows":
+            del self.options.fPIC
+
+    def configure(self):
+        if self.settings.os == "Windows":
+            self.options["libcurl"].with_ssl = "schannel"
+        if self.options.shared:
+            self.options.rm_safe("fPIC")
+
     def requirements(self):
-        self.requires("boost/1.84.0")
-        self.requires("nlohmann_json/3.11.3")
+        self.requires("boost/1.84.0", transitive_headers=True)
+        self.requires("nlohmann_json/3.11.3", transitive_headers=True)
         self.requires("libsodium/1.0.19")
         self.requires("sr25519/1.0.0@svnscha/dev")
-        self.requires("libcurl/8.7.0@svnscha/dev")
+        self.requires("libcurl/8.6.0@svnscha/dev")
         self.requires("libscale/1.1.0@svnscha/dev")
         if self.options.with_tests:
             self.requires("gtest/1.14.0")
@@ -71,4 +100,4 @@ class libSubstratePackage(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["libSubstrate"]
+        self.cpp_info.libs = ["substrate"]

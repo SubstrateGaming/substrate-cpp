@@ -4,7 +4,6 @@
 
 #include <random>
 #include <ctime>
-#include <format>
 #include <vector>
 #include <bitset>
 #include <algorithm>
@@ -140,7 +139,7 @@ namespace substrate::mnemonic::detail
       if (!is_entropy_valid(entropy.size()))
          throw std::runtime_error("invalid mnemonic entropy size");
 
-      std::string salt = std::format("mnemonic{}", password);
+      std::string salt = std::string("mnemonic") + password;
       const substrate::bytes salt_bytes(salt.begin(), salt.end());
       const auto result = substrate::pbkdf2_hmac_sha512(64, entropy, salt_bytes, 2048);
       return result;

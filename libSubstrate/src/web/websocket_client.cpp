@@ -2,7 +2,6 @@
 
 #include "logger.h"
 
-#include <format>
 #include <sstream>
 #include <assert.h>
 
@@ -26,7 +25,7 @@ websocket_client::websocket_client(substrate::Logger logger, const std::string &
       CURLcode res = curl_easy_perform(_curl);
       if (res != CURLE_OK)
       {
-         SLOG_ERROR(kCategory, std::format("curl_easy_perform failed: {}", curl_easy_strerror(res)));
+         SLOG_ERROR(kCategory, std::string("curl_easy_perform failed: ") + std::string(curl_easy_strerror(res)));
 
          curl_easy_cleanup(_curl);
          _curl = nullptr;
@@ -75,7 +74,7 @@ bool websocket_client::send_message(const std::string &message)
    CURLcode res = curl_ws_send(_curl, message.data(), message.size(), &sent, 0, CURLWS_TEXT);
    if (res != CURLE_OK)
    {
-      SLOG_ERROR(kCategory, std::format("curl_easy_perform failed: {}", curl_easy_strerror(res)));
+      SLOG_ERROR(kCategory, std::string("curl_easy_perform failed: ") + std::string(curl_easy_strerror(res)));
       return false;
    }
    assert(sent == message.size());
@@ -112,7 +111,7 @@ void websocket_client::on_receive()
       if (res != CURLE_OK)
       {
          // Rather unexpected. Escalate.
-         SLOG_ERROR(kCategory, std::format("curl_ws_recv failed: {}", curl_easy_strerror(res)));
+         SLOG_ERROR(kCategory, std::string("curl_ws_recv failed: ") + std::string(curl_easy_strerror(res)));
          break;
       }
 
