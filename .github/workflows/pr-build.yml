@@ -1,0 +1,19 @@
+name: Pull Request Build
+
+on:
+  pull_request:
+
+jobs:
+  run-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Build
+      run: |
+        docker pull conanio/clang14-ubuntu16.04:latest
+        docker run -v .:/code conanio/clang14-ubuntu16.04:latest /bin/bash -c "cd /code && ./build-linux.sh"
