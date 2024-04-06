@@ -1,0 +1,9 @@
+[submodule "external/scale-codec-cpp"]
+	path = external/scale-codec-cpp
+	url = https://github.com/svnscha/scale-codec-cpp.git
+[submodule "external/sr25519"]
+	path = external/sr25519
+	url = https://github.com/svnscha/sr25519.git
+[submodule "external/libcurl-conan"]
+	path = external/libcurl-conan
+	url = https://github.com/svnscha/libcurl-conan.git
