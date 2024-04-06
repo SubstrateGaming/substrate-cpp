@@ -4,7 +4,7 @@ from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
 class libSubstratePackage(ConanFile):
 
     # Metadata
-    name = "libsubstrate"
+    name = "substrate"
     version = "1.0.0"
     license = "GPL 3"
     author = "svnscha"
@@ -63,8 +63,8 @@ class libSubstratePackage(ConanFile):
             self.options.rm_safe("fPIC")
 
     def requirements(self):
-        self.requires("boost/1.84.0")
-        self.requires("nlohmann_json/3.11.3")
+        self.requires("boost/1.84.0", transitive_headers=True)
+        self.requires("nlohmann_json/3.11.3", transitive_headers=True)
         self.requires("libsodium/1.0.19")
         self.requires("sr25519/1.0.0@svnscha/dev")
         self.requires("libcurl/8.6.0@svnscha/dev")
@@ -100,4 +100,4 @@ class libSubstratePackage(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["libSubstrate"]
+        self.cpp_info.libs = ["substrate"]

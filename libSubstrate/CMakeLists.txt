@@ -31,7 +31,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
-file (GLOB_RECURSE libSubstrate_includes ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
-install(FILES ${libSubstrate_includes} DESTINATION include/substrate)
-install(DIRECTORY ${nlohmann_json_INCLUDE_DIRS}/nlohmann DESTINATION include)
-install(DIRECTORY ${Boost_INCLUDE_DIRS}/boost/multiprecision DESTINATION include/boost/)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/substrate DESTINATION include)

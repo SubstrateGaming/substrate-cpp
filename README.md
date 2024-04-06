@@ -108,6 +108,14 @@ For local development you could simply use
 conan create --build=missing .
 ```
 
+## 🧪 Development
+
+```sh
+conan install conanfile.py -s build_type=Debug --build=missing
+```
+
+and then select your CMake presets in your favorite IDE and work on this library.
+
 ## References
 
 - Substrate.NET.API
