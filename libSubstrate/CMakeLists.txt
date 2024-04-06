@@ -1,4 +1,4 @@
-project(libSubstrate)
+project(substrate)
 
 include(GenerateExportHeader)
 
