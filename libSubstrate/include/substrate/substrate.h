@@ -18,6 +18,6 @@ namespace substrate
 {
    namespace utils
    {
-      LIB_SUBSTRATE_EXPORT [[nodiscard]] std::vector<uint8_t> make_random_bytes(size_t size);
+      [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<uint8_t> make_random_bytes(size_t size);
    }
 }

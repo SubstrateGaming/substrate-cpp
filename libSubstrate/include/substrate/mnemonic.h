@@ -29,9 +29,9 @@ namespace substrate
          Words24
       };
 
-      LIB_SUBSTRATE_EXPORT [[nodiscard]] std::vector<std::string> make_mnemonic(MnemonicSize size, BIP39WordList list = BIP39WordList::English);
-      LIB_SUBSTRATE_EXPORT [[nodiscard]] std::vector<std::string> make_mnemonic_with_entropy(const substrate::bytes& entropy, BIP39WordList list = BIP39WordList::English);
-      LIB_SUBSTRATE_EXPORT [[nodiscard]] substrate::bytes make_secret_from_mnemonic(const std::string& mnemonic, const std::string& password, BIP39WordList list = BIP39WordList::English);
+      [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<std::string> make_mnemonic(MnemonicSize size, BIP39WordList list = BIP39WordList::English);
+      [[nodiscard]] LIB_SUBSTRATE_EXPORT std::vector<std::string> make_mnemonic_with_entropy(const substrate::bytes& entropy, BIP39WordList list = BIP39WordList::English);
+      [[nodiscard]] LIB_SUBSTRATE_EXPORT substrate::bytes make_secret_from_mnemonic(const std::string& mnemonic, const std::string& password, BIP39WordList list = BIP39WordList::English);
    }
 
 }

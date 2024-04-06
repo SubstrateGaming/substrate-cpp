@@ -16,21 +16,21 @@ bool substrate_client::connect()
 {
    assert(_socket == nullptr);
 
-   SLOG_DEBUG(kCategory, std::format("connecting to endpoint {}", _url));
+   SLOG_DEBUG(kCategory, std::string("connecting to endpoint ") + _url);
 
    // build the rpc client and connect right away
    _socket = std::make_shared<json_rpc_client>(_logger, _url);
    if (!_socket->connected())
    {
       // most likely a user error
-      SLOG_DEBUG(kCategory, std::format("could not connect to endpoint {}", _url));
+      SLOG_DEBUG(kCategory, std::string("could not connect to endpoint ") + _url);
 
       _socket = nullptr;
       return false;
    }
 
    // start receiving messages
-   SLOG_DEBUG(kCategory, std::format("connected to endpoint {}, start receiving messages", _url));
+   SLOG_DEBUG(kCategory, std::string("connected to endpoint ") + _url + std::string("start receiving messages"));
    _socket->start();
    return true;
 }

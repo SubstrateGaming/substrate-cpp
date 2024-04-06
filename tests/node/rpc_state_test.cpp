@@ -8,7 +8,7 @@ public:
 protected:
    virtual void SetUp() override
    {
-      __super::SetUp();
+      rpc_test::SetUp();
 
       _testKey = client->state_getKeysPaged(substrate::rpc::StorageKey("0x"), 1).at(0);
    }

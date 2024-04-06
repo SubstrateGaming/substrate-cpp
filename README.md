@@ -77,27 +77,35 @@ mkdir build && cd build
 conan build ..
 ```
 
-## 🧪 Building the Package
-
-To create the Conan package, navigate to the directory containing conanfile.py and run:
+## 🧪 Export Dependencies
 
 ```sh
-conan create --user svnscha --channel dev -s build_type=Debug .
-conan create --user svnscha --channel dev -s build_type=Release .
+cd external/libcurl-conan/all
+conan export --user svnscha --channel dev --version 8.6.0 .
+
+cd external/scale-codec-cpp
+conan export --user svnscha --channel dev .
+
+cd external/sr25519
+conan export --user svnscha --channel dev .
 ```
+
+## 🧪 Export this Package
+
+To export the Conan package, navigate to the directory containing conanfile.py and run:
+
+```sh
+conan export --user svnscha --channel dev .
+```
+
+This exports the package to your local cache, usable by other projects.
+
+## 🧪 Building the Package
 
 For local development you could simply use
 
 ```sh
-conan create .
-```
-
-To work on this library run:
-
-
-```sh
-conan install conanfile.py -s build_type=Debug --build=missing
-conan install conanfile.py -s build_type=Release --build=missing
+conan create --build=missing .
 ```
 
 ## References

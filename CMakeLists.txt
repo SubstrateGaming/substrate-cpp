@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.15)
 
 project(substrate-cpp LANGUAGES CXX VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 20)
@@ -10,7 +10,7 @@ find_package(Boost)
 find_package(nlohmann_json)
 find_package(libsodium)
 find_package(sr25519)
-find_package(libcurl)
+find_package(CURL)
 find_package(libscale)
 
 option(BUILD_TESTS "Build tests" ON)
