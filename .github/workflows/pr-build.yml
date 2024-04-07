@@ -25,12 +25,17 @@ jobs:
     - name: Configure Conan
       run: |
         conan profile new ~/.conan2/profiles/default
-        conan profile update settings.arch=x64 default
-        conan profile update settings.build_type=Release default
-        conan profile update settings.compiler.cppstd=gnu14 default
-        conan profile update settings.compiler.libcxx=libstdc++11 default
-        conan profile update settings.compiler.version=14 default
-        conan profile update settings.os Linux default
+        mkdir -p ~/.conan2/profiles
+        cd ~/.conan2/profiles
+        echo "[settings]" >> default
+        echo "arch=x86_64" >> default
+        echo "build_type=Release" >> default
+        echo "compiler=clang" >> default
+        echo "compiler.cppstd=gnu14" >> default
+        echo "compiler.libcxx=libstdc++11" >> default
+        echo "compiler.version=14" >> default
+        echo "os=Linux" >> default
+
         conan profile show
 
     - name: Build
