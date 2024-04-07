@@ -24,6 +24,7 @@ jobs:
         sudo update-alternatives --set cc /usr/bin/clang
         sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
         sudo update-alternatives --set c++ /usr/bin/clang++
+        clang --version | grep -q 'clang version 14.0.0' && echo "Clang default version is as expected." || echo "Clang default version is changed on build runners. Please update generated conan profile in pr-build.yml."
 
     - name: Install Conan
       run: |
