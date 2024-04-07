@@ -1,6 +1,11 @@
 name: Pull Request Build
 
 on:
+  # Run this on pushes to main, develop
+  push:
+    branches: [ main, develop ]
+
+  # Run this on any pull request.
   pull_request:
 
 jobs:
@@ -17,8 +22,16 @@ jobs:
       run: |
         pip install conan
 
-        # Detect profile(s)
-        conan profile detect
+    - name: Configure Conan
+      run: |
+        conan profile new ~/.conan2/profiles/default
+        conan profile update settings.arch=x64 default
+        conan profile update settings.build_type=Release default
+        conan profile update settings.compiler.cppstd=gnu14 default
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan profile update settings.compiler.version=14 default
+        conan profile update settings.os Linux default
+        conan profile show
 
     - name: Build
       run: |
