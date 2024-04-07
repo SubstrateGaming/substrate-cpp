@@ -13,7 +13,10 @@ jobs:
       with:
         submodules: true
 
+    - name: Install Conan
+      run: |
+        pip install conan
+
     - name: Build
       run: |
-        docker pull conanio/clang14-ubuntu16.04:latest
-        docker run -v .:/code:Z conanio/clang14-ubuntu16.04:latest /bin/bash -c "cd /code && ./build-linux.sh"
+        ./build-linux.sh
