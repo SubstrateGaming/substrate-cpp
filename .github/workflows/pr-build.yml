@@ -9,7 +9,7 @@ on:
   pull_request:
 
 jobs:
-  run-docker:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,6 @@ jobs:
 
     - name: Configure Conan
       run: |
-        conan profile new ~/.conan2/profiles/default
         mkdir -p ~/.conan2/profiles
         cd ~/.conan2/profiles
         echo "[settings]" >> default
