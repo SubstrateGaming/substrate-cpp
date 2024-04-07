@@ -17,6 +17,9 @@ jobs:
       run: |
         pip install conan
 
+        # Detect profile(s)
+        conan profile detect
+
     - name: Build
       run: |
         ./build-linux.sh
