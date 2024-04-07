@@ -18,30 +18,20 @@ jobs:
       with:
         submodules: true
 
+    - name: Configure Compiler
+      run: |
+        sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+        sudo update-alternatives --set cc /usr/bin/clang
+        sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+        sudo update-alternatives --set c++ /usr/bin/clang++
+
     - name: Install Conan
       run: |
         pip install conan
 
-    - name: Configure Compiler
-      run: |
-        update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
-        update-alternatives --set cc /usr/bin/clang
-        update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
-        update-alternatives --set c++ /usr/bin/clang++
-
     - name: Configure Conan
       run: |
-        mkdir -p ~/.conan2/profiles
-        cd ~/.conan2/profiles
-        echo "[settings]" >> default
-        echo "arch=x86_64" >> default
-        echo "build_type=Release" >> default
-        echo "compiler=clang" >> default
-        echo "compiler.cppstd=gnu14" >> default
-        echo "compiler.libcxx=libstdc++11" >> default
-        echo "compiler.version=14" >> default
-        echo "os=Linux" >> default
-
+        conan profile detect
         conan profile show
 
     - name: Build
