@@ -43,5 +43,5 @@ jobs:
 
       - name: Build and create release
         run: |
-          conan create . --profile:build .\conan-profiles\windows.profile --build=missing --format json > release.json
+          conan create . --profile:host .\conan-profiles\windows.profile --profile:build .\conan-profiles\windows.profile --build=missing --format json > release.json
           ls -la
