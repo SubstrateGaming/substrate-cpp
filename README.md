@@ -58,7 +58,7 @@ Add this package to your project's `conanfile.txt`:
 
 ```ini
 [requires]
-libSubstrate/1.0.0@svnscha/dev
+libSubstrate/1.0.1@svnscha/dev
 
 [generators]
 cmake
