@@ -61,11 +61,9 @@ jobs:
           echo "packageLabel=$label" >> $env:GITHUB_OUTPUT
           echo "packagePath=$folderPath" >> $env:GITHUB_OUTPUT
 
-      - name: Upload package folder as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ steps.get-artifact.outputs.packageLabel }}
-          path: ${{ steps.get-artifact.outputs.packagePath }}
+      - name: Compress the package directory
+        run: Compress-Archive -Path "${{ steps.get-artifact.outputs.packagePath }}" -DestinationPath "${{ steps.get-artifact.outputs.packageLabel }}-windows.zip"
+        shell: pwsh
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -73,6 +71,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.get-artifact.outputs.packagePath }}
+          asset_path: ${{ steps.get-artifact.outputs.packageLabel }}-windows.zip
           asset_name: ${{ steps.get-artifact.outputs.packageLabel }}-windows.zip
           asset_content_type: application/octet-stream
