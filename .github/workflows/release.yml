@@ -1,0 +1,47 @@
+name: Build Release
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' 
+
+      - name: Install Conan
+        run: pip install conan
+
+      - name: Export libcurl-conan
+        run: |
+          cd external/libcurl-conan/all
+          conan export . svnscha/dev --version 8.6.0
+
+      - name: Export scale-codec-cpp
+        run: |
+          cd external/scale-codec-cpp
+          conan export . svnscha/dev
+
+      - name: Export sr25519
+        run: |
+          cd external/sr25519
+          conan export . svnscha/dev
+
+      - name: Build and create release
+        run: |
+          conan create . --profile .\conan-profiles\windows.profile --build=missing --format json > release.json
+          ls -la
