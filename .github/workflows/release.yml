@@ -44,4 +44,21 @@ jobs:
       - name: Build and create release
         run: |
           conan create . --profile:host .\conan-profiles\windows.profile --profile:build .\conan-profiles\windows.profile --build=missing --format json > release.json
-          ls -la
+
+      - name: Extract package folder path
+        id: get-artifact
+        shell: pwsh
+        run: |
+          $json = Get-Content release.json | ConvertFrom-Json
+          $node = $json.graph.nodes.1
+          $folderPath = $node.package_folder
+          $label = $node.label
+          echo "Package label= $label, path= $folderPath"
+          echo "::set-output name=packagePath::$folderPath"
+          echo "::set-output name=packageLabel::$label"
+
+      - name: Upload package folder as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.get-artifact.outputs.packageLabel }}
+          path: ${{ steps.get-artifact.outputs.packagePath }}
