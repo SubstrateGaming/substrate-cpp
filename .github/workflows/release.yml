@@ -61,8 +61,19 @@ jobs:
           echo "packageLabel=$label" >> $env:GITHUB_OUTPUT
           echo "packagePath=$folderPath" >> $env:GITHUB_OUTPUT
 
+          # Dependencies
+          $nlohmann = ($node.info.requires | Select-String -Pattern "nlohmann").Line
+          $nlohmann_path = conan cache path $nlohmann
+
+          $wide = ($node.info.requires | Select-String -Pattern "wide-integer").Line
+          $wide_path = conan cache path $wide
+
+          echo "nlohmann_path=$nlohmann_path" >> $env:GITHUB_OUTPUT
+          echo "wide_path=$wide_path" >> $env:GITHUB_OUTPUT
+
+
       - name: Compress the package directory
-        run: Compress-Archive -Path "${{ steps.get-artifact.outputs.packagePath }}/*" -DestinationPath "${{ steps.get-artifact.outputs.packageLabel }}-windows.zip"
+        run: Compress-Archive -Path "${{ steps.get-artifact.outputs.wide_path }}/include", "${{ steps.get-artifact.outputs.nlohmann_path }}/include", "${{ steps.get-artifact.outputs.packagePath }}/*" -DestinationPath "${{ steps.get-artifact.outputs.packageLabel }}-windows.zip"
         shell: pwsh
 
       - name: Upload Release Asset
