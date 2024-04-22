@@ -5,7 +5,7 @@ class libSubstratePackage(ConanFile):
 
     # Metadata
     name = "substrate"
-    version = "1.0.0"
+    version = "1.0.1"
     license = "GPL 3"
     author = "svnscha"
     description = "C++ client interface to Polkadot (Substrate)"
