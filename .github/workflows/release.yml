@@ -1,0 +1,76 @@
+name: Build Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' 
+
+      - name: Install Conan
+        run: pip install conan
+
+      - name: Export libcurl-conan
+        run: |
+          cd external/libcurl-conan/all
+          conan export . --user svnscha --channel dev --version 8.6.0
+
+      - name: Export scale-codec-cpp
+        run: |
+          cd external/scale-codec-cpp
+          conan export . --user svnscha --channel dev
+
+      - name: Export sr25519
+        run: |
+          cd external/sr25519
+          conan export . --user svnscha --channel dev
+
+      - name: Build and create release
+        run: |
+          conan create . --profile:host .\conan-profiles\windows.profile --profile:build .\conan-profiles\windows.profile --build=missing --format json > release.json
+
+      - name: Extract package folder path
+        id: get-artifact
+        shell: pwsh
+        run: |
+          # Get the build package
+          $json = Get-Content release.json | ConvertFrom-Json
+          $node = $json.graph.nodes.1
+          $folderPath = $node.package_folder
+          $label = $node.label
+
+          # Replace label name to get a valid artifact name.
+          # Error: Artifact name is not valid: substrate/1.0.0. Contains the following character:  Forward slash /
+          $label = $label.replace("/", "-")
+          echo "Package label=$label, path=$folderPath"
+
+          # Modern syntax to set output variables
+          # Reference: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+          echo "packageLabel=$label" >> $env:GITHUB_OUTPUT
+          echo "packagePath=$folderPath" >> $env:GITHUB_OUTPUT
+
+      - name: Compress the package directory
+        run: Compress-Archive -Path "${{ steps.get-artifact.outputs.packagePath }}/*" -DestinationPath "${{ steps.get-artifact.outputs.packageLabel }}-windows.zip"
+        shell: pwsh
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.get-artifact.outputs.packageLabel }}-windows.zip
+          asset_name: ${{ steps.get-artifact.outputs.packageLabel }}-windows.zip
+          asset_content_type: application/octet-stream

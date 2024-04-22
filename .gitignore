@@ -1,0 +1,5 @@
+﻿out
+.vscode/settings.json
+CMakeUserPresets.json
+build
+release.json
