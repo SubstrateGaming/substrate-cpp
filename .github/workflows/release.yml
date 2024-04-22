@@ -1,12 +1,11 @@
 name: Build Release
 
 on:
+  release:
+    types: [published]
   push:
-    branches:
-      - develop
-  pull_request:
-    branches:
-      - develop
+    tags:
+      - v*.*.*
 
 jobs:
   build:
@@ -70,3 +69,13 @@ jobs:
         with:
           name: ${{ steps.get-artifact.outputs.packageLabel }}
           path: ${{ steps.get-artifact.outputs.packagePath }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.package-project.outputs.packagePath }}
+          asset_name: ${{ steps.get-artifact.outputs.packageLabel }}-windows.zip
+          asset_content_type: application/octet-stream
