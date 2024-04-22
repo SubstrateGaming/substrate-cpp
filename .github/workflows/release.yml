@@ -62,7 +62,7 @@ jobs:
           echo "packagePath=$folderPath" >> $env:GITHUB_OUTPUT
 
       - name: Compress the package directory
-        run: Compress-Archive -Path "${{ steps.get-artifact.outputs.packagePath }}" -DestinationPath "${{ steps.get-artifact.outputs.packageLabel }}-windows.zip"
+        run: Compress-Archive -Path "${{ steps.get-artifact.outputs.packagePath }}/*" -DestinationPath "${{ steps.get-artifact.outputs.packageLabel }}-windows.zip"
         shell: pwsh
 
       - name: Upload Release Asset
