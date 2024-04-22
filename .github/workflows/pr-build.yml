@@ -24,26 +24,11 @@ jobs:
         sudo update-alternatives --set cc /usr/bin/clang
         sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
         sudo update-alternatives --set c++ /usr/bin/clang++
-        clang --version | grep -q 'clang version 14.0.0' && echo "Clang default version is as expected." || echo "Clang default version is changed on build runners. Please update generated conan profile in pr-build.yml."
+        clang --version | grep -q 'clang version 14.0.0' && echo "Clang default version is as expected." || echo "Clang default version is changed on build runners. Please update generated conan-profiles/linux.profile, Dockerfile and pr-build.yml."
 
     - name: Install Conan
       run: |
         pip install conan
-
-    - name: Configure Conan
-      run: |
-        mkdir -p ~/.conan2/profiles
-        cd ~/.conan2/profiles
-        echo "[settings]" >> default
-        echo "arch=x86_64" >> default
-        echo "build_type=Release" >> default
-        echo "compiler=clang" >> default
-        echo "compiler.cppstd=gnu14" >> default
-        echo "compiler.libcxx=libstdc++11" >> default
-        echo "compiler.version=14" >> default
-        echo "os=Linux" >> default
-
-        conan profile show
 
     - name: Build
       run: |

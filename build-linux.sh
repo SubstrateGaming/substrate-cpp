@@ -17,4 +17,4 @@ conan export --user svnscha --channel dev .
 cd "$original_dir"
 
 # Build
-conan create . --build="*"
+conan create . --profile:host ./conan-profiles/linux.profile --profile:build ./conan-profiles/linux.profile --build=missing --format json > release.json
