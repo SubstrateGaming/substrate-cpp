@@ -49,13 +49,21 @@ jobs:
         id: get-artifact
         shell: pwsh
         run: |
+          # Get the build package
           $json = Get-Content release.json | ConvertFrom-Json
           $node = $json.graph.nodes.1
           $folderPath = $node.package_folder
           $label = $node.label
+
+          # Replace label name to get a valid artifact name.
+          # Error: Artifact name is not valid: substrate/1.0.0. Contains the following character:  Forward slash /
+          $label = $label.replace("/", "-")
           echo "Package label= $label, path= $folderPath"
-          echo "::set-output name=packagePath::$folderPath"
-          echo "::set-output name=packageLabel::$label"
+
+          # Modern syntax to set output variables
+          # Reference: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+          echo "packageLabel=$label" >> $GITHUB_OUTPUT
+          echo "packagePath=$folderPath" >> $GITHUB_OUTPUT
 
       - name: Upload package folder as artifact
         uses: actions/upload-artifact@v2
