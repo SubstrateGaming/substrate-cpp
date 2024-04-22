@@ -29,17 +29,17 @@ jobs:
       - name: Export libcurl-conan
         run: |
           cd external/libcurl-conan/all
-          conan export . svnscha/dev --version 8.6.0
+          conan export . --user svnscha --channel dev --version 8.6.0
 
       - name: Export scale-codec-cpp
         run: |
           cd external/scale-codec-cpp
-          conan export . svnscha/dev
+          conan export . --user svnscha --channel dev
 
       - name: Export sr25519
         run: |
           cd external/sr25519
-          conan export . svnscha/dev
+          conan export . --user svnscha --channel dev
 
       - name: Build and create release
         run: |
