@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(Boost)
 find_package(nlohmann_json)
 find_package(libsodium)
 find_package(sr25519)
 find_package(CURL)
 find_package(libscale)
+find_package(wide-integer)
 
 option(BUILD_TESTS "Build tests" ON)
 

@@ -25,7 +25,6 @@ class libSubstratePackage(ConanFile):
         "shared": False,
         "fPIC": True,
         "with_tests": True,
-        "boost*:header_only": True,
         "libsodium*:shared": False,
         "libcurl*:shared": False,
         "libcurl*:with_websockets": True,
@@ -63,12 +62,12 @@ class libSubstratePackage(ConanFile):
             self.options.rm_safe("fPIC")
 
     def requirements(self):
-        self.requires("boost/1.84.0", transitive_headers=True)
         self.requires("nlohmann_json/3.11.3", transitive_headers=True)
+        self.requires("wide-integer/cci.20231015", transitive_headers=True)
         self.requires("libsodium/1.0.19")
         self.requires("sr25519/1.0.0@svnscha/dev")
         self.requires("libcurl/8.6.0@svnscha/dev")
-        self.requires("libscale/1.1.0@svnscha/dev")
+        self.requires("libscale/1.1.1@svnscha/dev")
         if self.options.with_tests:
             self.requires("gtest/1.14.0")
 

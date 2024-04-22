@@ -1,4 +1,5 @@
 #include <substrate/base58.h>
+#include <assert.h>
 
 // https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp
 // Copyright (c) 2014-2022 The Bitcoin Core developers

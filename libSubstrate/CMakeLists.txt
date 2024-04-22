@@ -20,7 +20,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/in
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Public exposed libraries
-target_link_libraries(${PROJECT_NAME} PUBLIC boost::boost nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json wide-integer::wide-integer)
 
 # Private libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE

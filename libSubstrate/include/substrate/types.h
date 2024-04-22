@@ -6,7 +6,7 @@
 #include <optional>
 #include <unordered_map>
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include <math/wide_integer/uintwide_t.h>
 
 namespace substrate
 {
@@ -23,7 +23,9 @@ namespace substrate
    using Crypto = std::shared_ptr<ICrypto>;
 
    using bytes = std::vector<uint8_t>;
-   using CompactInteger = boost::multiprecision::cpp_int;
+
+   // Must match libscale's CompactInteger.
+   using CompactInteger = math::wide_integer::uint256_t;
 
    template <typename T, typename Tag, size_t TypeSize = sizeof(T)>
    class strong_type
